@@ -1,9 +1,13 @@
 'use client'
 
+import React from 'react'
+
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  ColumnFiltersState,
+  getFilteredRowModel,
   useReactTable,
   getPaginationRowModel,
 } from '@tanstack/react-table'
@@ -25,7 +29,19 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
 import { Button } from './ui/button'
+import { Input } from '@/components/ui/input'
+import VehicleForm from './vehicle-form'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -36,15 +52,51 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  )
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
   })
 
   return (
     <div>
+      <div className="flex items-center py-4 justify-between">
+        <Input
+          placeholder="Busque por modelo..."
+          value={(table.getColumn('model')?.getFilterValue() as string) ?? ''}
+          onChange={(event) =>
+            table.getColumn('model')?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Novo Veículo</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Adicionar Novo Veículo</DialogTitle>
+              <DialogDescription>
+                Preencha as informações abaixo para adicionar um novo veículo ao
+                sistema. Clique em salvar ao concluir.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <VehicleForm />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
