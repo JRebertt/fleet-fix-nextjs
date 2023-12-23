@@ -648,7 +648,5 @@ export default async function getVehicles() {
     },
   ]
 
-  console.log(vehicles)
-
   return vehicles || []
 }
