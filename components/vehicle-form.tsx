@@ -20,11 +20,22 @@ import {
   CommandItem,
 } from '@/components/ui/command'
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
 import { Input } from './ui/input'
 
 import { vehicleFormSchema } from '@/schemas/vehicle'
-import { toast } from './ui/use-toast'
-import { Button } from './ui/button'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import createNewVehicle from '@/services/create-new-vehicle'
 
 type VehicleFormValues = z.infer<typeof vehicleFormSchema>
 
@@ -52,25 +63,23 @@ export default function VehicleForm() {
       licensePlate: '',
       chassisNumber: '',
       renavamNumber: '',
-      photos: [],
       crlveNumber: '',
+      currentMileage: '',
+      year: '',
       driver: '',
+      purchaseDate: '',
+      photos: [],
+      company: 'Norte Gases',
       vehicleStatus: 'Em Viagem',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
   })
 
-  function onSubmit(values: VehicleFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    })
-    console.log(values)
+  async function onSubmit(values: VehicleFormValues) {
+    toast('Veículo adicionado com sucesso!✅ ')
+    form.reset()
+    createNewVehicle(values)
   }
 
   return (
@@ -109,6 +118,7 @@ export default function VehicleForm() {
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -123,14 +133,13 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
-                    min={10}
-                    max={12}
                     id="crlveNumber"
                     placeholder="Número do CRLVe"
                     {...field}
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -143,14 +152,14 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
-                    min={9}
-                    max={11}
+                    type="number"
                     id="renavamNumber"
                     placeholder="RENAVAM"
                     {...field}
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -164,6 +173,7 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
+                    type="number"
                     placeholder="Data da compra"
                     {...field}
                     className="px-3 py-2"
@@ -189,25 +199,36 @@ export default function VehicleForm() {
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Número do Chassi */}
           <FormField
             control={form.control}
-            name="chassisNumber"
+            name="company"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    id="chassisNumber"
-                    placeholder="Chassi"
-                    {...field}
-                    className="px-3 py-2"
-                  />
+                  <Select>
+                    <SelectTrigger className="">
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Fruits</SelectLabel>
+                        <SelectItem className="w-full" value="apple">
+                          Apple
+                        </SelectItem>
+                        <SelectItem value="banana">Banana</SelectItem>
+                        <SelectItem value="blueberry">Blueberry</SelectItem>
+                        <SelectItem value="grapes">Grapes</SelectItem>
+                        <SelectItem value="pineapple">Pineapple</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
               </FormItem>
             )}
@@ -226,7 +247,7 @@ export default function VehicleForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          'w-[200px] justify-between',
+                          'w-full justify-between',
                           !field.value && 'text-muted-foreground',
                         )}
                       >
@@ -234,7 +255,7 @@ export default function VehicleForm() {
                           ? fakeDatas.find(
                               (fakeData) => fakeData.value === field.value,
                             )?.driveName
-                          : 'Selecione um Motorista'}
+                          : 'Motorista'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -287,6 +308,24 @@ export default function VehicleForm() {
                   className="px-3 py-2"
                 />
               </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="chassisNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  id="chassisNumber"
+                  placeholder="Chassi"
+                  {...field}
+                  className="px-3 py-2"
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

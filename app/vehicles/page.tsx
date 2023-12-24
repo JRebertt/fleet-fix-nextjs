@@ -1,25 +1,36 @@
+'use client'
 import { DataTable } from '@/components/data-table'
-import { Vehicle, columns } from './columns'
+import { columns } from './columns'
+
 import getVehicles from '@/services/get-vehicles'
+import { Toaster } from '@/components/ui/sonner'
+import { useEffect, useState } from 'react'
+import { Vehicle } from '@/@types/tables'
 
-async function getData(): Promise<Vehicle[]> {
-  const res = await fetch(
-    'https://65810f263dfdd1b11c425d28.mockapi.io/vehicles',
-  )
-  const data = await res.json()
+export default function DemoPage() {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
 
-  return data
-}
+  useEffect(() => {
+    async function loadVehicles() {
+      try {
+        const vehicleData = await getVehicles()
+        setVehicles(vehicleData)
+      } catch (error) {
+        console.error('Erro ao carregar veículos:', error)
+      }
+    }
 
-export default async function DemoPage() {
-  const data = await getVehicles()
+    loadVehicles()
+  }, [vehicles])
 
   return (
     <>
       <section className="py-12">
+        <Toaster />
+
         <div className="container">
           <h1 className="text-3xl font-bold pb-6">Todos Veiculos</h1>
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={vehicles} />
         </div>
       </section>
     </>

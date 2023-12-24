@@ -1,8 +1,11 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
+import Link from 'next/link'
 
-import { MoreHorizontal } from 'lucide-react'
+import { MoreHorizontal, Trash } from 'lucide-react'
+
+import { Vehicle } from '@/@types/tables'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -11,15 +14,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import Link from 'next/link'
-
-export type Vehicle = {
-  id: string
-  model: string
-  licensePlate: string
-}
+import { deleteVehicleById } from '@/services/delete-vehicle-by-id'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -30,7 +28,6 @@ export const columns: ColumnDef<Vehicle>[] = [
     accessorKey: 'licensePlate',
     header: 'Placa',
   },
-
   {
     id: 'actions',
     cell: ({ row }) => {
@@ -46,7 +43,11 @@ export const columns: ColumnDef<Vehicle>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Link href={`vehicles/${vehicle.id}`}>Ver detalhes</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
+              className="cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(`
                 Modelo: ${vehicle.model}
@@ -57,8 +58,14 @@ export const columns: ColumnDef<Vehicle>[] = [
               Copiar informações
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`vehicles/${vehicle.id}`}>Ver detalhes</Link>
+            <DropdownMenuItem
+              className="text-red-600 cursor-pointer"
+              onClick={() => deleteVehicleById(vehicle.id)}
+            >
+              Delete
+              <DropdownMenuShortcut>
+                <Trash size={16} />
+              </DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
