@@ -1,4 +1,4 @@
-import { Vehicle } from '@/@types/tables'
+import { Vehicle } from '@/@types/vehicle-table'
 
 export default async function getVehicles(): Promise<Vehicle[]> {
   const res = await fetch('http://localhost:3000/api/vehicles', {

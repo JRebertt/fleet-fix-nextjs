@@ -5,8 +5,6 @@ import Link from 'next/link'
 
 import { MoreHorizontal, Trash } from 'lucide-react'
 
-import { Vehicle } from '@/@types/tables'
-
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -17,7 +15,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { deleteVehicleById } from '@/services/delete-vehicle-by-id'
+import { Vehicle } from '@/@types/vehicle-table'
+import { deleteVehicleById } from '@/services/vehicle/delete-vehicle-by-id'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {

@@ -1,6 +1,5 @@
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '@/db/firebase/config'
-import { revalidateTag } from 'next/cache'
 
 export async function POST(request: Request) {
   try {
@@ -8,6 +7,7 @@ export async function POST(request: Request) {
     const { id } = vehicle
     const docRef = doc(db, 'vehicles', id)
     await setDoc(docRef, vehicle)
+
     return new Response(
       JSON.stringify({
         message: 'Veiculo adicionado com sucesso',

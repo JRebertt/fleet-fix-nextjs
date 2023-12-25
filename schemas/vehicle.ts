@@ -1,12 +1,14 @@
 import * as z from 'zod'
-export const vehicleFormSchema = z.object({
+
+export const vehicleSchema = z.object({
   id: z.string().uuid(),
   model: z
     .string()
     .toUpperCase()
     .min(4, 'Mínimo 4 caracteres')
     .max(20, 'Máximo 20 caracteres'), // Modelo do veículo
-  company: z.enum(['Norte Gases', 'SMTransportes', 'Particular']),
+  // company: z.enum(['Norte Gases', 'SMTransportes', 'Particular']),
+  company: z.string(),
   licensePlate: z
     .string()
     .toUpperCase()
@@ -35,6 +37,6 @@ export const vehicleFormSchema = z.object({
   driver: z.string(), // ID do motorista associado ao veículo
   vehicleStatus: z.enum(['Em Viagem', 'Em Manutenção', 'Revisado']), // Status atual do veículo
   currentMileage: z.string(), // Quilometragem atual do veículo
-  createdAt: z.date(), // Data de criação do cadastro
-  updatedAt: z.date(), // Data de atualização do cadastro
+  createdAt: z.string(), // Data de criação do cadastro
+  updatedAt: z.string(), // Data de atualização do cadastro
 })
