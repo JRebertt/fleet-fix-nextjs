@@ -62,8 +62,8 @@ export default function VehicleForm() {
       photos: [],
       company: '',
       vehicleStatus: 'Em Viagem',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   })
 
