@@ -22,55 +22,55 @@ import {
 
 import { Input } from './ui/input'
 
-import { vehicleFormSchema } from '@/schemas/vehicle'
-import { toast } from './ui/use-toast'
-import { Button } from './ui/button'
+import { vehicleSchema } from '@/schemas/vehicle'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import createNewVehicle from '@/services/vehicle/create-new-vehicle'
 
-type VehicleFormValues = z.infer<typeof vehicleFormSchema>
+type VehicleFormValues = z.infer<typeof vehicleSchema>
 
 const fakeDatas = [
-  { driveName: 'Alex', value: '376decef-6031-41a4-a555-b9464e230fea' },
-  { driveName: 'Maria', value: '4f7f8817-eb9b-4ced-9454-a4dcc3133f32' },
-  { driveName: 'John', value: '5fac34a4-f158-4189-8bd2-2447877f2f1b' },
-  { driveName: 'Sophia', value: '48aa7c01-87a1-4ef0-ad60-2172e70547c9' },
-  { driveName: 'Lucas', value: 'c6849f1d-1ba9-4fb2-821c-226c38113d9f' },
-  { driveName: 'Emma', value: ' 8e9aa0e5-461d-4442-808f-55eeed6de7f9' },
-  { driveName: 'Daniel', value: '8b540ae7-80bb-440e-8258-f1bfb940cdc4' },
-  { driveName: 'Isabella', value: '44a3c865-d7a0-4937-8d40-f92de13be118' },
-  { driveName: 'David', value: ' 28d5f66a-313f-4d16-8641-7a7592c560cc' },
-  { driveName: 'Olivia', value: 'eab99276-6543-48da-84a0-c5dc59bfb8c1' },
+  { driveName: 'João Silva', value: '1' },
+  { driveName: 'Maria Fernandes', value: '2' },
+  { driveName: 'Carlos Souza', value: '3' },
+  { driveName: 'Ana Pereira', value: '4' },
+  { driveName: 'Pedro Santos', value: '5' },
+]
+
+const companies = [
+  { name: 'Norte Gases', value: 'norte-gases' },
+  { name: 'SMTransportes', value: 'sm-transportes' },
+  { name: 'Particular', value: 'particular' },
 ]
 
 export default function VehicleForm() {
   const uuid = crypto.randomUUID()
 
   const form = useForm<VehicleFormValues>({
-    resolver: zodResolver(vehicleFormSchema),
+    resolver: zodResolver(vehicleSchema),
     defaultValues: {
       id: uuid,
       model: '',
       licensePlate: '',
       chassisNumber: '',
       renavamNumber: '',
-      photos: [],
       crlveNumber: '',
+      currentMileage: '',
+      year: '',
       driver: '',
+      purchaseDate: '',
+      photos: [],
+      company: '',
       vehicleStatus: 'Em Viagem',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   })
 
-  function onSubmit(values: VehicleFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    })
-    console.log(values)
+  async function onSubmit(values: VehicleFormValues) {
+    toast('Veículo adicionado com sucesso!✅ ')
+    form.reset()
+    createNewVehicle(values)
   }
 
   return (
@@ -109,6 +109,7 @@ export default function VehicleForm() {
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -123,14 +124,13 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
-                    min={10}
-                    max={12}
                     id="crlveNumber"
                     placeholder="Número do CRLVe"
                     {...field}
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -143,20 +143,20 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
-                    min={9}
-                    max={11}
+                    type="number"
                     id="renavamNumber"
                     placeholder="RENAVAM"
                     {...field}
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4 items-center">
           <FormField
             control={form.control}
             name="purchaseDate"
@@ -164,6 +164,7 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
+                    type="number"
                     placeholder="Data da compra"
                     {...field}
                     className="px-3 py-2"
@@ -172,7 +173,65 @@ export default function VehicleForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        {field.value
+                          ? companies.find((data) => data.value === field.value)
+                              ?.name
+                          : 'Empresa'}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Buscar Empresa..." />
+                      <CommandEmpty>Nenhuma Empresa Encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {companies.map((data) => (
+                          <CommandItem
+                            value={data.name}
+                            key={data.value}
+                            onSelect={() => {
+                              form.setValue('company', data.value)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                data.value === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0',
+                              )}
+                            />
+                            {data.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
+        <div className="grid md:grid-cols-2 gap-4">
           {/* Campo Ano */}
           <FormField
             control={form.control}
@@ -189,30 +248,10 @@ export default function VehicleForm() {
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Número do Chassi */}
-          <FormField
-            control={form.control}
-            name="chassisNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    id="chassisNumber"
-                    placeholder="Chassi"
-                    {...field}
-                    className="px-3 py-2"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
           {/* Campo Motorista */}
           <FormField
             control={form.control}
@@ -226,15 +265,14 @@ export default function VehicleForm() {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          'w-[200px] justify-between',
+                          'w-full justify-between',
                           !field.value && 'text-muted-foreground',
                         )}
                       >
                         {field.value
-                          ? fakeDatas.find(
-                              (fakeData) => fakeData.value === field.value,
-                            )?.driveName
-                          : 'Selecione um Motorista'}
+                          ? fakeDatas.find((data) => data.value === field.value)
+                              ?.driveName
+                          : 'Motorista'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -244,23 +282,23 @@ export default function VehicleForm() {
                       <CommandInput placeholder="Buscar Motorista..." />
                       <CommandEmpty>Nenhum Motorista Encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {fakeDatas.map((fakeData) => (
+                        {fakeDatas.map((data) => (
                           <CommandItem
-                            value={fakeData.driveName}
-                            key={fakeData.value}
+                            value={data.driveName}
+                            key={data.value}
                             onSelect={() => {
-                              form.setValue('driver', fakeData.value)
+                              form.setValue('driver', data.value)
                             }}
                           >
                             <Check
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                fakeData.value === field.value
+                                data.value === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0',
                               )}
                             />
-                            {fakeData.driveName}
+                            {data.driveName}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -287,6 +325,24 @@ export default function VehicleForm() {
                   className="px-3 py-2"
                 />
               </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="chassisNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  id="chassisNumber"
+                  placeholder="Chassi"
+                  {...field}
+                  className="px-3 py-2"
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

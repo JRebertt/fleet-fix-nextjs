@@ -33,7 +33,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -41,16 +40,23 @@ import {
 
 import { Button } from './ui/button'
 import { Input } from '@/components/ui/input'
-import VehicleForm from './vehicle-form'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  formComponent: React.ReactNode
+  dialogTitle?: string
+  dialogDescription?: string
+  buttonText?: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  dialogTitle = 'Adicionar Novo Item', // Valor padrão para dialogTitle
+  dialogDescription = 'Preencha as informações abaixo.',
+  buttonText = 'Novo Item',
+  formComponent,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -81,19 +87,14 @@ export function DataTable<TData, TValue>({
         />
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Novo Veículo</Button>
+            <Button variant="outline">{buttonText}</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Adicionar Novo Veículo</DialogTitle>
-              <DialogDescription>
-                Preencha as informações abaixo para adicionar um novo veículo ao
-                sistema. Clique em salvar ao concluir.
-              </DialogDescription>
+              <DialogTitle>{dialogTitle}</DialogTitle>
+              <DialogDescription>{dialogDescription}</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <VehicleForm />
-            </div>
+            <div className="grid gap-4 py-4">{formComponent}</div>
           </DialogContent>
         </Dialog>
       </div>
@@ -140,7 +141,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Sem Resultado.
                 </TableCell>
               </TableRow>
             )}

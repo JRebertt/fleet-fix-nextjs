@@ -1,25 +1,45 @@
+'use client'
 import { DataTable } from '@/components/data-table'
-import { Vehicle, columns } from './columns'
-import getVehicles from '@/services/get-vehicles'
+import { columns } from './columns'
 
-async function getData(): Promise<Vehicle[]> {
-  const res = await fetch(
-    'https://65810f263dfdd1b11c425d28.mockapi.io/vehicles',
-  )
-  const data = await res.json()
+import { Toaster } from '@/components/ui/sonner'
+import { useEffect, useState } from 'react'
+import VehicleForm from '@/components/vehicle-form'
+import { Vehicle } from '@/@types/vehicle-table'
+import getVehicles from '@/services/vehicle/get-vehicles'
 
-  return data
-}
+export default function DemoPage() {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
 
-export default async function DemoPage() {
-  const data = await getVehicles()
+  useEffect(() => {
+    async function loadVehicles() {
+      try {
+        const vehicleData = await getVehicles()
+        setVehicles(vehicleData)
+      } catch (error) {
+        console.error('Erro ao carregar veículos:', error)
+      }
+    }
+
+    loadVehicles()
+  }, [vehicles])
 
   return (
     <>
       <section className="py-12">
+        <Toaster />
+
         <div className="container">
           <h1 className="text-3xl font-bold pb-6">Todos Veiculos</h1>
-          <DataTable columns={columns} data={data} />
+          <DataTable
+            columns={columns}
+            data={vehicles}
+            formComponent={<VehicleForm />}
+            dialogTitle="Adicionar Novo Veículo"
+            dialogDescription="Preencha as informações abaixo para adicionar um novo veículo ao
+            sistema. Clique em salvar ao concluir."
+            buttonText="Novo Veículo"
+          />
         </div>
       </section>
     </>
