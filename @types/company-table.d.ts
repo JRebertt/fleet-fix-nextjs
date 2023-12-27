@@ -9,7 +9,7 @@ export interface Company {
   cnpj: string
   address: {
     street: string
-    number: string
+    number: number
     complement?: string
     neighborhood: string
     city: string
