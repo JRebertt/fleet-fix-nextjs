@@ -37,6 +37,6 @@ export const vehicleSchema = z.object({
   driver: z.string(), // ID do motorista associado ao veículo
   vehicleStatus: z.enum(['Em Viagem', 'Em Manutenção', 'Revisado']), // Status atual do veículo
   currentMileage: z.string(), // Quilometragem atual do veículo
-  createdAt: z.string(), // Data de criação do cadastro
-  updatedAt: z.string(), // Data de atualização do cadastro
+  createdAt: z.string().optional(), // Data de criação do cadastro
+  updatedAt: z.string().optional(), // Data de atualização do cadastro
 })

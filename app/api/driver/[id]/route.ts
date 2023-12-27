@@ -35,7 +35,6 @@ export async function GET(
     const driverDataValidated = driverSchema.safeParse(driverData)
 
     if (!driverDataValidated.success) {
-      // Log de erro pode ser mais detalhado internamente
       return new Response(
         JSON.stringify({ error: 'Falha na validação dos dados do Motorista' }),
         {

@@ -1,8 +1,7 @@
 import { cn } from '@/lib/utils'
 import { MobileSidebar } from '@/components/layout/mobile-sidebar'
 import Link from 'next/link'
-import { Boxes } from 'lucide-react'
-import { ModeToggle } from '../mode-toggle'
+import { CarFront } from 'lucide-react'
 // import { UserNav } from '@/components/layout/user-nav'
 // import { signIn, useSession } from 'next-auth/react'
 // import { Button } from '@/components/ui/button'
@@ -16,8 +15,8 @@ export default function Header() {
           href={'/'}
           className="hidden items-center justify-between gap-2 md:flex"
         >
-          <Boxes className="h-6 w-6" />
-          <h1 className="text-lg font-semibold">T3 app template</h1>
+          <CarFront className="h-6 w-6" />
+          <h1 className="text-lg font-semibold">Fleet Fix</h1>
         </Link>
         <div className={cn('block md:!hidden')}>
           <MobileSidebar />
