@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from './vehicles/head'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Layout } from '@/components/layout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,7 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Layout>{children}</Layout>
         </ThemeProvider>
       </body>
     </html>

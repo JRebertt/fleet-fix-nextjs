@@ -12,7 +12,7 @@ export default function CompanyPage() {
       cnpj: '12.345.678/0001-90',
       address: {
         street: 'Example Street',
-        number: '1000',
+        number: 1000,
         complement: 'Suite 5A',
         neighborhood: 'Business District',
         city: 'Example City',
