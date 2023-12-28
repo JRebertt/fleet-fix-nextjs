@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 import { db } from '@/db/firebase/config'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 
-export async function GET(response: Response) {
+export async function GET() {
   try {
     const querySnapshot = await getDocs(collection(db, 'workOrders'))
     const workOrders = querySnapshot.docs.map((doc) => ({
