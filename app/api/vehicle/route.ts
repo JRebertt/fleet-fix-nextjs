@@ -17,11 +17,10 @@ export async function POST(request: Request) {
     const parseResult = vehicleSchema.safeParse(updatedVehicle)
 
     if (!parseResult.success) {
-      console.log(parseResult.error.format())
       return new Response(
         JSON.stringify({
           error: 'Dados inválidos',
-          details: parseResult.error,
+          details: parseResult.error.format(),
         }),
         {
           status: 400,
