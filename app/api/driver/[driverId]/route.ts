@@ -1,17 +1,16 @@
 import { db } from '@/db/firebase/config'
-import { vehicleSchema } from '@/schemas/vehicle'
+import { driverSchema } from '@/schemas/driver'
 import { deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: { driverId: string } },
 ) {
   try {
-    const id = params.id
-    console.log(id)
+    const id = params.driverId
     if (!id) {
       return new Response(
-        JSON.stringify({ error: 'ID do veículo não fornecido' }),
+        JSON.stringify({ error: 'ID do Motorista não fornecido' }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
@@ -19,12 +18,12 @@ export async function GET(
       )
     }
 
-    const docRef = doc(db, 'vehicles', id)
+    const docRef = doc(db, 'drivers', id)
     const docSnap = await getDoc(docRef)
 
     if (!docSnap.exists()) {
       return new Response(
-        JSON.stringify({ error: `Veículo com ID ${id} não encontrado` }),
+        JSON.stringify({ error: `Motorista com ID ${id} não encontrado` }),
         {
           status: 404,
           headers: { 'Content-Type': 'application/json' },
@@ -32,13 +31,12 @@ export async function GET(
       )
     }
 
-    const vehicleData = docSnap.data()
-    const vehicleDataValidated = vehicleSchema.safeParse(vehicleData)
+    const driverData = docSnap.data()
+    const driverDataValidated = driverSchema.safeParse(driverData)
 
-    if (!vehicleDataValidated.success) {
-      // Log de erro pode ser mais detalhado internamente
+    if (!driverDataValidated.success) {
       return new Response(
-        JSON.stringify({ error: 'Falha na validação dos dados do veículo' }),
+        JSON.stringify({ error: 'Falha na validação dos dados do Motorista' }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
@@ -46,14 +44,14 @@ export async function GET(
       )
     }
 
-    return new Response(JSON.stringify({ data: vehicleDataValidated.data }), {
+    return new Response(JSON.stringify({ data: driverDataValidated.data }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (e) {
     // Log interno do erro
     return new Response(
-      JSON.stringify({ error: 'Erro interno ao buscar veículo' }),
+      JSON.stringify({ error: 'Erro interno ao buscar Motorista' }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
@@ -64,19 +62,19 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: { driverId: string } },
 ) {
   try {
-    const id = params.id
+    const id = params.driverId
 
     if (!id) {
       throw new Error('ID do documento não fornecido')
     }
 
-    const docRef = doc(db, 'vehicles', id)
+    const docRef = doc(db, 'drivers', id)
     await deleteDoc(docRef)
     return new Response(
-      JSON.stringify({ message: 'Veiculo deletado com sucesso' }),
+      JSON.stringify({ message: 'Motorista deletado com sucesso' }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -84,7 +82,7 @@ export async function DELETE(
     )
   } catch (e) {
     return new Response(
-      JSON.stringify({ error: 'Erro ao deletar Veiculo', details: e }),
+      JSON.stringify({ error: 'Erro ao deletar Motorista', details: e }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
@@ -95,10 +93,10 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: { driverId: string } },
 ) {
   try {
-    const id = params.id
+    const id = params.driverId
     if (!id) {
       throw new Error('ID do documento não fornecido')
     }
@@ -109,30 +107,15 @@ export async function PUT(
       updatedAt: new Date().toISOString(),
     }
 
-    console.log()
-
     if (!body) {
       throw new Error('Dados para atualização não fornecidos')
     }
 
-    const vehicleUpdateSchema = vehicleSchema.partial()
-
-    const validationResult = vehicleUpdateSchema.safeParse(updateData)
-
-    if (validationResult.success === false) {
-      return new Response(
-        JSON.stringify({ message: validationResult.error.format() }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
-    }
-    const docRef = doc(db, 'vehicles', id)
+    const docRef = doc(db, 'drivers', id)
     await updateDoc(docRef, updateData)
 
     return new Response(
-      JSON.stringify({ message: 'Veiculo atualizada com sucesso' }),
+      JSON.stringify({ message: 'Motorista atualizada com sucesso' }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -140,7 +123,7 @@ export async function PUT(
     )
   } catch (e) {
     return new Response(
-      JSON.stringify({ error: 'Erro ao atualizar Veiculo', details: e }),
+      JSON.stringify({ error: 'Erro ao atualizar', details: e }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },

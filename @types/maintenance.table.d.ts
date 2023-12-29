@@ -28,7 +28,7 @@ export interface Attachment {
 export interface MaintenanceHistory {
   vehicleId: string // ID do veículo relacionado
   maintenanceDate: string // Data da manutenção
-  description: string // Descrição da manutenção
+  description?: string // Descrição da manutenção
   serviceCost: number // Custo do serviço
   mileageAtMaintenance: number // Quilometragem no momento da manutenção
   serviceOrderId?: string // ID da ordem de serviço relacionada (opcional)
