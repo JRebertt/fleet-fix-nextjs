@@ -1,5 +1,4 @@
 export interface Driver {
-  id: string // Identificador único para cada motorista
   nickname: string // Apelido do motorista
   fullName: string // Nome completo do motorista
   dateOfBirth: string // Data de nascimento do motorista

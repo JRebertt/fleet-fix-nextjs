@@ -1,5 +1,8 @@
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/db/firebase/config'
+import { Driver } from '@/@types/driver-table'
+import { randomUUID } from 'crypto'
+import { driverSchema } from '@/schemas/driver'
 
 export async function GET() {
   try {
@@ -30,15 +33,34 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const driver = await request.json()
-    const { id } = driver
-    const docRef = doc(db, 'drivers', id)
+    const driver: Driver = await request.json()
+    const uuid = randomUUID()
+    const newDriver = {
+      id: uuid,
+      ...driver,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    const validationResult = driverSchema.safeParse(newDriver)
+
+    if (!validationResult.success) {
+      return new Response(
+        JSON.stringify({
+          message: 'Error ao Validadar dados',
+          data: validationResult.error.format(),
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      )
+    }
+
+    const docRef = doc(db, 'drivers', uuid)
     await setDoc(docRef, driver)
 
     return new Response(
       JSON.stringify({
         message: 'Motorista adicionado com sucesso',
-        id,
+        data: validationResult.data,
       }),
       {
         status: 201,

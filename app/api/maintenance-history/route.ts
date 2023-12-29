@@ -27,12 +27,15 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   try {
     const historyData: MaintenanceHistory = await request.json()
+    const { id: vehicleID } = params
     const uuid = randomUUID()
 
-    // Aqui, assumimos que o objeto recebido na requisição já está no formato esperado para MaintenanceHistory
     const newHistory = {
       id: uuid,
       ...historyData,
@@ -51,6 +54,8 @@ export async function POST(request: Request) {
         { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
+
+    console.log(JSON.stringify(validationResult))
 
     const newHistoryRef = doc(collection(db, 'maintenanceHistory'), uuid)
     await setDoc(newHistoryRef, validationResult.data)
