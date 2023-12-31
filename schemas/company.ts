@@ -1,13 +1,13 @@
 import * as z from 'zod'
 
 const SocialMediaSchema = z.object({
-  name: z.string(),
-  url: z.string(),
+  name: z.string().optional(),
+  url: z.string().optional(),
 })
 
 const AddressSchema = z.object({
   street: z.string(),
-  number: z.number(),
+  number: z.string(),
   complement: z.string().optional(),
   neighborhood: z.string(),
   city: z.string(),
@@ -16,11 +16,11 @@ const AddressSchema = z.object({
 })
 
 export const CompanySchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   name: z.string(),
   cnpj: z.string(),
   address: AddressSchema,
-  socialMedia: z.array(SocialMediaSchema),
+  socialMedia: z.array(SocialMediaSchema).optional(),
   contactPhone: z.string(),
   billingEmail: z.string().optional(),
   logisticsEmail: z.string(),
@@ -31,6 +31,6 @@ export const CompanySchema = z.object({
     name: z.string(),
     contact: z.string(),
   }),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 })

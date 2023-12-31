@@ -9,5 +9,5 @@ export async function deleteVehicleById(id: string) {
     throw new Error('Falha ao deletar o veículo')
   }
 
-  return toast('')
+  return toast('O item foi deletado')
 }

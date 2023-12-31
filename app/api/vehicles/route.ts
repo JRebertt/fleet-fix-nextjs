@@ -8,7 +8,6 @@ export async function GET() {
       id: doc.id,
       ...doc.data(),
     }))
-    console.log(vehicles)
     return new Response(JSON.stringify(vehicles), {
       status: 200,
       headers: {

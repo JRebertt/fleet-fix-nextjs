@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Company } from '@/@types/company-table'
+import deleteCompanyById from '@/services/companies/dele-company-by-id'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -65,7 +66,7 @@ export const columns: ColumnDef<Company>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => console.log('Deletado')}
+              onClick={() => deleteCompanyById(company.id)}
             >
               Delete
               <DropdownMenuShortcut>
