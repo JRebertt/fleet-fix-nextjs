@@ -44,12 +44,10 @@ const companies = [
 ]
 
 export default function VehicleForm() {
-  const uuid = crypto.randomUUID()
-
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      id: uuid,
+      id: '',
       model: '',
       licensePlate: '',
       chassisNumber: '',

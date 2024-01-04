@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem } from './ui/form'
 import { Input } from './ui/input'
-import createNewComapny from '@/services/companies/create-new-company'
+import createNewComapny from '@/services/company/create-new-company'
 import { Button } from './ui/button'
 
 type CompaniesFormValues = z.infer<typeof CompanySchema>

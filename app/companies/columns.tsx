@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Company } from '@/@types/company-table'
-import deleteCompanyById from '@/services/companies/dele-company-by-id'
+import deleteCompanyById from '@/services/company/dele-company-by-id'
 
 export const columns: ColumnDef<Company>[] = [
   {

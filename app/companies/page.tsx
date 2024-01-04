@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { columns } from './columns'
 import { Company } from '@/@types/company-table'
 import CompanyForm from '@/components/company-form'
-import getCompanies from '@/services/companies/get-companies'
+import getCompanies from '@/services/company/get-companies'
 import { useEffect, useState } from 'react'
 
 export default function CompanyPage() {
