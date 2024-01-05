@@ -16,7 +16,6 @@ const AddressSchema = z.object({
 })
 
 export const CompanySchema = z.object({
-  id: z.string().uuid(),
   name: z.string(),
   cnpj: z.string(),
   address: AddressSchema,

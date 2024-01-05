@@ -1,3 +1,5 @@
+'use client'
+
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -47,7 +49,6 @@ export default function VehicleForm() {
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      id: '',
       model: '',
       licensePlate: '',
       chassisNumber: '',
@@ -66,7 +67,7 @@ export default function VehicleForm() {
   async function onSubmit(values: VehicleFormValues) {
     toast('Veículo adicionado com sucesso!✅ ')
     form.reset()
-    createNewVehicle(values)
+    await createNewVehicle(values)
   }
 
   return (

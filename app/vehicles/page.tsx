@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 import { DataTable } from '@/components/data-table'
 import { columns } from './columns'
@@ -9,21 +9,23 @@ import VehicleForm from '@/components/vehicle-form'
 import { Vehicle } from '@/@types/vehicle-table'
 import getVehicles from '@/services/vehicle/get-vehicles'
 
-export default function DemoPage() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+export default async function DemoPage() {
+  // const [vehicles, setVehicles] = useState<Vehicle[]>([])
 
-  useEffect(() => {
-    async function loadVehicles() {
-      try {
-        const vehicleData = await getVehicles()
-        setVehicles(vehicleData)
-      } catch (error) {
-        console.error('Erro ao carregar veículos:', error)
-      }
-    }
+  // useEffect(() => {
+  //   async function loadVehicles() {
+  //     try {
+  //       const vehicleData = await getVehicles()
+  //       setVehicles(vehicleData)
+  //     } catch (error) {
+  //       console.error('Erro ao carregar veículos:', error)
+  //     }
+  //   }
 
-    loadVehicles()
-  }, [vehicles])
+  //   loadVehicles()
+  // }, [vehicles])
+
+  const vehicles = await getVehicles()
 
   return (
     <>

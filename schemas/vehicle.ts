@@ -1,7 +1,6 @@
 import * as z from 'zod'
 
 export const vehicleSchema = z.object({
-  id: z.string().uuid(),
   model: z
     .string()
     .toUpperCase()

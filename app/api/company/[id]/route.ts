@@ -11,7 +11,7 @@ export async function GET(
       throw new Error('ID do documento não fornecido')
     }
 
-    const docRef = doc(db, 'company', id)
+    const docRef = doc(db, 'companies', id)
     const docSnap = await getDoc(docRef)
 
     if (!docSnap.exists()) {
@@ -54,7 +54,7 @@ export async function PUT(
       throw new Error('Dados para atualização não fornecidos')
     }
 
-    const docRef = doc(db, 'company', id)
+    const docRef = doc(db, 'companies', id)
     await updateDoc(docRef, body) // Atualiza o documento com os novos dados
 
     return new Response(
@@ -86,7 +86,7 @@ export async function DELETE(
       throw new Error('ID do documento não fornecido')
     }
 
-    const docRef = doc(db, 'company', id)
+    const docRef = doc(db, 'companies', id)
     await deleteDoc(docRef)
     return new Response(
       JSON.stringify({ message: 'Empresa deletado com sucesso' }),

@@ -14,39 +14,17 @@ export default function CompanyForm() {
   const form = useForm<CompaniesFormValues>({
     resolver: zodResolver(CompanySchema),
     defaultValues: {
-      name: 'Tech Solutions Ltda.',
-      cnpj: '12.345.678/0001-90',
-      address: {
-        street: 'Av. Paulista',
-        number: '1000',
-        complement: '10º andar',
-        neighborhood: 'Bela Vista',
-        city: 'São Paulo',
-        state: 'SP',
-        zipCode: '01310-100',
-      },
-      socialMedia: [
-        {
-          name: 'Facebook',
-          url: 'https://www.facebook.com/techsolutions',
-        },
-        {
-          name: 'LinkedIn',
-          url: 'https://www.linkedin.com/company/techsolutions',
-        },
-      ],
-      contactPhone: '(11) 4002-8922',
-      billingEmail: 'faturamento@techsolutions.com.br',
-      logisticsEmail: 'logistica@techsolutions.com.br',
-      corporateEmail: 'corporativo@techsolutions.com.br',
-      financialEmail: 'financeiro@techsolutions.com.br',
-      stateRegistration: '123456789',
-      responsiblePersonName: {
-        contact: '(11) 4002-8923',
-        name: 'Carlos Silva',
-      },
-      createdAt: '2021-01-01',
-      updatedAt: '2023-01-01',
+      name: '',
+      cnpj: '',
+      address: {},
+      socialMedia: [],
+      contactPhone: '',
+      billingEmail: '',
+      logisticsEmail: '',
+      corporateEmail: '',
+      financialEmail: '',
+      stateRegistration: '',
+      responsiblePersonName: {},
     },
   })
 
@@ -61,12 +39,10 @@ export default function CompanyForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 p-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
         <div className="grid md:grid-cols-2 gap-4">
           <div className="col-span-2">
-            <h3 className="text-lg font-bold leading-6 text-gray-900">
-              Dados Empresariais
-            </h3>
+            <h3 className="text-lg font-bold leading-6">Dados Empresariais</h3>
           </div>
           <FormField
             control={form.control}
@@ -202,9 +178,7 @@ export default function CompanyForm() {
         {/* Pessoa Responsável e Redes Sociais */}
         <div className="grid md:grid-cols-2 gap-4">
           <div className="col-span-2">
-            <h3 className="text-lg font-bold leading-6 text-gray-900">
-              Responsável
-            </h3>
+            <h3 className="text-lg font-bold leading-6">Responsável</h3>
           </div>
           <FormField
             control={form.control}
@@ -245,9 +219,7 @@ export default function CompanyForm() {
         {/* Endereço */}
         <div className="">
           <div className="col-span-2 pt-2">
-            <h3 className="text-lg font-bold leading-6 text-gray-900 pb-4">
-              Endereço
-            </h3>
+            <h3 className="text-lg font-bold leading-6 pb-4">Endereço</h3>
             <div className="md:col-span-2 pb-4">
               <FormField
                 control={form.control}

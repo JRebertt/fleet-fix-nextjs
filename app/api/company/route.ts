@@ -6,7 +6,7 @@ import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 
 export async function GET() {
   try {
-    const querySnapshot = await getDocs(collection(db, 'company'))
+    const querySnapshot = await getDocs(collection(db, 'companies'))
     const company = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const docRef = doc(db, 'company', uuid)
+    const docRef = doc(db, 'companies', uuid)
     await setDoc(docRef, newCompany)
 
     return new Response(
