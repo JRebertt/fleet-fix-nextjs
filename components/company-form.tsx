@@ -14,30 +14,39 @@ export default function CompanyForm() {
   const form = useForm<CompaniesFormValues>({
     resolver: zodResolver(CompanySchema),
     defaultValues: {
-      name: '',
-      cnpj: '',
+      name: 'Tech Solutions Ltda.',
+      cnpj: '12.345.678/0001-90',
       address: {
-        street: '',
-        number: '',
-        complement: '',
-        neighborhood: '',
-        city: '',
-        state: '',
-        zipCode: '',
+        street: 'Av. Paulista',
+        number: '1000',
+        complement: '10º andar',
+        neighborhood: 'Bela Vista',
+        city: 'São Paulo',
+        state: 'SP',
+        zipCode: '01310-100',
       },
       socialMedia: [
         {
-          name: '',
-          url: '',
+          name: 'Facebook',
+          url: 'https://www.facebook.com/techsolutions',
+        },
+        {
+          name: 'LinkedIn',
+          url: 'https://www.linkedin.com/company/techsolutions',
         },
       ],
-      contactPhone: '',
-      billingEmail: '',
-      logisticsEmail: '',
-      corporateEmail: '',
-      financialEmail: '',
-      stateRegistration: '',
-      responsiblePersonName: {},
+      contactPhone: '(11) 4002-8922',
+      billingEmail: 'faturamento@techsolutions.com.br',
+      logisticsEmail: 'logistica@techsolutions.com.br',
+      corporateEmail: 'corporativo@techsolutions.com.br',
+      financialEmail: 'financeiro@techsolutions.com.br',
+      stateRegistration: '123456789',
+      responsiblePersonName: {
+        contact: '(11) 4002-8923',
+        name: 'Carlos Silva',
+      },
+      createdAt: '2021-01-01',
+      updatedAt: '2023-01-01',
     },
   })
 
@@ -45,7 +54,7 @@ export default function CompanyForm() {
     toast('Empresa adicionada com sucesso! ✅')
     form.reset()
 
-    console.log(values, 'criado')
+    console.table(values)
 
     createNewComapny(values)
   }
