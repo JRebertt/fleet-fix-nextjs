@@ -4,9 +4,7 @@ import { DataTable } from '@/components/data-table'
 import { columns } from './columns'
 
 import { Toaster } from '@/components/ui/sonner'
-import { useEffect, useState } from 'react'
 import VehicleForm from '@/components/vehicle-form'
-import { Vehicle } from '@/@types/vehicle-table'
 import getVehicles from '@/services/vehicle/get-vehicles'
 
 export default async function DemoPage() {

@@ -44,10 +44,11 @@ import { Input } from '@/components/ui/input'
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  formComponent: React.ReactNode
+  formComponent?: React.ReactNode
   dialogTitle?: string
   dialogDescription?: string
   buttonText?: string
+  filterColumnName: string
 }
 
 export function DataTable<TData, TValue>({
@@ -57,10 +58,32 @@ export function DataTable<TData, TValue>({
   dialogDescription = 'Preencha as informações abaixo.',
   buttonText = 'Novo Item',
   formComponent,
+  filterColumnName,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   )
+
+  const renderDialog = () => {
+    return (
+      <div>
+        {formComponent && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">{buttonText}</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogDescription>{dialogDescription}</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">{formComponent}</div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    )
+  }
 
   const table = useReactTable({
     data,
@@ -79,24 +102,18 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4 justify-between">
         <Input
           placeholder="Busque por modelo..."
-          value={(table.getColumn('model')?.getFilterValue() as string) ?? ''}
+          value={
+            (table.getColumn(filterColumnName)?.getFilterValue() as string) ??
+            ''
+          }
           onChange={(event) =>
-            table.getColumn('model')?.setFilterValue(event.target.value)
+            table
+              .getColumn(filterColumnName)
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">{buttonText}</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>{dialogTitle}</DialogTitle>
-              <DialogDescription>{dialogDescription}</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">{formComponent}</div>
-          </DialogContent>
-        </Dialog>
+        {renderDialog()}
       </div>
       <div className="rounded-md border">
         <Table>

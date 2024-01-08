@@ -26,6 +26,7 @@ export interface Attachment {
 }
 
 export interface MaintenanceHistory {
+  id?: string
   vehicleId: string // ID do veículo relacionado
   maintenanceDate: string // Data da manutenção
   description?: string // Descrição da manutenção

@@ -1,6 +1,6 @@
 import { toast } from 'sonner'
 
-export default async function deleteCompanyById(id: string) {
+export default async function deleteCompanyById(id?: string) {
   const res = await fetch(`http://localhost:3000/api/company/${id}`, {
     method: 'DELETE',
   })

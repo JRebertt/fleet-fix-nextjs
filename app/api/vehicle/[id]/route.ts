@@ -8,7 +8,6 @@ export async function GET(
 ) {
   try {
     const id = params.id
-    console.log(id)
     if (!id) {
       return new Response(
         JSON.stringify({ error: 'ID do veículo não fornecido' }),
@@ -46,7 +45,7 @@ export async function GET(
       )
     }
 
-    return new Response(JSON.stringify({ data: vehicleDataValidated.data }), {
+    return new Response(JSON.stringify(vehicleDataValidated.data), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })

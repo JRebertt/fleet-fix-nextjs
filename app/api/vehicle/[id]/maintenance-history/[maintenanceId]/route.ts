@@ -1,6 +1,3 @@
-import { db } from '@/db/firebase/config'
-import { addDoc, collection } from 'firebase/firestore'
-
 export async function GET(
   request: Request,
   { params }: { params: { id: string; maintenanceId: string } },

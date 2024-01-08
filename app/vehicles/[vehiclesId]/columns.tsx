@@ -15,7 +15,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Vehicle } from '@/@types/vehicle-table'
 import {
   Tooltip,
   TooltipContent,
@@ -25,23 +24,24 @@ import {
 import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
+import { MaintenanceHistory } from '@/@types/maintenance.table'
 
-export const columns: ColumnDef<Vehicle>[] = [
+export const columns: ColumnDef<MaintenanceHistory>[] = [
   {
-    accessorKey: 'model',
-    header: 'Modelo',
+    accessorKey: 'description',
+    header: 'Descrição',
   },
   {
-    accessorKey: 'licensePlate',
-    header: 'Placa',
+    accessorKey: 'serviceType',
+    header: 'Tipo',
   },
   {
-    accessorKey: 'updatedAt',
-    header: 'Ultima atualização',
+    accessorKey: 'maintenanceDate',
+    header: 'Manutenção',
     cell: ({ row }) => {
-      const dateString = row.getValue('updatedAt') as string
+      const dateString = row.getValue('maintenanceDate') as string
       const dateObject = new Date(dateString)
-      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy')
       const formattedDate = formatDistanceToNow(dateObject, {
         addSuffix: true,
         locale: ptBR,
@@ -49,7 +49,9 @@ export const columns: ColumnDef<Vehicle>[] = [
       return (
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>{formattedDate}</TooltipTrigger>
+            <TooltipTrigger className="text-center">
+              {formattedDate}
+            </TooltipTrigger>
             <TooltipContent>
               <p>{formattedDateV2}</p>
             </TooltipContent>
@@ -59,9 +61,24 @@ export const columns: ColumnDef<Vehicle>[] = [
     },
   },
   {
+    accessorKey: 'serviceCost',
+    header: 'Custo',
+    cell: ({ row }) => {
+      const amount = parseFloat(row.original.serviceCost.toString())
+
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(amount)
+
+      return <div className="font-medium">{formatted}</div>
+    },
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
-      const vehicle = row.original
+      const maintenanceHistory = row.original
 
       return (
         <DropdownMenu>
@@ -74,23 +91,16 @@ export const columns: ColumnDef<Vehicle>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link href={`vehicles/${vehicle.id}`}>Ver detalhes</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() =>
-                navigator.clipboard.writeText(`
-                Modelo: ${vehicle.model}
-                Placa: ${vehicle.licensePlate}
-                `)
-              }
-            >
-              Copiar informações
+              <Link
+                href={`vehicle/${maintenanceHistory.vehicleId}/maintenance-history/${maintenanceHistory.id}`}
+              >
+                Ver detalhes
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteVehicleById(vehicle.id)}
+              onClick={() => deleteVehicleById(maintenanceHistory.id)}
             >
               Delete
               <DropdownMenuShortcut>

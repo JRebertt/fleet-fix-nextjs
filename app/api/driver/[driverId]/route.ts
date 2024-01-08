@@ -44,7 +44,7 @@ export async function GET(
       )
     }
 
-    return new Response(JSON.stringify({ data: driverDataValidated.data }), {
+    return new Response(JSON.stringify(driverDataValidated.data), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })

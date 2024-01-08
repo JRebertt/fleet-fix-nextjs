@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   try {
     const driver: Driver = await request.json()
     const uuid = randomUUID()
-    const newDriver = {
+    const newDriver: Driver = {
       id: uuid,
       ...driver,
       createdAt: new Date().toISOString(),
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     const docRef = doc(db, 'drivers', uuid)
-    await setDoc(docRef, driver)
+    await setDoc(docRef, newDriver)
 
     return new Response(
       JSON.stringify({
