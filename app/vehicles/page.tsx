@@ -33,6 +33,7 @@ export default async function DemoPage() {
         <div className="container">
           <h1 className="text-3xl font-bold pb-6">Todos Veiculos</h1>
           <DataTable
+            filterColumnName="model"
             columns={columns}
             data={vehicles}
             formComponent={<VehicleForm />}

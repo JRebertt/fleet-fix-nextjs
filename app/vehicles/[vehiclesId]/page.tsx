@@ -1,18 +1,17 @@
 import * as React from 'react'
 
 import { DataTable } from '@/components/data-table'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card as CardShadcnUi } from '@/components/ui/card'
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel'
 import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
 import getMaintenanceHistory from '@/services/vehicle/maintenance-history/get-maintenance-history'
 import { columns } from './columns'
 import { getDriverById } from '@/services/driver/get-driver-by-id'
-import Image from 'next/image'
+
+import CustomProgress from '@/components/customProgress'
+import { Separator } from '@/components/ui/separator'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Image } from '@nextui-org/react'
 
 export default async function VehicleProfile({
   params,
@@ -21,95 +20,173 @@ export default async function VehicleProfile({
 }) {
   const data = await getVehicleById(params.vehiclesId)
   const maintenanceHistory = await getMaintenanceHistory(params.vehiclesId)
-  console.log(data.driver)
   const driverData = await getDriverById(data.driver)
-  console.log(driverData.nickname)
+
+  function calcularPorcentagemAutomatica(
+    kmAtual: number,
+    intervaloTroca: number,
+  ) {
+    const ultimaTroca = kmAtual - (kmAtual % intervaloTroca)
+
+    const kmPercorridos = kmAtual - ultimaTroca
+
+    const porcentagemPercorrida = (kmPercorridos / intervaloTroca) * 100
+
+    return porcentagemPercorrida
+  }
+
+  const kmAtual = 35550
+  const intervaloTroca = 20000
+
+  const porcentagem = calcularPorcentagemAutomatica(kmAtual, intervaloTroca)
+
   return (
     <>
-      <section className="w-full grid grid-rows-2 md:gap-4 p-4 items-center">
-        <section className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 h-auto sm:h-[32rem]">
-          <div className="grid grid-rows-2 gap-6">
-            <div className="grid justify-items-center items-center">
-              <Carousel className="w-full max-w-xs sm:max-w-xl">
-                <CarouselContent>
-                  <CarouselItem>
-                    <div className="">
-                      <div className="h-[20rem] flex justify-center items-center p-4">
-                        {/* <Image
-                          src={'https://picsum.photos/id/1/900/600'}
-                          alt="img"
-                          width={1000}
-                          height={600}
-                          className=""
-                          objectFit="cover"
-                        /> */}
-                      </div>
-                    </div>
-                  </CarouselItem>
-                </CarouselContent>
-              </Carousel>
+      <main className="w-full p-6 flex flex-col gap-6">
+        <section className="flex flex-col sm:flex-row gap-6 justify-between">
+          <CardShadcnUi className="max-w-3xl h-[26rem] w-full flex flex-col items-center sm:flex-row gap-4 p-2">
+            <div className="w-full max-h-[495px]">
+              <Image
+                loading="lazy"
+                width={455}
+                height={495}
+                alt="NextUI hero Image with delay"
+                src="https://app.requestly.io/delay/5000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+              />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full text-center items-center">
-              <Card className="py-4 h-24">
-                <CardHeader className="p-0">KM Atual</CardHeader>
-                <CardContent className="p-0">{data.currentMileage}</CardContent>
-              </Card>
-              <Card className="py-4 h-24">
-                <CardHeader className="p-0">Status</CardHeader>
-                <CardContent className="p-0">{data.vehicleStatus}</CardContent>
-              </Card>
-              <Card className="py-4 h-24">
-                <CardHeader className="p-0">Motorista</CardHeader>
-                <CardContent className="p-0">{driverData.fullName}</CardContent>
-              </Card>
+            <div className="max-w-[16rem] h-full w-full flex flex-row gap-6 justify-between items-center sm:flex-col sm:justify-around">
+              <CustomProgress aria-label="Teste" value={porcentagem} />
+              <CustomProgress
+                aria-label="Teste"
+                value={0}
+                formatOptions={{ style: 'unit', unit: 'kilometer' }}
+              />
             </div>
-          </div>
-          <Card className="w-full min-h-[10rem] sm:max-h-[35.5rem] py-4 px-6 rounded-lg">
-            <ul className="grid grid-cols-2 gap-4">
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Modelo:</span>
-                <span className="text-sm">{data.model}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Placa:</span>
-                <span className="text-sm">{data.licensePlate}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Número do Chassi:</span>
-                <span className="text-sm">{data.chassisNumber}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Ano:</span>
-                <span className="text-sm">{data.year}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Data de Compra:</span>
-                <span className="text-sm">{data.purchaseDate}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">
-                  Número do Renavam:
-                </span>
-                <span className="text-sm">{data.renavamNumber}</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <span className="font-semibold text-lg">Número do CRLVE:</span>
-                <span className="text-sm">{data.crlveNumber}</span>
-              </li>
-            </ul>
-          </Card>
-        </section>
+          </CardShadcnUi>
 
-        <section className="">
-          <div className="col-span-2">
+          <CardShadcnUi className="max-w-xl w-full space-y-4 h-[26rem] flex flex-col max-h-[26rem]">
+            <div className="w-full h-full max-h-56 bg-gray-300"></div>
+            <div className="w-full h-full p-4">
+              <ul className="grid sm:grid-row-1 sm:grid-cols-2 gap-2 justify-items-start sm:justify-items-center items-center text-center">
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">Modelo:</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.model}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">Placa</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.licensePlate}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">Chassi</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.chassisNumber}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">Ano</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.year}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">
+                    Data de Compra
+                  </p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.purchaseDate}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">Renavam</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.renavamNumber}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">
+                    Numero do Crlve
+                  </p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {data.crlveNumber}
+                  </h3>
+                </li>
+                <li className="flex gap-2 max-w-[16rem]">
+                  <p className="text-base text-muted-foreground">KM:</p>
+                  <h3 className="font-semibold text-sm tracking-wider">
+                    {Number(data.currentMileage)}
+                  </h3>
+                </li>
+              </ul>
+            </div>
+          </CardShadcnUi>
+        </section>
+        <section>
+          <ScrollArea className="hidden sm:block whitespace-nowrap rounded-md border">
+            <CardShadcnUi className="w-full h-full max-h-40 max-w-full p-4 grid grid-cols-3">
+              <div className="w-full flex items-center justify-between max-w-[26rem] space-x-4">
+                <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+                <ul className="flex flex-col space-y-1 px-2">
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">Nome:</h2>
+                    <p>{driverData.fullName}</p>
+                  </li>
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">
+                      Apelido:
+                    </h2>
+                    <p>{driverData.nickname}</p>
+                  </li>
+                  <li>
+                    <div className="w-16 h-5 bg-red-300"></div>
+                  </li>
+                </ul>
+                <Separator orientation="vertical" />
+              </div>
+              <div className="w-full flex items-center justify-between px-4 max-w-[24rem]">
+                <ul className="flex flex-col space-y-1 px-2">
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">Contato</h2>
+                    <p>{driverData.contactNumber}</p>
+                  </li>
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">CNH:</h2>
+                    <p>{driverData.driverLicenseNumber}</p>
+                  </li>
+                </ul>
+                <Separator orientation="vertical" />
+              </div>
+              <div className="w-full flex items-center justify-between px-4 max-w-[24rem]">
+                <ul className="flex flex-col space-y-1 px-2">
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">CPF</h2>
+                    <p>{driverData.cpf}</p>
+                  </li>
+                  <li className="flex gap-2">
+                    <h2 className="text-base text-muted-foreground">
+                      Data de Nascimentos:
+                    </h2>
+                    <p>{driverData.dateOfBirth}</p>
+                  </li>
+                </ul>
+              </div>
+            </CardShadcnUi>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </section>
+        <section>
+          <div>
             <DataTable
+              filterColumnName="description"
               columns={columns}
               data={maintenanceHistory}
-              filterColumnName="description"
             />
           </div>
         </section>
-      </section>
+      </main>
     </>
   )
 }

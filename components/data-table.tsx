@@ -54,7 +54,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  dialogTitle = 'Adicionar Novo Item', // Valor padrão para dialogTitle
+  dialogTitle = 'Adicionar Novo Item',
   dialogDescription = 'Preencha as informações abaixo.',
   buttonText = 'Novo Item',
   formComponent,

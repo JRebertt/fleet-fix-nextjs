@@ -6,16 +6,16 @@ export interface StatusChange {
 }
 
 export interface MaintenanceSchedule {
-  id: string // Identificador único do agendamento
+  id?: string // Identificador único do agendamento
   vehicleId: string // ID do veículo para o qual a manutenção está agendada
   scheduledDate: string // Data agendada da manutenção
   description: string // Descrição da manutenção agendada
-  priority?: 'Alta' | 'Média' | 'Baixa' // Prioridade do agendamento (opcional)
+  priority?: 'Alta' | 'Média' | 'Baixa' | 'Normal' // Prioridade do agendamento (opcional)
   contactPerson?: string // Contato responsável pelo veículo (opcional)
   statusChangeHistory?: StatusChange[] // Histórico de alterações de status (opcional)
   status: 'Agendada' | 'Concluída' | 'Cancelada' // Status do agendamento
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 // Estrutura para anexos (fotos, documentos)
