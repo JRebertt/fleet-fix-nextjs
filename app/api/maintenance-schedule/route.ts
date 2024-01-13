@@ -1,8 +1,9 @@
-import { MaintenanceSchedule, StatusChange } from '@/@types/maintenance.table'
+import { StatusChange } from '@/@types/maintenance.table'
 import { db } from '@/db/firebase/config'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import { randomUUID } from 'crypto'
 import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
+import { z } from 'zod'
 
 export async function GET() {
   try {
@@ -37,6 +38,14 @@ export async function GET() {
   }
 }
 
+// Gabiarra para aceitar o scheduleDate como string, pois inicialmente vem como data e depois na funcao passa para string
+
+const ExtendedMaintenanceScheduleSchema = MaintenanceScheduleSchema.extend({
+  scheduledDate: z.string(),
+})
+type ExtendedMaintenanceScheduleSchemaTypes = z.infer<
+  typeof ExtendedMaintenanceScheduleSchema
+>
 export async function POST(request: Request) {
   try {
     const scheduleData = await request.json()
@@ -48,7 +57,7 @@ export async function POST(request: Request) {
       changedAt: new Date().toISOString(),
       reason: 'Criação inicial do agendamento',
     }
-    const newSchedule: MaintenanceSchedule = {
+    const newSchedule: ExtendedMaintenanceScheduleSchemaTypes = {
       id: uuid,
       ...scheduleData,
       statusChangeHistory: [initialStatusChange],
@@ -56,7 +65,8 @@ export async function POST(request: Request) {
       updatedAt: new Date().toISOString(),
     }
 
-    const validationResult = MaintenanceScheduleSchema.safeParse(newSchedule)
+    const validationResult =
+      ExtendedMaintenanceScheduleSchema.safeParse(newSchedule)
 
     if (!validationResult.success) {
       return new Response(

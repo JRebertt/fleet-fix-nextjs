@@ -3,6 +3,8 @@ import { MaintenanceSchedule } from '@/@types/maintenance.table'
 export default async function createNewMaintenanceSchedule(
   maintenanceSchedule: MaintenanceSchedule,
 ): Promise<MaintenanceSchedule> {
+  console.log(maintenanceSchedule.scheduledDate)
+
   const res = await fetch('http://localhost:3000/api/maintenance-schedule', {
     method: 'POST',
 
@@ -14,10 +16,7 @@ export default async function createNewMaintenanceSchedule(
   })
 
   const data = await res.json()
-
-  if (!res.ok) {
-    throw new Error(data.error || 'Erro desconhecido ao adicionar item')
-  }
+  console.log(data)
 
   return data
 }

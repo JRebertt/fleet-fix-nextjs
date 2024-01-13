@@ -75,13 +75,11 @@ export default function VehicleForm() {
     fetchData()
   }, [])
 
-  console.log(drivers)
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 p-4">
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Modelo */}
+          {/* Campo Descrição */}
           <FormField
             control={form.control}
             name="model"

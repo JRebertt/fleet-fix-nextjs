@@ -1,6 +1,17 @@
+'use client'
+
+import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { Vehicle } from '@/@types/vehicle-table'
 import ScheduleForm from '@/components/schedule-form'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -9,11 +20,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import Image from 'next/image'
+import getMaintenanceSchedule from '@/services/maintenance-schedule/get-maintenance-schedule'
+import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
+import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { Toaster } from 'sonner'
 
 export default function Home() {
+  const [schedule, setSchedule] = useState<MaintenanceSchedule[]>([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const scheduleList = await getMaintenanceSchedule()
+      setSchedule(scheduleList)
+    }
+    fetchData()
+  }, [])
+
   return (
     <main className="min-h-screen p-10 space-y-6">
+      <Toaster />
       <header className="flex">
         <Dialog>
           <DialogTrigger asChild>
@@ -33,9 +58,28 @@ export default function Home() {
         </Dialog>
       </header>
       <section className="max-w-6xl grid grid-cols-3 justify-items-center gap-28">
-        {[1, 2, 3].map((num) => (
-          <Card key={num} className="w-80 h-36"></Card>
-        ))}
+        {schedule.map((data, i) => {
+          const dateObject = new Date(data.scheduledDate)
+          const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+          return (
+            <Card
+              key={i++}
+              className="min-h-[10rem] max-h-[16rem] p-4 flex flex-col gap-2 justify-center items-center"
+            >
+              <CardTitle>Agendamento</CardTitle>
+              <CardHeader>{formattedDateV2}</CardHeader>
+              <CardContent>
+                <div>{data.vehicleId}</div>
+                <div>{data.status}</div>
+                <div>{data.priority}</div>
+              </CardContent>
+              <CardDescription>{data.description}</CardDescription>
+              <CardFooter>
+                <Button>Iniciar</Button>
+              </CardFooter>
+            </Card>
+          )
+        })}
       </section>
     </main>
   )
