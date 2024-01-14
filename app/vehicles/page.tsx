@@ -5,20 +5,7 @@ import { columns } from './columns'
 
 import { Toaster } from '@/components/ui/sonner'
 import VehicleForm from '@/components/vehicle-form'
-import { Vehicle } from '@/@types/vehicle-table'
-
-async function getData() {
-  const res = await fetch('http://localhost:3000/api/vehicles')
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
-
-  return res.json()
-}
+import getVehicles from '@/services/vehicle/get-vehicles'
 
 export default async function DemoPage() {
   // const [vehicles, setVehicles] = useState<Vehicle[]>([])
@@ -36,7 +23,8 @@ export default async function DemoPage() {
   //   loadVehicles()
   // }, [vehicles])
 
-  const data = await getData()
+  const vehicles = await getVehicles()
+
   return (
     <>
       <section className="py-12">
@@ -47,7 +35,7 @@ export default async function DemoPage() {
           <DataTable
             filterColumnName="model"
             columns={columns}
-            data={data}
+            data={vehicles}
             formComponent={<VehicleForm />}
             dialogTitle="Adicionar Novo Veículo"
             dialogDescription="Preencha as informações abaixo para adicionar um novo veículo ao
