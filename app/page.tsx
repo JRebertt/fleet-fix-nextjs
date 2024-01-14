@@ -1,7 +1,6 @@
 'use client'
 
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
-import { Vehicle } from '@/@types/vehicle-table'
 import ScheduleForm from '@/components/schedule-form'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +20,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import getMaintenanceSchedule from '@/services/maintenance-schedule/get-maintenance-schedule'
-import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
