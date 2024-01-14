@@ -9,6 +9,8 @@ const envSchema = z.object({
   FIREBASE_APP_ID: z.string(),
   FIREBASE_MEASUREMENT_ID: z.string(),
   BASEURL: z.string(),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
+  PORT: z.coerce.number().default(3333),
 })
 
 const _env = envSchema.safeParse(process.env)

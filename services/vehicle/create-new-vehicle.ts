@@ -4,7 +4,7 @@ import { env } from '@/env/env-validation'
 export default async function createNewVehicle(
   vehicle: Vehicle,
 ): Promise<Vehicle> {
-  const res = await fetch(`${env.BASEURL}:3000/api/vehicle`, {
+  const res = await fetch(`${env.BASEURL}/api/vehicle`, {
     method: 'POST',
 
     next: { revalidate: 0 },
