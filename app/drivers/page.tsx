@@ -15,6 +15,7 @@ export default async function DriverPage() {
         <div className="container">
           <h1 className="text-3xl font-bold pb-6">Motorista</h1>
           <DataTable
+            filterColumnName="name"
             columns={columns}
             data={drivers}
             formComponent={<DriverForm />}
