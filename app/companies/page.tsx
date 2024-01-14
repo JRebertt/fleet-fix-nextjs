@@ -32,6 +32,7 @@ export default function CompanyPage() {
         <div className="container">
           <h1 className="text-3xl font-bold pb-6">Empresas</h1>
           <DataTable
+            filterColumnName="name"
             columns={columns}
             data={companies}
             formComponent={<CompanyForm />}
