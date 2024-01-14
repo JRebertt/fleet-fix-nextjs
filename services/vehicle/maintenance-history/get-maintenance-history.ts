@@ -5,10 +5,7 @@ export default async function getMaintenanceHistory(
 ): Promise<MaintenanceHistory[]> {
   const res = await fetch(
     `http://localhost:3000/api/vehicle/${id}/maintenance-history`,
-    {
-      method: 'GET',
-      next: { revalidate: 1 },
-    },
+    { cache: 'no-store' },
   )
   const data = await res.json()
 
