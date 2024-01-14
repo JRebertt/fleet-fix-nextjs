@@ -6,7 +6,7 @@ export default async function createNewMaintenanceSchedule(
 ): Promise<MaintenanceSchedule> {
   console.log(maintenanceSchedule.scheduledDate)
 
-  const res = await fetch(`${env.BASEURL}/api/maintenance-schedule`, {
+  const res = await fetch(`http://127.0.0.1:3000/api/maintenance-schedule`, {
     method: 'POST',
 
     next: { revalidate: 0 },

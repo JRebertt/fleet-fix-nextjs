@@ -5,7 +5,7 @@ export default async function getMaintenanceHistory(
   id: string,
 ): Promise<MaintenanceHistory[]> {
   const res = await fetch(
-    `${env.BASEURL}/api/vehicle/${id}/maintenance-history`,
+    `http://127.0.0.1:3000/api/vehicle/${id}/maintenance-history`,
     { cache: 'no-store' },
   )
   const data = await res.json()

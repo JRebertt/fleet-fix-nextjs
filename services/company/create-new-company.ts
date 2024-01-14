@@ -4,7 +4,7 @@ import { env } from '@/env/env-validation'
 export default async function createNewComapny(
   company: Company,
 ): Promise<Company> {
-  const res = await fetch(`${env.BASEURL}/api/company`, {
+  const res = await fetch(`http://127.0.0.1:3000/api/company`, {
     method: 'POST',
 
     next: { revalidate: 0 },

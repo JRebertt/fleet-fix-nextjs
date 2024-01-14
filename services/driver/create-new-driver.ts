@@ -2,7 +2,7 @@ import { Driver } from '@/@types/driver-table'
 import { env } from '@/env/env-validation'
 
 export default async function createNewDriver(driver: Driver): Promise<Driver> {
-  const res = await fetch(`${env.BASEURL}/api/driver`, {
+  const res = await fetch(`http://127.0.0.1:3000/api/driver`, {
     method: 'POST',
 
     next: { revalidate: 0 },

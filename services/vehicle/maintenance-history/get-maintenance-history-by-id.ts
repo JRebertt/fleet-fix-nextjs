@@ -6,7 +6,9 @@ export default async function getMaintenanceHistoryById(
   id: string,
 ): Promise<MaintenanceHistory> {
   const res = await fetch(
-    `${env.BASEURL}/api/vehicle/${vehicleId}/maintenance-history/${id}`,
+    `${
+      env.BASEURL + env.PORT
+    }/api/vehicle/${vehicleId}/maintenance-history/${id}`,
     {
       method: 'GET',
       next: { revalidate: 1 },
