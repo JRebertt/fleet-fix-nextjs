@@ -8,7 +8,7 @@ const envSchema = z.object({
   FIREBASE_MESSAGING_SENDER_ID: z.string(),
   FIREBASE_APP_ID: z.string(),
   FIREBASE_MEASUREMENT_ID: z.string(),
-  BASEURL: z.number(),
+  BASEURL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)
