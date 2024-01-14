@@ -1,9 +1,10 @@
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { env } from '@/env/env-validation'
 
 export default async function getMaintenanceSchedule(): Promise<
   MaintenanceSchedule[]
 > {
-  const res = await fetch('http://localhost:3000/api/maintenance-schedule', {
+  const res = await fetch(`${env.BASEURL}:3000/api/maintenance-schedule`, {
     cache: 'no-store',
   })
 

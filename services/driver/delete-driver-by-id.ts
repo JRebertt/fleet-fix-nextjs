@@ -1,7 +1,8 @@
+import { env } from '@/env/env-validation'
 import { toast } from 'sonner'
 
 export async function deleteDriverById(id?: string) {
-  const res = await fetch(`http://localhost:3000/api/driver/${id}`, {
+  const res = await fetch(`${env.BASEURL}:3000/api/driver/${id}`, {
     method: 'DELETE',
   })
 

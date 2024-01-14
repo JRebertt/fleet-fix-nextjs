@@ -1,11 +1,12 @@
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { env } from '@/env/env-validation'
 
 export default async function createNewMaintenanceSchedule(
   maintenanceSchedule: MaintenanceSchedule,
 ): Promise<MaintenanceSchedule> {
   console.log(maintenanceSchedule.scheduledDate)
 
-  const res = await fetch('http://localhost:3000/api/maintenance-schedule', {
+  const res = await fetch(`${env.BASEURL}:3000/api/maintenance-schedule`, {
     method: 'POST',
 
     next: { revalidate: 0 },

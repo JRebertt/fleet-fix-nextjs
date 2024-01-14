@@ -1,10 +1,11 @@
 import { MaintenanceHistory } from '@/@types/maintenance.table'
+import { env } from '@/env/env-validation'
 
 export default async function getMaintenanceHistory(
   id: string,
 ): Promise<MaintenanceHistory[]> {
   const res = await fetch(
-    `http://localhost:3000/api/vehicle/${id}/maintenance-history`,
+    `${env.BASEURL}:3000/api/vehicle/${id}/maintenance-history`,
     { cache: 'no-store' },
   )
   const data = await res.json()
