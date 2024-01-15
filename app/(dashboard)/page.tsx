@@ -26,6 +26,7 @@ async function getMaintenanceSchedule(): Promise<MaintenanceSchedule[]> {
   const response = await api('/maintenance-schedule', {
     method: 'GET',
     cache: 'no-store',
+    next: { revalidate: 0 },
   })
 
   const maintenanceSchedule = await response.json()
