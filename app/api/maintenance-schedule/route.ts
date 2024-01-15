@@ -2,7 +2,7 @@ import { StatusChange } from '@/@types/maintenance.table'
 import { db } from '@/db/firebase/config'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import { randomUUID } from 'crypto'
-import { doc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
+import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { z } from 'zod'
 
 export async function GET() {
