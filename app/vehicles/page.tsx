@@ -7,7 +7,10 @@ import { Vehicle } from '@/@types/vehicle-table'
 import { api } from '@/lib/api-fetch'
 
 async function getListVehicles(): Promise<Vehicle[]> {
-  const response = await api('/vehicles')
+  const response = await api('/vehicles', {
+    method: 'GET',
+    cache: 'no-store',
+  })
 
   const vehicles = await response.json()
   return vehicles
