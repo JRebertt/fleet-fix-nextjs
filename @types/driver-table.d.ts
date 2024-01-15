@@ -1,5 +1,5 @@
 export interface Driver {
-  id: string // Identificador único para cada motorista
+  id?: string
   nickname: string // Apelido do motorista
   fullName: string // Nome completo do motorista
   dateOfBirth: string // Data de nascimento do motorista
@@ -9,6 +9,6 @@ export interface Driver {
   contactNumber: string // Número de contato do motorista
   driverPhoto?: string // URL ou caminho para a foto do motorista
   company: string // Company do motorista
-  createdAt: string // Data da última criação do perfil do motorista
-  updatedAt: string // Data da última atualização do perfil do motorista
+  createdAt?: string // Data da última criação do perfil do motorista
+  updatedAt?: string // Data da última atualização do perfil do motorista
 }

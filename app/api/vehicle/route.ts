@@ -1,13 +1,14 @@
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '@/db/firebase/config'
 import { vehicleSchema } from '@/schemas/vehicle'
+import { randomUUID } from 'crypto'
 
 export async function POST(request: Request) {
   try {
     const vehicle = await request.json()
-    const { id } = vehicle
-
+    const id = randomUUID()
     const updatedVehicle = {
+      id,
       ...vehicle,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -17,11 +18,10 @@ export async function POST(request: Request) {
     const parseResult = vehicleSchema.safeParse(updatedVehicle)
 
     if (!parseResult.success) {
-      console.log(parseResult.error.format())
       return new Response(
         JSON.stringify({
           error: 'Dados inválidos',
-          details: parseResult.error,
+          details: parseResult.error.format(),
         }),
         {
           status: 400,

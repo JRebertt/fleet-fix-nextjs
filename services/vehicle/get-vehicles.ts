@@ -1,10 +1,12 @@
 import { Vehicle } from '@/@types/vehicle-table'
+import { api } from '@/lib/api-fetch'
 
 export default async function getVehicles(): Promise<Vehicle[]> {
-  const res = await fetch('http://localhost:3000/api/vehicles', {
+  const res = await api(`/vehicles`, {
     method: 'GET',
-    next: { revalidate: 1800 },
+    cache: 'no-store',
   })
+
   const data = await res.json()
 
   return data || []
