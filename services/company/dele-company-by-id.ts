@@ -1,8 +1,8 @@
-import { env } from '@/env/env-validation'
+import { api } from '@/lib/api-fetch'
 import { toast } from 'sonner'
 
 export default async function deleteCompanyById(id?: string) {
-  const res = await fetch(`http://127.0.0.1:3000/api/company/${id}`, {
+  const res = await api(`company/${id}`, {
     method: 'DELETE',
   })
 

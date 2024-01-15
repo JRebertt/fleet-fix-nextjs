@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 export const WorkOrderSchema = z.object({
-  id: z.string(), // Validar como string
+  id: z.string().optional(), // Validar como string
   workshopId: z.string(), // Validar como string
   vehicleId: z.string(), // Validar como string
   mechanicAssigned: z.string(), // Validar como string
@@ -12,4 +12,6 @@ export const WorkOrderSchema = z.object({
     .enum(['Em Andamento', 'Concluída', 'Aguardando Peças'])
     .default('Em Andamento'), // Validar como enumeração
   feedback: z.string().optional(), // Validar como string opcional
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 })

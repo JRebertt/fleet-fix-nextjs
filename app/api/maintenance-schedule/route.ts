@@ -2,7 +2,7 @@ import { StatusChange } from '@/@types/maintenance.table'
 import { db } from '@/db/firebase/config'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import { randomUUID } from 'crypto'
-import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
+import { doc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
 import { z } from 'zod'
 
 export async function GET() {
@@ -39,7 +39,6 @@ export async function GET() {
 }
 
 // Gabiarra para aceitar o scheduleDate como string, pois inicialmente vem como data e depois na funcao passa para string
-
 const ExtendedMaintenanceScheduleSchema = MaintenanceScheduleSchema.extend({
   scheduledDate: z.string(),
 })

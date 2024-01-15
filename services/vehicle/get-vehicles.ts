@@ -1,8 +1,9 @@
 import { Vehicle } from '@/@types/vehicle-table'
-import { env } from '@/env/env-validation'
+import { api } from '@/lib/api-fetch'
 
 export default async function getVehicles(): Promise<Vehicle[]> {
-  const res = await fetch(`http://127.0.0.1:3000/api/vehicles`, {
+  const res = await api(`/vehicles`, {
+    method: 'GET',
     cache: 'no-store',
   })
 

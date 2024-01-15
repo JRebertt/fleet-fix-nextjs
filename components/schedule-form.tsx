@@ -68,6 +68,8 @@ const priority: Priority[] = [
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
 export default function ScheduleForm() {
+  const [schedule, setSchedule] = useState<Vehicle[]>([])
+
   const form = useForm<ScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
     defaultValues: {
@@ -91,8 +93,6 @@ export default function ScheduleForm() {
 
     await createNewMaintenanceSchedule(values)
   }
-
-  const [schedule, setSchedule] = useState<Vehicle[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -251,7 +251,9 @@ export default function ScheduleForm() {
           />
         </div>
 
-        <Button type="submit">Agendar</Button>
+        <Button className="w-full" type="submit">
+          Agendar
+        </Button>
       </form>
     </Form>
   )

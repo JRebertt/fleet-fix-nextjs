@@ -129,49 +129,49 @@ export default async function VehicleProfile({
             <CardShadcnUi className="w-full h-full max-h-40 max-w-full p-4 grid grid-cols-3">
               <div className="w-full flex items-center justify-between max-w-[26rem] space-x-4">
                 <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-                <ul className="flex flex-col space-y-1 px-2">
-                  <li className="flex gap-2">
+                <div className="flex flex-col space-y-1 px-2">
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">Nome:</h2>
                     <p>{driverData.fullName}</p>
-                  </li>
-                  <li className="flex gap-2">
+                  </div>
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">
                       Apelido:
                     </h2>
                     <p>{driverData.nickname}</p>
-                  </li>
-                  <li>
+                  </div>
+                  <div>
                     <div className="w-16 h-5 bg-red-300"></div>
-                  </li>
-                </ul>
+                  </div>
+                </div>
                 <Separator orientation="vertical" />
               </div>
               <div className="w-full flex items-center justify-between px-4 max-w-[24rem]">
-                <ul className="flex flex-col space-y-1 px-2">
-                  <li className="flex gap-2">
+                <div className="flex flex-col space-y-1 px-2">
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">Contato</h2>
                     <p>{driverData.contactNumber}</p>
-                  </li>
-                  <li className="flex gap-2">
+                  </div>
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">CNH:</h2>
                     <p>{driverData.driverLicenseNumber}</p>
-                  </li>
-                </ul>
+                  </div>
+                </div>
                 <Separator orientation="vertical" />
               </div>
               <div className="w-full flex items-center justify-between px-4 max-w-[24rem]">
-                <ul className="flex flex-col space-y-1 px-2">
-                  <li className="flex gap-2">
+                <div className="flex flex-col space-y-1 px-2">
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">CPF</h2>
                     <p>{driverData.cpf}</p>
-                  </li>
-                  <li className="flex gap-2">
+                  </div>
+                  <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">
                       Data de Nascimentos:
                     </h2>
                     <p>{driverData.dateOfBirth}</p>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </CardShadcnUi>
             <ScrollBar orientation="horizontal" />
