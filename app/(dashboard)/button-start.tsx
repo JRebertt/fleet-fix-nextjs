@@ -54,7 +54,7 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
+        <Button variant="default" className="w-full">
           Inicia O.S
         </Button>
       </DialogTrigger>

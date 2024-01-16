@@ -1,6 +1,5 @@
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
-import ScheduleForm from '@/components/schedule-form'
-import { Button } from '@/components/ui/button'
+
 import {
   Card,
   CardContent,
@@ -8,25 +7,27 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+
 import { api } from '@/lib/api-fetch'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { Toaster } from 'sonner'
 import { ButtonStart } from './button-start'
 import { Options } from './options'
+import { Header } from './header'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { ptBR } from 'date-fns/locale'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 async function getMaintenanceSchedule(): Promise<MaintenanceSchedule[]> {
   const response = await api('/maintenance-schedule', {
     method: 'GET',
     cache: 'no-store',
-    next: { revalidate: 0 },
   })
 
   const maintenanceSchedule = await response.json()
@@ -41,50 +42,81 @@ export default async function Home() {
     <>
       <Toaster />
       <main className="min-h-screen p-10 space-y-14">
-        <div className="flex">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Agendar</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Adicionar Novo Item</DialogTitle>
-                <DialogDescription>
-                  Preencha as informações abaixo.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <ScheduleForm />
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <section className="max-w-6xl grid grid-cols-3 justify-items-center gap-28">
+        <Header />
+        <section className="px-4 grid grid-cols-3 justify-items-center gap-28">
           {schedule.map((data, i) => {
             const dateObject = new Date(data.scheduledDate)
             const formattedDateV2 = format(dateObject, 'dd/MM/yyyy')
+            const formattedDate = formatDistanceToNow(dateObject, {
+              addSuffix: true,
+              locale: ptBR,
+            })
+
+            const divClass = cn({
+              'bg-red-500': data.priority === 'Alta',
+              'bg-yellow-500': data.priority === 'Média',
+              'bg-blue-500': data.priority === 'Baixa',
+              'bg-teal-500': data.priority === 'Normal',
+            })
             return (
               <Card
                 key={i++}
-                className="max-h-[20rem] p-4 flex flex-col gap-2 justify-center items-center"
+                className="w-96 max-h-52 p-4 flex flex-col gap-2 justify-center items-center"
               >
-                <CardHeader className="flex flex-row w-full items-center p-0 justify-between">
-                  <span className="max-w-[6rem] font-semibold">
-                    {formattedDateV2}
-                  </span>
-                  <Options value={data} />
+                <CardHeader className="flex flex-row w-full py-1 px-0 items-center justify-between">
+                  <h3 className="max-w-40 font-semibold">{data.description}</h3>
+                  <div className="space-x-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <div
+                            className={cn(
+                              'p-1.5 rounded-full cursor-default',
+                              divClass,
+                            )}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-64">
+                          <p className="text-sm text-muted-foreground">
+                            Indicador do nível de prioridade.
+                          </p>
+                          <small className="text-sm font-medium leading-none mr-1">
+                            Prioridade:
+                          </small>
+                          {data.priority}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <Options value={data} />
+                  </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div>{data.vehicleId}</div>
-                  <div>{data.status}</div>
-                  <div>{data.priority}</div>
+                  <div className="flex space-x-2">
+                    <span className="font-bold space-x-2 bg-slate-500/">
+                      Id do Veiculo:
+                    </span>
+                    <p>{data.vehicleId}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <span className="font-bold">Status:</span>
+                    <Badge variant={'outline'}>{data.status}</Badge>
+                  </div>
                 </CardContent>
-                <CardDescription className="p-0">
-                  {data.description}
-                </CardDescription>
-                <CardFooter className="p-0">
-                  <ButtonStart value={data} />
-                </CardFooter>
+                <div className="w-full flex justify-between items-center">
+                  <CardDescription className="p-0">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>{formattedDate}</TooltipTrigger>
+                        <TooltipContent>
+                          <p>{formattedDateV2}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </CardDescription>
+                  <CardFooter className="p-0">
+                    <ButtonStart value={data} />
+                  </CardFooter>
+                </div>
               </Card>
             )
           })}
