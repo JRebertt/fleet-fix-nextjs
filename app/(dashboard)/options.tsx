@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import deleteMaintenanceScheduleById from '@/services/maintenance-schedule/dele-maintenance-schedule-by-id'
 import { MoreHorizontal, Trash } from 'lucide-react'
+import Link from 'next/link'
+
 export function Options({ value }: { value: MaintenanceSchedule }) {
   return (
     <DropdownMenu>
@@ -24,9 +26,9 @@ export function Options({ value }: { value: MaintenanceSchedule }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-        {/* <DropdownMenuItem>
-          <Link href={`vehicles/${vehicle.id}`}>Ver detalhes</Link>
-        </DropdownMenuItem> */}
+        <DropdownMenuItem>
+          <Link href={`vehicles/`}>Ver detalhes</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => navigator.clipboard.writeText(`Copiado`)}
