@@ -36,6 +36,14 @@ export const theme = {
         DEFAULT: 'hsl(var(--destructive))',
         foreground: 'hsl(var(--destructive-foreground))',
       },
+      blue: {
+        DEFAULT: 'hsl(var(--blue))',
+        foreground: 'hsl(var(--blue-foreground))',
+      },
+      yellow: {
+        DEFAULT: 'hsl(var(--yellow))',
+        foreground: 'hsl(var(--yellow-foreground))',
+      },
       muted: {
         DEFAULT: 'hsl(var(--muted))',
         foreground: 'hsl(var(--muted-foreground))',

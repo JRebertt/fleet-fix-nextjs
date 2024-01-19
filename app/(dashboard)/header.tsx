@@ -23,7 +23,7 @@ import {
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
 
 import { Button } from '@/components/ui/button'
-import ScheduleForm from '@/components/schedule-form'
+import ScheduleForm from '@/app/(dashboard)/schedule-form'
 import { Input } from '@/components/ui/input'
 
 type Checked = DropdownMenuCheckboxItemProps['checked']
@@ -34,16 +34,16 @@ export function Header() {
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
   return (
     <section className="flex justify-between w-full">
-      <div className="flex space-x-2">
-        <Input className="w-64" placeholder="Buscar..." />
+      <div className="w-full max-w-96 flex space-x-2">
+        <Input className="w-full" placeholder="Buscar..." />
 
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Open</Button>
+              <Button variant="outline">Filtro</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+              <DropdownMenuLabel>Prioridade</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuCheckboxItem
                 checked={showStatusBar}

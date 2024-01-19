@@ -6,6 +6,8 @@ import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { z } from 'zod'
 
 export async function GET() {
+  // await new Promise((resolve) => setTimeout(resolve, 10000))
+
   try {
     // Recupera todos os documentos da coleção 'maintenanceSchedules'
     const querySnapshot = await getDocs(collection(db, 'maintenanceSchedules'))
