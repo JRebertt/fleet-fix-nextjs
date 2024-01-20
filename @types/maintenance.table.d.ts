@@ -24,7 +24,12 @@ export interface MaintenanceSchedule {
     title: string
     checked: boolean
   }[] // Lista de serviços a serem realizados
-  maintenanceCost?: number
+  payment: {
+    amount: string // Valor do pagamento
+    paymentStatus?: 'Pago' | 'Pendente' // Status do pagamento
+    paymentMethod?: 'Cartão de Crédito' | 'Débito' | 'Pix' // Método de pagamento
+    paymentedDate?: string
+  }
   feedback?: string // Feedback ou observações sobre a ordem (opcional)
   createdAt?: string // Data de criação da ordem (opcional)
   updatedAt?: string // Data da última atualização da ordem (opcional)

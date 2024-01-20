@@ -27,7 +27,12 @@ export const MaintenanceScheduleSchema = z.object({
   workshopId: z.string(),
   serviceList: z.array(ServiceListSchema).optional(),
   feedback: z.string().optional(),
-  maintenanceCost: z.number().optional(),
+  payment: z.object({
+    amount: z.string(), // Valor do pagamento
+    paymentStatus: z.enum(['Pago', 'Pendente']).optional(), // Status do pagamento
+    paymentMethod: z.enum(['Cartão de Crédito', 'Débito', 'Pix']).optional(), // Método de pagamento
+    paymentedDate: z.string().optional(),
+  }),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })

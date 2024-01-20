@@ -32,6 +32,7 @@ export function Header() {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
+
   return (
     <section className="flex justify-between w-full">
       <div className="w-full max-w-96 flex space-x-2">

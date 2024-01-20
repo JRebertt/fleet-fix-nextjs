@@ -54,7 +54,13 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
   return (
     <Card className="max-h-52 p-4 flex flex-col gap-2 justify-center items-center">
       <CardHeader className="flex flex-row w-full py-1 px-0 items-center justify-between">
-        <h3 className="max-w-44 font-semibold">{data.title}</h3>
+        <h3 className="max-w-44 font-semibold">
+          {data.title !== '' ? (
+            <span>Agendento</span>
+          ) : (
+            <span>{data.title}</span>
+          )}
+        </h3>
         <div className="space-x-2">
           <TooltipProvider>
             <Tooltip>

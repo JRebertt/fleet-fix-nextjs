@@ -43,6 +43,7 @@ import getVehicles from '@/services/vehicle/get-vehicles'
 import { Vehicle } from '@/@types/vehicle-table'
 import { Textarea } from '@/components/ui/textarea'
 import updateMaintenanceSchedule from '@/services/maintenance-schedule/update-maintenance-schedule'
+import { useHookFormMask } from 'use-mask-input'
 
 const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
   vehicleId: true,
@@ -51,6 +52,8 @@ const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
   mechanicAssigned: true,
   statusChangeHistory: true,
   feedback: true,
+  maintenanceCost: true,
+  payment: true,
 })
 
 type MaintenanceScheduleFormsValues = z.infer<
@@ -70,6 +73,7 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
       vehicleId: value.vehicleId,
       status: value.status === 'Agendado' ? 'Em Manutenção' : 'Concluído',
       statusChangeHistory: [
+        ...value.statusChangeHistory,
         {
           changedAt: new Date().toDateString(),
           reason:
@@ -79,8 +83,13 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
           status: value.status === 'Agendado' ? 'Em Manutenção' : 'Concluído',
         },
       ],
+      payment: {
+        amount: '',
+      },
     },
   })
+
+  const masked = useHookFormMask(form.register)
 
   async function onSubmit(values: MaintenanceScheduleFormsValues) {
     toast('Manutenção iniciada sucesso!✅ ')
@@ -91,7 +100,6 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
       ...values,
     }
     await updateMaintenanceSchedule(value.id as string, data)
-    console.log('startMaintenanceSchedule', data)
   }
 
   useEffect(() => {
@@ -220,6 +228,24 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6"
               >
+                <FormField
+                  control={form.control}
+                  name="payment.amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Valor do Serviço"
+                          {...field}
+                          {...masked('payment.amount', 'integer', {
+                            prefix: 'R$',
+                          })}
+                          className="px-3 py-2 text-right"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="feedback"

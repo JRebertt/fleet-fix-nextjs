@@ -1,10 +1,15 @@
 'use client'
 
-import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
-import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
+import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { useEffect, useState } from 'react'
+
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { toast } from 'sonner'
+
 import {
   Form,
   FormControl,
@@ -12,7 +17,7 @@ import {
   FormItem,
   FormMessage,
 } from '../../components/ui/form'
-import { Input } from '../../components/ui/input'
+
 import {
   Select,
   SelectContent,
@@ -20,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 import {
   Popover,
   PopoverContent,
@@ -33,19 +39,18 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/command'
-import { Check, ChevronsUpDown } from 'lucide-react'
+
+import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react'
+
+import { Input } from '../../components/ui/input'
 import { Button } from '../../components/ui/button'
-import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { Calendar } from '../../components/ui/calendar'
 
 import getVehicles from '@/services/vehicle/get-vehicles'
 import { Vehicle } from '@/@types/vehicle-table'
-import { CalendarIcon } from '@radix-ui/react-icons'
 
-import { toast } from 'sonner'
-import { Calendar } from '../../components/ui/calendar'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
+import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
 
 type Priority = {
   name: 'Alta' | 'Média' | 'Baixa'
@@ -70,8 +75,6 @@ const priority: Priority[] = [
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
 export default function ScheduleForm() {
-  const [schedule, setSchedule] = useState<Vehicle[]>([])
-
   const form = useForm<ScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
     defaultValues: {
@@ -95,6 +98,9 @@ export default function ScheduleForm() {
           reason: 'Agendamento inicial',
         },
       ],
+      payment: {
+        amount: '',
+      },
     },
   })
 
@@ -103,6 +109,7 @@ export default function ScheduleForm() {
 
     await createNewMaintenanceSchedule(values)
   }
+  const [schedule, setSchedule] = useState<Vehicle[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
