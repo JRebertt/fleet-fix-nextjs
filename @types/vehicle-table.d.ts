@@ -1,5 +1,5 @@
 export interface Vehicle {
-  id: string // Identificador único para cada veículo
+  id?: string // Identificador único para cada veículo
   model: string // Modelo do veículo
   licensePlate: string // Placa do veículo
   chassisNumber: string // Número do chassi do veículo

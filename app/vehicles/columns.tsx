@@ -16,7 +16,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Vehicle } from '@/@types/vehicle-table'
-import { deleteVehicleById } from '@/services/vehicle/delete-vehicle-by-id'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { format, formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -26,6 +34,29 @@ export const columns: ColumnDef<Vehicle>[] = [
   {
     accessorKey: 'licensePlate',
     header: 'Placa',
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: 'Ultima atualização',
+    cell: ({ row }) => {
+      const dateString = row.getValue('updatedAt') as string
+      const dateObject = new Date(dateString)
+      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+      const formattedDate = formatDistanceToNow(dateObject, {
+        addSuffix: true,
+        locale: ptBR,
+      })
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>{formattedDate}</TooltipTrigger>
+            <TooltipContent>
+              <p>{formattedDateV2}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    },
   },
   {
     id: 'actions',

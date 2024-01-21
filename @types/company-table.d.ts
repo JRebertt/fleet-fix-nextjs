@@ -1,22 +1,22 @@
 interface SocialMedia {
-  name: string
-  url: string
+  name?: string
+  url?: string
 }
 
 export interface Company {
-  id: string
+  id?: string
   name: string
   cnpj: string
   address: {
     street: string
-    number: number
+    number: string
     complement?: string
     neighborhood: string
     city: string
     state: string
     zipCode: string
   }
-  socialMedia: SocialMedia[]
+  socialMedia?: SocialMedia[]
   contactPhone: string
   billingEmail?: string
   logisticsEmail: string
@@ -27,6 +27,6 @@ export interface Company {
     name: string
     contact: string
   }
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }

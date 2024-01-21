@@ -1,9 +1,10 @@
 import { Vehicle } from '@/@types/vehicle-table'
+import { api } from '@/lib/api-fetch'
 
 export default async function createNewVehicle(
   vehicle: Vehicle,
 ): Promise<Vehicle> {
-  const res = await fetch('http://localhost:3000/api/vehicle', {
+  const res = await api(`/vehicle`, {
     method: 'POST',
 
     next: { revalidate: 0 },

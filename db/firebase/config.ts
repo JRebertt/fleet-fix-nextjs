@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { env } from '@/env/env-validation'
+import { env } from '@/env/env'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {

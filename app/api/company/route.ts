@@ -1,9 +1,12 @@
+import { Company } from '@/@types/company-table'
 import { db } from '@/db/firebase/config'
+import { CompanySchema } from '@/schemas/company'
+import { randomUUID } from 'crypto'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 
 export async function GET() {
   try {
-    const querySnapshot = await getDocs(collection(db, 'company'))
+    const querySnapshot = await getDocs(collection(db, 'companies'))
     const company = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -29,15 +32,38 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const company = await request.json()
-    const { id } = company
-    const docRef = doc(db, 'company', id)
-    await setDoc(docRef, company)
+    const company: Company = await request.json()
+
+    const uuid = randomUUID()
+
+    const newCompany = {
+      id: uuid,
+      ...company,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    const validationResult = CompanySchema.safeParse(newCompany)
+
+    if (!validationResult.success) {
+      return new Response(
+        JSON.stringify({
+          message: 'Error ao validar os dados',
+          details: validationResult.error.format(),
+        }),
+        {
+          status: 400,
+        },
+      )
+    }
+
+    const docRef = doc(db, 'companies', uuid)
+    await setDoc(docRef, newCompany)
 
     return new Response(
       JSON.stringify({
         message: 'Empresa adicionado com sucesso',
-        id,
+        data: validationResult.data,
       }),
       {
         status: 201,

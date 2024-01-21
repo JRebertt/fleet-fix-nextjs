@@ -1,3 +1,5 @@
+'use client'
+
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -26,30 +28,18 @@ import { vehicleSchema } from '@/schemas/vehicle'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import createNewVehicle from '@/services/vehicle/create-new-vehicle'
+import { useEffect, useState } from 'react'
+import getDrivers from '@/services/driver/get-drivers'
+import { Driver } from '@/@types/driver-table'
+import getCompanies from '@/services/company/get-companies'
+import { Company } from '@/@types/company-table'
 
 type VehicleFormValues = z.infer<typeof vehicleSchema>
 
-const fakeDatas = [
-  { driveName: 'João Silva', value: '1' },
-  { driveName: 'Maria Fernandes', value: '2' },
-  { driveName: 'Carlos Souza', value: '3' },
-  { driveName: 'Ana Pereira', value: '4' },
-  { driveName: 'Pedro Santos', value: '5' },
-]
-
-const companies = [
-  { name: 'Norte Gases', value: 'norte-gases' },
-  { name: 'SMTransportes', value: 'sm-transportes' },
-  { name: 'Particular', value: 'particular' },
-]
-
 export default function VehicleForm() {
-  const uuid = crypto.randomUUID()
-
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      id: uuid,
       model: '',
       licensePlate: '',
       chassisNumber: '',
@@ -68,14 +58,28 @@ export default function VehicleForm() {
   async function onSubmit(values: VehicleFormValues) {
     toast('Veículo adicionado com sucesso!✅ ')
     form.reset()
-    createNewVehicle(values)
+    await createNewVehicle(values)
   }
+
+  const [drivers, setDrivers] = useState<Driver[]>([])
+  const [companies, setCompanies] = useState<Company[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const driversList = await getDrivers()
+      const companiesList = await getCompanies()
+      setDrivers(driversList)
+      setCompanies(companiesList)
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 p-4">
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Modelo */}
+          {/* Campo Descrição */}
           <FormField
             control={form.control}
             name="model"
@@ -83,7 +87,6 @@ export default function VehicleForm() {
               <FormItem>
                 <FormControl>
                   <Input
-                    id="model"
                     placeholder="Modelo do Veículo"
                     {...field}
                     className="px-3 py-2"
@@ -168,6 +171,7 @@ export default function VehicleForm() {
                     className="px-3 py-2"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -188,7 +192,7 @@ export default function VehicleForm() {
                         )}
                       >
                         {field.value
-                          ? companies.find((data) => data.value === field.value)
+                          ? companies.find((data) => data.id === field.value)
                               ?.name
                           : 'Empresa'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -203,15 +207,15 @@ export default function VehicleForm() {
                         {companies.map((data) => (
                           <CommandItem
                             value={data.name}
-                            key={data.value}
+                            key={data.id}
                             onSelect={() => {
-                              form.setValue('company', data.value)
+                              form.setValue('company', data.id as string)
                             }}
                           >
                             <Check
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                data.value === field.value
+                                data.id === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0',
                               )}
@@ -268,8 +272,8 @@ export default function VehicleForm() {
                         )}
                       >
                         {field.value
-                          ? fakeDatas.find((data) => data.value === field.value)
-                              ?.driveName
+                          ? drivers.find((data) => data.id === field.value)
+                              ?.nickname
                           : 'Motorista'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -280,23 +284,23 @@ export default function VehicleForm() {
                       <CommandInput placeholder="Buscar Motorista..." />
                       <CommandEmpty>Nenhum Motorista Encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {fakeDatas.map((data) => (
+                        {drivers.map((data) => (
                           <CommandItem
-                            value={data.driveName}
-                            key={data.value}
+                            value={data.nickname}
+                            key={data.id}
                             onSelect={() => {
-                              form.setValue('driver', data.value)
+                              form.setValue('driver', data.id as string)
                             }}
                           >
                             <Check
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                data.value === field.value
+                                data.id === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0',
                               )}
                             />
-                            {data.driveName}
+                            {data.nickname}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -323,6 +327,7 @@ export default function VehicleForm() {
                   className="px-3 py-2"
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
