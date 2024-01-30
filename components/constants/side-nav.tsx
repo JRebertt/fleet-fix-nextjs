@@ -45,18 +45,18 @@ export const NavItems: NavItem[] = [
 
         href: '/vehicles',
       },
-      {
-        title: 'Oficinas',
-        icon: Wrench,
+      // {
+      //   title: 'Oficinas',
+      //   icon: Wrench,
 
-        href: '/workshop',
-      },
-      {
-        title: 'Autopeças',
-        icon: HardHat,
+      //   href: '/workshop',
+      // },
+      // {
+      //   title: 'Autopeças',
+      //   icon: HardHat,
 
-        href: '/partstores',
-      },
+      //   href: '/partstores',
+      // },
     ],
   },
 ]

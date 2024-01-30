@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
-import { MoreHorizontal, Trash } from 'lucide-react'
+import { Check, MoreHorizontal, Trash } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +20,7 @@ import {
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
 
 import { PaymentSchemas } from '@/schemas/payment'
+import updatePayments from '@/services/payment/update-payment'
 
 type PaymentSchemasValues = z.infer<typeof PaymentSchemas>
 
@@ -94,7 +95,34 @@ export const columns: ColumnDef<PaymentSchemasValues>[] = [
     header: 'Forma de Pagemento',
   },
   {
-    id: 'actions',
+    accessorKey: 'paymentStatusAction',
+    header: '',
+    cell: ({ row }) => {
+      const data = row.original
+
+      return (
+        <Button
+          className="h-8"
+          variant="outline"
+          onClick={() =>
+            updatePayments(data.id as string, {
+              payment: {
+                paymentStatus: 'Pago',
+              },
+            })
+          }
+        >
+          <div className="flex justify-center items-center gap-2">
+            <Check size={16} />
+            <span>Pagar</span>
+          </div>
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: 'actions',
+    header: '',
     cell: ({ row }) => {
       const payment = row.original
 
