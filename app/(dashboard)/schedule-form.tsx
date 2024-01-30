@@ -69,7 +69,6 @@ export default function ScheduleForm() {
       feedback: '',
       status: 'Agendado',
       priority: 'Baixa',
-      scheduledDate: new Date(),
       statusChangeHistory: [
         {
           status: 'Agendado',
@@ -184,7 +183,7 @@ export default function ScheduleForm() {
                     <Button
                       variant={'outline'}
                       className={cn(
-                        'w-[12rem] pl-3 text-left font-normal',
+                        'w-full pl-3 text-left font-normal',
                         !field.value && 'text-muted-foreground',
                       )}
                     >
@@ -193,7 +192,7 @@ export default function ScheduleForm() {
                           locale: ptBR,
                         })
                       ) : (
-                        <span>Pick a date</span>
+                        <span>Escolha uma data</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
