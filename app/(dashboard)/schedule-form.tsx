@@ -183,16 +183,14 @@ export default function ScheduleForm() {
                     <Button
                       variant={'outline'}
                       className={cn(
-                        'w-full pl-3 text-left font-normal',
+                        'w-[240px] pl-3 text-left font-normal',
                         !field.value && 'text-muted-foreground',
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP', {
-                          locale: ptBR,
-                        })
+                        format(field.value, 'PPP')
                       ) : (
-                        <span>Escolha uma data</span>
+                        <span>Pick a date</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -201,13 +199,16 @@ export default function ScheduleForm() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    locale={ptBR}
                     selected={field.value}
                     onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date('1900-01-01')
+                    }
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
+
               <FormMessage />
             </FormItem>
           )}
