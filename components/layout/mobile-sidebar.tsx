@@ -1,9 +1,15 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { CarFront, MenuIcon } from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { SideNav } from '@/components/layout/side-nav'
 import { NavItems } from '@/components/constants/side-nav'
+import { ModeToggle } from '../mode-toggle'
 
 export const MobileSidebar = () => {
   const [open, setOpen] = useState(false)
@@ -30,6 +36,9 @@ export const MobileSidebar = () => {
           </div>
         </SheetTrigger>
         <SheetContent side="left" className="w-72">
+          <div className="block sm:hidden">
+            <ModeToggle />
+          </div>
           <div className="px-1 py-6 pt-16">
             <SideNav items={NavItems} setOpen={setOpen} />
           </div>
