@@ -186,8 +186,8 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
                   )}
                 />
 
-                {/* Campo Veiculo */}
-                <FormField
+                {/* Campo Oficina */}
+                {/* <FormField
                   control={form.control}
                   name="workshopId"
                   render={({ field }) => (
@@ -248,7 +248,7 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <Button className="w-full" type="submit">
                   Confirmar

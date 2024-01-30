@@ -9,7 +9,7 @@ export default async function updatePayments(
   id: string,
   updatedData: Partial<PaymentValues>,
 ): Promise<PaymentValues> {
-  const res = await api(`/paymets/${id}`, {
+  const res = await api(`/payment/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
