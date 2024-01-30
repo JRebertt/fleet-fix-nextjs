@@ -1,21 +1,32 @@
 // Estrutura para acompanhar mudanças de status
 export interface StatusChange {
   status: 'Agendado' | 'Concluído' | 'Cancelado' | 'Em Manutenção'
-  changedAt: string
-  reason?: string
+  changedAt: string // Data e hora da mudança de status
+  reason?: string // Motivo da mudança de status (opcional)
 }
 
+// Estrutura de uma Ordem de Manutenção
 export interface MaintenanceSchedule {
-  id?: string // Identificador único do agendamento
-  vehicleId: string // ID do veículo para o qual a manutenção está agendada
-  scheduledDate: Date // Data agendada da manutenção
-  description: string // Descrição da manutenção agendada
-  priority: 'Alta' | 'Média' | 'Baixa' | 'Normal' // Prioridade do agendamento (opcional)
-  contactPerson?: string // Contato responsável pelo veículo (opcional)
-  statusChangeHistory: StatusChange[] // Histórico de alterações de status (opcional)
-  status: 'Agendado' | 'Concluído' | 'Cancelado' // Status do agendamento
-  createdAt?: string
-  updatedAt?: string
+  id?: string // Identificador único da ordem de manutenção
+  vehicleId: string // ID do veículo
+  scheduledDate: Date // Data agendada para a manutenção
+  title?: string // Título da ordem de manutenção (opcional)
+  description: string // Descrição detalhada da manutenção
+  priority: 'Alta' | 'Média' | 'Baixa' // Prioridade da manutenção
+  contactPerson?: string // Pessoa de contato para a manutenção (opcional)
+  status: 'Agendado' | 'Concluído' | 'Cancelado' | 'Em Manutenção' // Status atual da ordem
+  statusChangeHistory: StatusChange[] // Histórico de alterações de status
+  startDate?: string // Data de início real da manutenção (opcional)
+  completionDate?: string // Data de conclusão da manutenção (opcional)
+  mechanicAssigned?: string // Mecânico responsável pela ordem
+  workshopId: string // ID da oficina responsável
+  serviceList?: {
+    title: string
+    checked: boolean
+  }[] // Lista de serviços a serem realizados
+  feedback?: string // Feedback ou observações sobre a ordem (opcional)
+  createdAt?: string // Data de criação da ordem (opcional)
+  updatedAt?: string // Data da última atualização da ordem (opcional)
 }
 
 // Estrutura para anexos (fotos, documentos)

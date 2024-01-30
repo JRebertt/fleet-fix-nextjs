@@ -1,12 +1,15 @@
-import { MaintenanceSchedule } from '@/@types/maintenance.table'
 import { api } from '@/lib/api-fetch'
+import { PaymentSchemas } from '@/schemas/payment'
 import { toast } from 'sonner'
+import { z } from 'zod'
 
-export default async function updateMaintenanceSchedule(
+type PaymentValues = z.infer<typeof PaymentSchemas>
+
+export default async function updatePayments(
   id: string,
-  updatedData: Partial<MaintenanceSchedule>,
-): Promise<MaintenanceSchedule> {
-  const res = await api(`/maintenance-schedule/${id}`, {
+  updatedData: Partial<PaymentValues>,
+): Promise<PaymentValues> {
+  const res = await api(`/paymets/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

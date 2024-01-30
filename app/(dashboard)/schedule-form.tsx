@@ -1,12 +1,23 @@
 'use client'
 
-import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
-import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
+import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form'
-import { Input } from './ui/input'
+import { useEffect, useState } from 'react'
+
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { toast } from 'sonner'
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '../../components/ui/form'
+
 import {
   Select,
   SelectContent,
@@ -14,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 import {
   Popover,
   PopoverContent,
@@ -27,56 +39,36 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/command'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { Button } from './ui/button'
-import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+
+import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react'
+
+import { Input } from '../../components/ui/input'
+import { Button } from '../../components/ui/button'
+import { Calendar } from '../../components/ui/calendar'
 
 import getVehicles from '@/services/vehicle/get-vehicles'
 import { Vehicle } from '@/@types/vehicle-table'
-import { CalendarIcon } from '@radix-ui/react-icons'
 
-import { toast } from 'sonner'
-import { Calendar } from './ui/calendar'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-
-type Priority = {
-  name: 'Alta' | 'Média' | 'Baixa' | 'Normal'
-  value: 'Alta' | 'Média' | 'Baixa' | 'Normal'
-}
-
-const priority: Priority[] = [
-  {
-    name: 'Normal',
-    value: 'Normal',
-  },
-  {
-    name: 'Alta',
-    value: 'Alta',
-  },
-  {
-    name: 'Baixa',
-    value: 'Baixa',
-  },
-  {
-    name: 'Média',
-    value: 'Média',
-  },
-]
+import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
+import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
+import { priority } from '@/db/data'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
 export default function ScheduleForm() {
-  const [schedule, setSchedule] = useState<Vehicle[]>([])
-
   const form = useForm<ScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
     defaultValues: {
-      status: 'Agendado',
-      vehicleId: '',
       description: '',
-      priority: 'Normal',
+      completionDate: '',
+      contactPerson: '',
+      serviceList: [],
+      mechanicAssigned: '',
+      startDate: '',
+      workshopId: '',
+      feedback: '',
+      status: 'Agendado',
+      priority: 'Baixa',
       scheduledDate: new Date(),
       statusChangeHistory: [
         {
@@ -93,6 +85,7 @@ export default function ScheduleForm() {
 
     await createNewMaintenanceSchedule(values)
   }
+  const [schedule, setSchedule] = useState<Vehicle[]>([])
 
   useEffect(() => {
     const fetchData = async () => {

@@ -4,6 +4,9 @@ import {
   LayoutDashboard,
   Truck,
   User,
+  Wallet,
+  Wrench,
+  HardHat,
 } from 'lucide-react'
 import { type NavItem } from '@/@types/types'
 
@@ -12,6 +15,11 @@ export const NavItems: NavItem[] = [
     title: 'Dashboard',
     icon: LayoutDashboard,
     href: '/',
+  },
+  {
+    title: 'Pagamentos',
+    icon: Wallet,
+    href: '/payment',
   },
   {
     title: 'Tabelas',
@@ -36,6 +44,18 @@ export const NavItems: NavItem[] = [
         icon: Truck,
 
         href: '/vehicles',
+      },
+      {
+        title: 'Oficinas',
+        icon: Wrench,
+
+        href: '/workshop',
+      },
+      {
+        title: 'Autopeças',
+        icon: HardHat,
+
+        href: '/partstores',
       },
     ],
   },
