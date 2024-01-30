@@ -1,7 +1,7 @@
 import { StatusChange } from '@/@types/maintenance.table'
 import { db } from '@/db/firebase/config'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
-import { randomUUID } from 'crypto'
+import { createId } from '@paralleldrive/cuid2'
 import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { z } from 'zod'
 
@@ -44,6 +44,7 @@ export async function GET() {
 const ExtendedMaintenanceScheduleSchema = MaintenanceScheduleSchema.extend({
   scheduledDate: z.string(),
 })
+
 type ExtendedMaintenanceScheduleSchemaTypes = z.infer<
   typeof ExtendedMaintenanceScheduleSchema
 >
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
   try {
     const scheduleData = await request.json()
 
-    const uuid = randomUUID()
+    const cuid = createId()
 
     const initialStatusChange: StatusChange = {
       status: scheduleData.status, // ou um status padrão, como 'Agendada'
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
       reason: 'Criação inicial do agendamento',
     }
     const newSchedule: ExtendedMaintenanceScheduleSchemaTypes = {
-      id: uuid,
+      id: cuid,
       ...scheduleData,
       statusChangeHistory: [initialStatusChange],
       createdAt: new Date().toISOString(),
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const newScheduleRef = doc(db, 'maintenanceSchedules', uuid)
+    const newScheduleRef = doc(db, 'maintenanceSchedules', cuid)
     await setDoc(newScheduleRef, validationResult.data)
 
     return new Response(

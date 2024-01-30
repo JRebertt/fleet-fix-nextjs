@@ -51,26 +51,7 @@ import { Vehicle } from '@/@types/vehicle-table'
 
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
-
-type Priority = {
-  name: 'Alta' | 'Média' | 'Baixa'
-  value: 'Alta' | 'Média' | 'Baixa'
-}
-
-const priority: Priority[] = [
-  {
-    name: 'Alta',
-    value: 'Alta',
-  },
-  {
-    name: 'Baixa',
-    value: 'Baixa',
-  },
-  {
-    name: 'Média',
-    value: 'Média',
-  },
-]
+import { priority } from '@/db/data'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
@@ -78,7 +59,6 @@ export default function ScheduleForm() {
   const form = useForm<ScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
     defaultValues: {
-      title: '',
       description: '',
       completionDate: '',
       contactPerson: '',
@@ -88,7 +68,6 @@ export default function ScheduleForm() {
       workshopId: '',
       feedback: '',
       status: 'Agendado',
-      vehicleId: '',
       priority: 'Baixa',
       scheduledDate: new Date(),
       statusChangeHistory: [
@@ -98,9 +77,6 @@ export default function ScheduleForm() {
           reason: 'Agendamento inicial',
         },
       ],
-      payment: {
-        amount: '',
-      },
     },
   })
 
@@ -122,18 +98,6 @@ export default function ScheduleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Campo Titulo */}
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Titulo" {...field} className="px-3 py-2" />
-              </FormControl>
-            </FormItem>
-          )}
-        />
         {/* Campo Veiculo */}
         <FormField
           control={form.control}

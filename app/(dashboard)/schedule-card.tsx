@@ -1,7 +1,5 @@
 'use client'
 
-import { format, formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import {
   Card,
@@ -18,50 +16,49 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip'
 
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import deleteMaintenanceScheduleById from '@/services/maintenance-schedule/dele-maintenance-schedule-by-id'
-import { MoreHorizontal, Trash } from 'lucide-react'
-import Link from 'next/link'
-
 import { Badge } from '@/components/ui/badge'
 
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
 import { ButtonStart } from './button-start'
+import { useEffect, useState } from 'react'
+import { Vehicle } from '@/@types/vehicle-table'
+import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
+import { formatDates } from '@/lib/formtDate'
+import { ActionsComponents } from './actions-components'
 
 function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
-  const dateObject = new Date(data.scheduledDate)
-  const formattedDateV2 = format(dateObject, 'dd/MM/yyyy')
-  const formattedDate = formatDistanceToNow(dateObject, {
-    addSuffix: true,
-    locale: ptBR,
-  })
-
+  const [vehicle, setVehicles] = useState<Vehicle>()
   const divClass = cn({
     'bg-red-500': data.priority === 'Alta',
     'bg-yellow-500': data.priority === 'Média',
     'bg-teal-500': data.priority === 'Baixa',
   })
 
+  const { formattedDate: simpleCreatedAt, timeUntilNow: detailsCreatedAt } =
+    formatDates(data.createdAt as string, {
+      formatDate: 'dd/MM/yyyy HH:mm:ss',
+    })
+
+  const { formattedDate: simpleScheduleDate } = formatDates(
+    data.scheduledDate,
+    {
+      formatDate: 'dd/MM/yyyy',
+    },
+  )
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const vehiclesList = await getVehicleById(data.vehicleId)
+      setVehicles(vehiclesList)
+    }
+    fetchData()
+  }, [])
+
   return (
-    <Card className="max-h-52 p-4 flex flex-col gap-2 justify-center items-center">
+    <Card className="max-h-60 p-4 flex flex-col gap-2 justify-center">
       <CardHeader className="flex flex-row w-full py-1 px-0 items-center justify-between">
-        <h3 className="max-w-44 font-semibold">
-          {data.title !== '' ? (
-            <span>Agendento</span>
-          ) : (
-            <span>{data.title}</span>
-          )}
-        </h3>
-        <div className="space-x-2">
+        <h3 className="max-w-48 text-sm font-semibold">{data.id}</h3>
+        <div className="space-x-2 flex ">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -80,7 +77,10 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <DropdownMenu>
+
+          <ActionsComponents id={data.id as string} />
+
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Abrir menu</span>
@@ -89,8 +89,8 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Link href={`vehicles/`}>Ver detalhes</Link>
+              <DropdownMenuItem className="cursor-pointer">
+                Ver detalhes
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
@@ -109,26 +109,31 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </CardHeader>
       <CardContent className="p-0">
         <div className="flex space-x-2">
           <span className="font-bold space-x-2 bg-slate-500/">Veiculo:</span>
-          <p>{data.vehicleId}</p>
+          <p>{vehicle?.model}</p>
         </div>
         <div className="flex space-x-2">
           <span className="font-bold">Status:</span>
           <Badge variant={'outline'}>{data.status}</Badge>
         </div>
+        <div className="flex space-x-2">
+          <span className="font-bold">Data:</span>
+          <Badge variant={'outline'}>{simpleScheduleDate}</Badge>
+        </div>
+        <p className="text-sm text-muted-foreground">{data.description}</p>
       </CardContent>
       <div className="w-full flex justify-between items-center">
         <CardDescription className="p-0">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>{formattedDate}</TooltipTrigger>
+              <TooltipTrigger>{detailsCreatedAt}</TooltipTrigger>
               <TooltipContent>
-                <p>{formattedDateV2}</p>
+                <p>{simpleCreatedAt}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

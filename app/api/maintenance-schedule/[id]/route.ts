@@ -1,5 +1,52 @@
 import { db } from '@/db/firebase/config'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const id = params.id
+    if (!id) {
+      return new Response(
+        JSON.stringify({ error: 'ID do agendamento não fornecido' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+    }
+
+    const docRef = doc(db, 'maintenanceSchedules', id)
+    const docSnap = await getDoc(docRef)
+
+    if (!docSnap.exists()) {
+      return new Response(
+        JSON.stringify({ error: `Agendamento com ID ${id} não encontrado` }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+    }
+
+    const maintenanceSchedulesData = docSnap.data()
+
+    return new Response(JSON.stringify(maintenanceSchedulesData), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (e) {
+    return new Response(
+      JSON.stringify({ error: 'Erro interno ao buscar agendamento' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+  }
+}
 
 export async function DELETE(
   request: Request,

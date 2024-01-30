@@ -23,14 +23,14 @@ import {
 import { MaintenanceSchedule } from '@/@types/maintenance.table'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { AwardIcon, Check, ChevronsUpDown } from 'lucide-react'
 import {
   Command,
   CommandEmpty,
@@ -41,9 +41,10 @@ import {
 import { cn } from '@/lib/utils'
 import getVehicles from '@/services/vehicle/get-vehicles'
 import { Vehicle } from '@/@types/vehicle-table'
-import { Textarea } from '@/components/ui/textarea'
 import updateMaintenanceSchedule from '@/services/maintenance-schedule/update-maintenance-schedule'
-import { useHookFormMask } from 'use-mask-input'
+import { PaymentSchemas } from '@/schemas/payment'
+import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
+import createNewPayment from '@/services/payment/create-new-payment'
 
 const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
   vehicleId: true,
@@ -53,16 +54,24 @@ const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
   statusChangeHistory: true,
   feedback: true,
   maintenanceCost: true,
-  payment: true,
 })
 
 type MaintenanceScheduleFormsValues = z.infer<
   typeof StarteMaintenanceScheduleSchema
 >
 
+type PaymenteFormsValues = z.infer<typeof PaymentSchemas>
+
 export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
-  const [isOpen, setIsOpen] = React.useState(false)
   const [schedule, setSchedule] = useState<Vehicle[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const scheduleList = await getVehicles()
+      setSchedule(scheduleList)
+    }
+    fetchData()
+  }, [])
 
   const form = useForm<MaintenanceScheduleFormsValues>({
     resolver: zodResolver(StarteMaintenanceScheduleSchema),
@@ -83,35 +92,61 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
           status: value.status === 'Agendado' ? 'Em Manutenção' : 'Concluído',
         },
       ],
+    },
+  })
+
+  const formEnd = useForm<PaymenteFormsValues>({
+    resolver: zodResolver(PaymentSchemas),
+    defaultValues: {
       payment: {
         amount: '',
+        paymentedDate: new Date().toISOString(),
+        paymentStatus: 'Pendente',
+        paymentMethod: 'A Definir',
+      },
+      vehicle: {
+        id: '',
+        model: '',
+      },
+      maintenanceSchedule: {
+        id: value.id,
+        title: value.title,
+        description: value.description,
       },
     },
   })
 
-  const masked = useHookFormMask(form.register)
-
   async function onSubmit(values: MaintenanceScheduleFormsValues) {
     toast('Manutenção iniciada sucesso!✅ ')
     form.reset()
-    setIsOpen(false)
+
     const data = {
-      ...value,
-      ...values,
+      ...value, // Dados do Agendamento
+      ...values, // Dados do Start da Manutenção
     }
+
     await updateMaintenanceSchedule(value.id as string, data)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const vehiclesList = await getVehicles()
-      setSchedule(vehiclesList)
+  async function onSubmitEnd(values: PaymenteFormsValues) {
+    toast('Manutenção finalizada sucesso!✅ ')
+    const { id, model } = await getVehicleById(value.vehicleId)
+
+    const updatedValues = {
+      ...values,
+      vehicle: {
+        id,
+        model,
+      },
     }
-    fetchData()
-  }, [])
+
+    await createNewPayment(updatedValues)
+
+    await updateMaintenanceSchedule(value.id as string, { status: 'Concluído' })
+  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         {value.status === 'Agendado' ? (
           <Button variant="blue" className="w-full">
@@ -223,13 +258,13 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
           </div>
         ) : (
           <div className="grid gap-4 py-4">
-            <Form {...form}>
+            <Form {...formEnd}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={formEnd.handleSubmit(onSubmitEnd)}
                 className="space-y-6"
               >
                 <FormField
-                  control={form.control}
+                  control={formEnd.control}
                   name="payment.amount"
                   render={({ field }) => (
                     <FormItem>
@@ -237,24 +272,7 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
                         <Input
                           placeholder="Valor do Serviço"
                           {...field}
-                          {...masked('payment.amount', 'integer', {
-                            prefix: 'R$',
-                          })}
-                          className="px-3 py-2 text-right"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="feedback"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Observações"
-                          {...field}
+                          type="number"
                           className="px-3 py-2"
                         />
                       </FormControl>

@@ -12,10 +12,11 @@ const ServiceListSchema = z.object({
 })
 
 export const MaintenanceScheduleSchema = z.object({
-  id: z.string().uuid().optional(),
-  vehicleId: z.string(),
+  id: z.string().cuid2().optional(),
+  vehicleId: z.string({
+    required_error: 'Por favor, selecione um veículo para exibir.',
+  }),
   scheduledDate: z.date(),
-  title: z.string().optional(),
   description: z.string(),
   priority: z.enum(['Alta', 'Média', 'Baixa']).default('Baixa'),
   contactPerson: z.string().optional(),
@@ -27,12 +28,6 @@ export const MaintenanceScheduleSchema = z.object({
   workshopId: z.string(),
   serviceList: z.array(ServiceListSchema).optional(),
   feedback: z.string().optional(),
-  payment: z.object({
-    amount: z.string(), // Valor do pagamento
-    paymentStatus: z.enum(['Pago', 'Pendente']).optional(), // Status do pagamento
-    paymentMethod: z.enum(['Cartão de Crédito', 'Débito', 'Pix']).optional(), // Método de pagamento
-    paymentedDate: z.string().optional(),
-  }),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })

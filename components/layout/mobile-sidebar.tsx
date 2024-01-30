@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { MenuIcon } from 'lucide-react'
+import { CarFront, MenuIcon } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { SideNav } from '@/components/layout/side-nav'
 import { NavItems } from '@/components/constants/side-nav'
@@ -23,7 +23,10 @@ export const MobileSidebar = () => {
         <SheetTrigger asChild>
           <div className="flex items-center justify-center gap-2">
             <MenuIcon />
-            <h1 className="text-lg font-semibold">T3 app template</h1>
+            <div className="flex gap-4">
+              <CarFront className="h-6 w-6" />
+              <h1 className="text-lg font-semibold">Fleet fix</h1>
+            </div>
           </div>
         </SheetTrigger>
         <SheetContent side="left" className="w-72">

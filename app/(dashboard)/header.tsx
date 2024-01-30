@@ -3,15 +3,6 @@
 import * as React from 'react'
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -23,8 +14,24 @@ import {
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
 
 import { Button } from '@/components/ui/button'
-import ScheduleForm from '@/app/(dashboard)/schedule-form'
 import { Input } from '@/components/ui/input'
+
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import ScheduleForm from './schedule-form'
+
+const filterSchema = z.object({
+  name: z.string(),
+})
 
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
@@ -33,12 +40,27 @@ export function Header() {
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
 
-  return (
-    <section className="flex justify-between w-full">
-      <div className="w-full max-w-96 flex space-x-2">
-        <Input className="w-full" placeholder="Buscar..." />
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(filterSchema),
+  })
 
-        <div>
+  function onSubmit(value: any) {
+    console.log(value)
+  }
+
+  return (
+    <section className="flex justify-between w-full gap-2">
+      <form
+        className="w-full max-w-96 flex space-x-2"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {/* <Input
+          className="w-full"
+          placeholder="Buscar..."
+          {...register('name')}
+        /> */}
+
+        {/* <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Filtro</Button>
@@ -51,27 +73,26 @@ export function Header() {
                 onCheckedChange={setShowStatusBar}
                 disabled
               >
-                Status Bar
+                Alta
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={showActivityBar}
                 onCheckedChange={setShowActivityBar}
                 disabled
               >
-                Activity Bar
+                Media
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 disabled
                 checked={showPanel}
                 onCheckedChange={setShowPanel}
               >
-                Panel
+                Baixa
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-      </div>
-
+        </div> */}
+      </form>
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline">Agendar</Button>
