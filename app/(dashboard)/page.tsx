@@ -4,6 +4,7 @@ import { api } from '@/lib/api-fetch'
 
 import ScheduleCard from './schedule-card'
 import { Toaster } from 'sonner'
+import { CalendarForm } from '@/components/calendar-test'
 
 async function getMaintenanceSchedule(): Promise<MaintenanceSchedule[]> {
   const response = await api('/maintenance-schedule', {
@@ -37,6 +38,8 @@ export default async function Home() {
             Nenhum Agendamento Encontrado
           </p>
         )}
+
+        <CalendarForm />
       </section>
     </>
   )
