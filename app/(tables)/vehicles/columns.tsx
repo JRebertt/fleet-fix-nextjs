@@ -25,8 +25,12 @@ import {
 import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
+import { z } from 'zod'
+import { vehicleSchema } from '@/schemas/vehicle'
 
-export const columns: ColumnDef<Vehicle>[] = [
+type VehicleValues = z.infer<typeof vehicleSchema>
+
+export const columns: ColumnDef<VehicleValues>[] = [
   {
     accessorKey: 'model',
     header: 'Modelo',
@@ -59,7 +63,8 @@ export const columns: ColumnDef<Vehicle>[] = [
     },
   },
   {
-    id: 'actions',
+    accessorKey: 'actions',
+    header: '',
     cell: ({ row }) => {
       const vehicle = row.original
 
