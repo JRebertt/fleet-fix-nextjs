@@ -25,7 +25,6 @@ export default async function DriverPage() {
         <Toaster />
 
         <div className="container">
-          <h1 className="text-3xl font-bold pb-6">Pagamentos</h1>
           <DataTable
             filterColumnName="maintenanceId"
             columns={columns}

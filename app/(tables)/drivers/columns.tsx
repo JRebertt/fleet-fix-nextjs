@@ -15,8 +15,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Company } from '@/@types/company-table'
-import deleteCompanyById from '@/services/company/dele-company-by-id'
+import { Driver } from '@/@types/driver-table'
 import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -25,15 +24,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { deleteDriverById } from '@/services/driver/delete-driver-by-id'
 
-export const columns: ColumnDef<Company>[] = [
+export const columns: ColumnDef<Driver>[] = [
   {
-    accessorKey: 'name',
-    header: 'Empresa',
+    accessorKey: 'fullName',
+    header: 'Nome',
   },
   {
-    accessorKey: 'cnpj',
-    header: 'CNPJ',
+    accessorKey: 'cpf',
+    header: 'CPF',
   },
   {
     accessorKey: 'updatedAt',
@@ -59,7 +59,8 @@ export const columns: ColumnDef<Company>[] = [
     },
   },
   {
-    id: 'actions',
+    accessorKey: 'actions',
+    header: '',
     cell: ({ row }) => {
       const company = row.original
 
@@ -80,11 +81,11 @@ export const columns: ColumnDef<Company>[] = [
               className="cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(`
-                Nome da Empresa: ${company.name}
-                CNPJ: ${company.cnpj}
-                Email Corporativo: ${company.corporateEmail}
-                Email Financeiro: ${company.financialEmail}
-                Endereço: ${company.address}
+                Nome do Motorista: ${company.fullName}
+                CPF: ${company.cpf}
+                Data de Nascimento: ${company.dateOfBirth}
+                Data de Entrada: ${company.hireDate}
+                Contato: ${company.contactNumber}
                 `)
               }
             >
@@ -93,7 +94,7 @@ export const columns: ColumnDef<Company>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteCompanyById(company.id)}
+              onClick={() => deleteDriverById(company.id)}
             >
               Delete
               <DropdownMenuShortcut>

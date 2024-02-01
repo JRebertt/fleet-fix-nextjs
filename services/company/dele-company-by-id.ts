@@ -2,7 +2,7 @@ import { api } from '@/lib/api-fetch'
 import { toast } from 'sonner'
 
 export default async function deleteCompanyById(id?: string) {
-  const res = await api(`company/${id}`, {
+  const res = await api(`/company/${id}`, {
     method: 'DELETE',
   })
 

@@ -69,7 +69,6 @@ export default function ScheduleForm() {
       feedback: '',
       status: 'Agendado',
       priority: 'Baixa',
-      scheduledDate: new Date(),
       statusChangeHistory: [
         {
           status: 'Agendado',

@@ -3,29 +3,17 @@ import { columns } from './columns'
 
 import { Toaster } from '@/components/ui/sonner'
 import VehicleForm from '@/components/vehicle-form'
-import { Vehicle } from '@/@types/vehicle-table'
-import { api } from '@/lib/api-fetch'
-
-async function getListVehicles(): Promise<Vehicle[]> {
-  const response = await api('/vehicles', {
-    method: 'GET',
-    cache: 'no-store',
-  })
-
-  const vehicles = await response.json()
-  return vehicles
-}
+import getVehicles from '@/services/vehicle/get-vehicles'
 
 export default async function DemoPage() {
-  const vehicles = await getListVehicles()
+  const vehicles = await getVehicles()
 
   return (
     <>
-      <section className="py-12">
+      <section>
         <Toaster />
 
         <div className="container">
-          <h1 className="text-3xl font-bold pb-6">Todos Veiculos</h1>
           <DataTable
             filterColumnName="model"
             columns={columns}
