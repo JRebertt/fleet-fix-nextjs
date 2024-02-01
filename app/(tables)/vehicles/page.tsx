@@ -10,11 +10,10 @@ export default async function DemoPage() {
 
   return (
     <>
-      <section className="py-12">
+      <section>
         <Toaster />
 
         <div className="container">
-          <h1 className="text-3xl font-bold pb-6">Todos Veiculos</h1>
           <DataTable
             filterColumnName="model"
             columns={columns}
