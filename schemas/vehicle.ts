@@ -8,7 +8,7 @@ export const vehicleSchema = z.object({
     .min(4, 'Mínimo 4 caracteres')
     .max(20, 'Máximo 20 caracteres'), // Modelo do veículo
   // company: z.enum(['Norte Gases', 'SMTransportes', 'Particular']),
-  company: z.string(),
+  company: z.string().optional(),
   licensePlate: z
     .string()
     .toUpperCase()
