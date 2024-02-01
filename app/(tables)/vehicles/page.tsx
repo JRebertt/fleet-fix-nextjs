@@ -1,3 +1,5 @@
+'use client'
+
 import { DataTable } from '@/components/data-table'
 import { columns } from './columns'
 
@@ -11,7 +13,7 @@ import { Vehicle } from '@/@types/vehicle-table'
 
 type VehiclesValues = z.infer<typeof vehicleSchema>
 
-export default async function DemoPage() {
+export default function DemoPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   useEffect(() => {
     const fetchData = async () => {
