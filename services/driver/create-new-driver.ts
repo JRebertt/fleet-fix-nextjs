@@ -4,8 +4,6 @@ import { api } from '@/lib/api-fetch'
 export default async function createNewDriver(driver: Driver): Promise<Driver> {
   const res = await api(`/driver`, {
     method: 'POST',
-
-    next: { revalidate: 0 },
     headers: {
       'Content-Type': 'application/json',
     },
