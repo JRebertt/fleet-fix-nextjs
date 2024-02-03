@@ -15,7 +15,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Vehicle } from '@/@types/vehicle-table'
 import {
   Tooltip,
   TooltipContent,

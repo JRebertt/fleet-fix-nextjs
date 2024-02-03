@@ -10,7 +10,5 @@ export default async function getVehicles(): Promise<Vehicle[]> {
 
   const data = await res.json()
 
-  console.log(data)
-
   return data || []
 }
