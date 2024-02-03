@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4 justify-between">
         <Input
-          placeholder="Busque por modelo..."
+          placeholder="Buscar"
           value={
             (table.getColumn(filterColumnName)?.getFilterValue() as string) ??
             ''
