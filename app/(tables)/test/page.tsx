@@ -1,19 +1,14 @@
 import { DataTable } from '@/components/data-table'
 import { columns } from './columns'
-import { z } from 'zod'
-import { vehicleSchema } from '@/schemas/vehicle'
 import { api } from '@/lib/api-fetch'
+import { Vehicle } from '@/@types/vehicle-table'
 
-type Value = z.infer<typeof vehicleSchema>
-
-async function getData(): Promise<Value[]> {
-  const response = await api('/vehicles')
-
-  console.log(response)
+async function getData(): Promise<Vehicle[]> {
+  const response = await api('/vehicles', {
+    cache: 'no-store',
+  })
 
   const data = await response.json()
-
-  console.log('data aqui', data)
 
   return data
 }
