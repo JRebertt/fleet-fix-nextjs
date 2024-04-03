@@ -20,8 +20,13 @@ export interface MaintenanceSchedule {
   vehicle_id: string
 }
 
+interface GetMaintenanceSchedule extends MaintenanceSchedule {
+  created_at: Date
+  updated_at: Date
+}
+
 export interface MaintenanceResponse {
-  maintenances: MaintenanceSchedule[]
+  maintenances: GetMaintenanceSchedule[]
 }
 
 // Estrutura para anexos (fotos, documentos)

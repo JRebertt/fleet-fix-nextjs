@@ -18,18 +18,13 @@ import {
 
 import { Badge } from '@/components/ui/badge'
 
-import { MaintenanceSchedule } from '@/@types/maintenance-table'
+import { GetMaintenanceSchedule } from '@/@types/maintenance-table'
 import { ButtonStart } from './button-start'
 import { useEffect, useState } from 'react'
 import { Vehicle } from '@/@types/vehicle-table'
 import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
 import { formatDates } from '@/lib/formtDate'
 import { ActionsComponents } from './actions-components'
-
-interface GetMaintenanceSchedule extends MaintenanceSchedule {
-  created_at: Date
-  updated_at: Date
-}
 
 function ScheduleCard({ data }: { data: GetMaintenanceSchedule }) {
   const [vehicle, setVehicles] = useState<Vehicle>()

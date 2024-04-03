@@ -1,11 +1,11 @@
 import {
+  GetMaintenanceSchedule,
   MaintenanceResponse,
-  MaintenanceSchedule,
 } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
 
 export default async function fetchMaintenanceSchedule(): Promise<
-  MaintenanceSchedule[]
+  GetMaintenanceSchedule[]
 > {
   const res = await api(`/maintenances`, {
     method: 'GET',
