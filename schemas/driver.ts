@@ -1,16 +1,11 @@
 import * as z from 'zod'
 
 export const driverSchema = z.object({
-  id: z.string().uuid().optional(),
-  nickname: z.string(),
-  fullName: z.string(),
-  company: z.string(),
-  dateOfBirth: z.string(), // Você pode querer usar z.date() se estiver trabalhando com objetos Date
-  driverLicenseNumber: z.string(),
+  user_id: z.string(),
   cpf: z.string(),
-  hireDate: z.string(), // Similarmente, z.date() pode ser adequado aqui
-  contactNumber: z.string(),
-  driverPhoto: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  contact_number: z.string().nullable(),
+  birthDate: z.coerce.date().nullable(),
+  licenseNumber: z.string().nullable(),
+  licenseExpiry: z.coerce.date().nullable(),
+  company_id: z.string(),
 })

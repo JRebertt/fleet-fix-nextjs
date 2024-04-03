@@ -1,6 +1,5 @@
 'use client'
 
-import { z } from 'zod'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
@@ -19,57 +18,85 @@ import {
 
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
 
-import { PaymentSchemas } from '@/schemas/payment'
 import updatePayments from '@/services/payment/update-payment'
+import { Payment } from '@/@types/payment'
+import { PaymentStatusDisplay } from '@/components/payment-status'
+import { PaymentMethodDisplay } from '@/components/payment-method'
+import completePayment from '@/services/payment/complete-payment'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { formatDates } from '@/lib/formtDate'
+import { space } from 'postcss/lib/list'
+import deletePaymentById from '@/services/payment/delete-payment-by-id'
 
-type PaymentSchemasValues = z.infer<typeof PaymentSchemas>
+interface PaymentColum extends Payment {
+  maintenanceTitle: string
+  licensePlate: string
+}
 
-export const columns: ColumnDef<PaymentSchemasValues>[] = [
+export const columns: ColumnDef<PaymentColum>[] = [
   {
     accessorFn: (row) => {
-      const { id } = row.maintenanceSchedule
+      const { id } = row
 
       return id
     },
-    accessorKey: 'maintenanceId',
-    header: 'Manutenção',
+    accessorKey: 'id',
+    header: 'id',
   },
+  // {
+  //   cell: async ({ row }) => {
+  //     const payment = row.original
+
+  //     const { vehicle_id: vehicleId } = await getMaintenanceScheduleById(
+  //       payment.maintenance_id,
+  //     )
+
+  //     const { licensePlate } = await getVehicleById(vehicleId)
+
+  //     return <p>{licensePlate}</p>
+  //   },
+  //   accessorKey: 'licensePlate',
+  //   header: 'Veiculo',
+  // },
+  // {
+  //   cell: async ({ row }) => {
+  //     const payment = row.original
+
+  //     const { title } = await getMaintenanceScheduleById(payment.maintenance_id)
+
+  //     return <p>{title}</p>
+  //   },
+  //   accessorKey: 'maintenanceTitle',
+  //   header: 'Manutenção',
+  // },
   {
     accessorFn: (row) => {
-      const { model } = row.vehicle
+      const { status } = row
 
-      return model
+      return status
     },
-    accessorKey: 'model',
-    header: 'Veiculo',
-  },
-
-  {
-    accessorFn: (row) => {
-      const { paymentStatus } = row.payment
-
-      return paymentStatus
-    },
-    accessorKey: 'paymentStatus',
+    accessorKey: 'status',
     cell: ({ row }) => {
-      const status = row.getValue('paymentStatus') as string
+      const status = row.getValue('status') as
+        | 'Pending'
+        | 'Completed'
+        | 'Canceled'
+        | 'Failed'
+        | 'InProcess'
+        | 'OnHold'
 
-      return (
-        <div className="flex items-center">
-          <span
-            className={`h-2 w-2 rounded-full mr-2 ${
-              status === 'Pago' ? 'bg-green-500' : 'bg-yellow-500'
-            }`}
-          />
-          {status}
-        </div>
-      )
+      return <PaymentStatusDisplay status={status} />
     },
     header: 'Status',
   },
   {
     accessorFn: (row) => {
-      const { amount } = row.payment
+      const { amount } = row
       const numericAmount = Number(amount) || 0
 
       // Formatação para a moeda brasileira
@@ -79,17 +106,52 @@ export const columns: ColumnDef<PaymentSchemasValues>[] = [
       })
     },
     header: 'Pagamento',
+    accessorKey: 'amount',
+  },
+  {
+    cell: ({ row }) => {
+      const data = row.original
+
+      if (data.paymentDate === null) {
+        return <span>Não encontrado</span>
+      }
+
+      const { formattedDate: simpleCreatedAt, timeUntilNow: detailsCreatedAt } =
+        formatDates(data.paymentDate, {
+          formatDate: 'dd/MM/yyyy HH:mm:ss',
+        })
+
+      return (
+        <div className="w-full flex justify-between items-center">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>{detailsCreatedAt}</TooltipTrigger>
+              <TooltipContent>
+                <p>{simpleCreatedAt}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )
+    },
+    accessorKey: 'paymentDate',
+    header: 'Data de Pagamento',
   },
   {
     accessorFn: (row) => {
-      const { paymentMethod } = row.payment
+      const { paymentMethod } = row
 
       return paymentMethod
     },
     cell: ({ row }) => {
-      const method = row.getValue('paymentMethod') as string
+      const method = row.getValue('paymentMethod') as
+        | 'Card'
+        | 'Boleto'
+        | 'Transfer'
+        | 'Cash'
+        | 'Pix'
 
-      return <p className="text-sm text-muted-foreground">{method}</p>
+      return <PaymentMethodDisplay method={method} />
     },
     accessorKey: 'paymentMethod',
     header: 'Forma de Pagemento',
@@ -104,13 +166,7 @@ export const columns: ColumnDef<PaymentSchemasValues>[] = [
         <Button
           className="h-8"
           variant="outline"
-          onClick={() =>
-            updatePayments(data.id as string, {
-              payment: {
-                paymentStatus: 'Pago',
-              },
-            })
-          }
+          onClick={() => completePayment(data.id, new Date(), 'Pix')}
         >
           <div className="flex justify-center items-center gap-2">
             <Check size={16} />
@@ -143,11 +199,11 @@ export const columns: ColumnDef<PaymentSchemasValues>[] = [
               className="cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(`
-                Modelo: ${payment.payment.amount}
-                Modelo: ${payment.payment.paymentMethod}
-                Modelo: ${payment.payment.paymentStatus}
-                Modelo: ${payment.payment.paymentedDate}
-                Modelo: ${payment.id}
+                Valor do serviço: ${payment.amount}
+                Metodo de pagemento: ${payment.paymentMethod}
+                Status: ${payment.status}
+                Data do pagamento: ${payment.paymentDate}
+                Id da manutenção: ${payment.maintenance_id}
                 `)
               }
             >
@@ -156,7 +212,7 @@ export const columns: ColumnDef<PaymentSchemasValues>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteVehicleById(payment.id)}
+              onClick={() => deletePaymentById(payment.id)}
             >
               Delete
               <DropdownMenuShortcut>

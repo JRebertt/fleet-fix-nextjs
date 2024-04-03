@@ -1,14 +1,16 @@
 import { api } from '@/lib/api-fetch'
 import { toast } from 'sonner'
 
-export default async function deleteVehicleById(id?: string) {
-  const res = await api(`/vehicle/${id}`, {
+type deleteVehicleByIdResponse = {
+  message: string
+}
+
+export default async function deleteVehicleById(id: string) {
+  const res = await api(`/vehicle/${id}/delete`, {
     method: 'DELETE',
   })
 
-  if (!res.ok) {
-    throw new Error('Falha ao deletar item')
-  }
+  const { message }: deleteVehicleByIdResponse = await res.json()
 
-  return toast('O item foi deletado')
+  return toast(message)
 }

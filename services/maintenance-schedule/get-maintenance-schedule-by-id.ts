@@ -1,16 +1,16 @@
+import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
-import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 
-import { z } from 'zod'
-
-type MaintenanceScheduleValues = z.infer<typeof MaintenanceScheduleSchema>
+type GetMaintenanceScheduleByIdResponse = {
+  maintenance: MaintenanceSchedule
+}
 
 export async function getMaintenanceScheduleById(
   id: string,
-): Promise<MaintenanceScheduleValues> {
-  const res = await api(`/maintenance-schedule/${id}`, {
+): Promise<MaintenanceSchedule> {
+  const res = await api(`/maintenance/${id}`, {
     method: 'GET',
   })
-  const data = await res.json()
-  return data
+  const { maintenance }: GetMaintenanceScheduleByIdResponse = await res.json()
+  return maintenance
 }

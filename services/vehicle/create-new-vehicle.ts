@@ -1,13 +1,14 @@
 import { Vehicle } from '@/@types/vehicle-table'
 import { api } from '@/lib/api-fetch'
 
+type VehicleWithoutId = Omit<Vehicle, 'id'>
+
 export default async function createNewVehicle(
-  vehicle: Vehicle,
+  vehicle: VehicleWithoutId,
 ): Promise<Vehicle> {
   const res = await api(`/vehicle`, {
     method: 'POST',
 
-    next: { revalidate: 0 },
     headers: {
       'Content-Type': 'application/json',
     },
@@ -15,10 +16,6 @@ export default async function createNewVehicle(
   })
 
   const data = await res.json()
-
-  if (!res.ok) {
-    throw new Error(data.error || 'Erro desconhecido ao adicionar veículo')
-  }
 
   return data
 }

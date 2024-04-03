@@ -2,7 +2,7 @@ import { MaintenanceHistorySchema } from '@/schemas/maintenance-history'
 import { randomUUID } from 'crypto'
 import { doc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '@/db/firebase/config'
-import { MaintenanceHistory } from '@/@types/maintenance.table'
+import { MaintenanceHistory } from '@/@types/maintenance-table'
 
 // Capturando dados do veiculo e do historico
 // export async function GET(

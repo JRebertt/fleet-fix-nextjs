@@ -6,15 +6,19 @@ import { useHookFormMask } from 'use-mask-input'
 
 import { useForm } from 'react-hook-form'
 
-import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
 
-import { Input } from './ui/input'
+import { Input } from '@/components/ui/input'
 
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import React, { useEffect, useState } from 'react'
-import getCompanies from '@/services/company/get-companies'
-import { Company } from '@/@types/company-table'
+import { useEffect, useState } from 'react'
 import { driverSchema } from '@/schemas/driver'
 import {
   Select,
@@ -22,24 +26,44 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
-import createNewDriver from '@/services/driver/create-new-driver'
+} from '@/components/ui/select'
+import createDriver from '@/services/driver/create-new-driver'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { cn } from '@/lib/utils'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from './ui/command'
+
+import { Company } from '@/@types/company-table'
+import fetchUsers from '@/services/company/fetch-users'
+import fetchCompanies from '@/services/company/fetch-companies'
 
 type DriverFormValues = z.infer<typeof driverSchema>
+
+export interface Users {
+  id: string
+  name: string
+  email: string
+  role: 'ADMIN' | 'MEMBER' | 'DRIVER'
+  created_at: Date
+}
 
 export default function DriverForm() {
   const form = useForm<DriverFormValues>({
     resolver: zodResolver(driverSchema),
     defaultValues: {
-      nickname: '',
-      fullName: '',
-      dateOfBirth: '',
-      driverLicenseNumber: '',
+      user_id: '',
       cpf: '',
-      hireDate: '',
-      contactNumber: '',
-      driverPhoto: '',
-      company: '',
+      birthDate: null,
+      company_id: '',
+      contact_number: '',
+      licenseExpiry: null,
+      licenseNumber: '',
     },
   })
 
@@ -48,19 +72,25 @@ export default function DriverForm() {
   async function onSubmit(value: DriverFormValues) {
     toast('Empresa adicionado com sucesso!✅ ')
     form.reset()
-    createNewDriver(value)
+
+    createDriver(value)
   }
 
+  const [users, setUsers] = useState<Users[]>([])
   const [companies, setCompanies] = useState<Company[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const companiesList = await getCompanies()
+      const usersList = await fetchUsers()
+      const companiesList = await fetchCompanies()
+      setUsers(usersList)
       setCompanies(companiesList)
     }
 
     fetchData()
   }, [])
+
+  console.log(users)
 
   return (
     <Form {...form}>
@@ -68,48 +98,66 @@ export default function DriverForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-2 gap-4 "
       >
-        {/* Campo Nome Completo */}
         <FormField
           control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormControl>
-                <Input
-                  id="fullName"
-                  placeholder="Nome Completo"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Campo Apelido */}
-        <FormField
-          control={form.control}
-          name="nickname"
+          name="user_id"
           render={({ field }) => (
             <FormItem>
-              <FormControl>
-                <Input
-                  id="nickname"
-                  placeholder="Apelido"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        'w-full justify-between',
+                        !field.value && 'text-muted-foreground',
+                      )}
+                    >
+                      {field.value
+                        ? users.find((data) => data.id === field.value)?.name
+                        : 'Nome'}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[20rem] sm:w-[24rem] p-0">
+                  <Command className="">
+                    <CommandInput placeholder="Buscar Motorista..." />
+                    <CommandEmpty>Nenhum Motorista Encontrado.</CommandEmpty>
+                    <CommandGroup>
+                      {users.map((data) => (
+                        <CommandItem
+                          value={data.id}
+                          key={data.id}
+                          onSelect={() => {
+                            form.setValue('user_id', data.id as string)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              data.id === field.value
+                                ? 'opacity-100'
+                                : 'opacity-0',
+                            )}
+                          />
+                          {data.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
         />
 
         {/* Campo Data de Nascimento */}
-        <FormField
+        {/* <FormField
           control={form.control}
-          name="dateOfBirth"
+          name="birthDate"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -117,26 +165,27 @@ export default function DriverForm() {
                   id="dateOfBirth"
                   placeholder="Data de Nascimento"
                   {...field}
-                  {...masked('dateOfBirth', '99/99/9999')}
+                  value={field.value ?? new Date()}
+                  {...masked('birthDate', '99/99/9999')}
                   className="px-3 py-2"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Campo Numero da CNH */}
         <FormField
           control={form.control}
-          name="driverLicenseNumber"
+          name="licenseNumber"
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <Input
-                  id="driverLicenseNumber"
                   placeholder="Numero da CNH"
                   {...field}
+                  value={field.value ?? ''}
                   className="px-3 py-2"
                 />
               </FormControl>
@@ -165,29 +214,10 @@ export default function DriverForm() {
           )}
         />
 
-        {/* Campo Data de Adimissão */}
-        <FormField
-          control={form.control}
-          name="hireDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  id="hireDate"
-                  placeholder="Data de Adimissão"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         {/* Campo Numero de Contato */}
         <FormField
           control={form.control}
-          name="contactNumber"
+          name="contact_number"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -195,26 +225,8 @@ export default function DriverForm() {
                   id="contactNumber"
                   placeholder="Numero para Contato"
                   {...field}
-                  {...masked('contactNumber', '99 9999-9999')}
-                  className="px-3 py-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Campo CPF */}
-        <FormField
-          control={form.control}
-          name="driverPhoto"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  id="driverPhoto"
-                  placeholder="Foto do Motorista"
-                  {...field}
+                  value={field.value ?? ''}
+                  {...masked('contact_number', '99 9999-9999')}
                   className="px-3 py-2"
                 />
               </FormControl>
@@ -226,7 +238,7 @@ export default function DriverForm() {
         {/* Campo Empresa */}
         <FormField
           control={form.control}
-          name="company"
+          name="company_id"
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -249,7 +261,7 @@ export default function DriverForm() {
         />
 
         <Button className="col-span-2" type="submit">
-          Salvar Veículo
+          Salvar
         </Button>
       </form>
     </Form>

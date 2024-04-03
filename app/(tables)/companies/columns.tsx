@@ -17,14 +17,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Company } from '@/@types/company-table'
 import deleteCompanyById from '@/services/company/dele-company-by-id'
-import { format, formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -35,29 +27,29 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'cnpj',
     header: 'CNPJ',
   },
-  {
-    accessorKey: 'updatedAt',
-    header: 'Ultima atualização',
-    cell: ({ row }) => {
-      const dateString = row.getValue('updatedAt') as string
-      const dateObject = new Date(dateString)
-      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
-      const formattedDate = formatDistanceToNow(dateObject, {
-        addSuffix: true,
-        locale: ptBR,
-      })
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>{formattedDate}</TooltipTrigger>
-            <TooltipContent>
-              <p>{formattedDateV2}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
-  },
+  // {
+  //   accessorKey: '',
+  //   header: 'Ultima atualização',
+  //   cell: ({ row }) => {
+  //     const dateString = row.getValue('updatedAt') as string
+  //     const dateObject = new Date(dateString)
+  //     const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+  //     const formattedDate = formatDistanceToNow(dateObject, {
+  //       addSuffix: true,
+  //       locale: ptBR,
+  //     })
+  //     return (
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <TooltipTrigger>{formattedDate}</TooltipTrigger>
+  //           <TooltipContent>
+  //             <p>{formattedDateV2}</p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     )
+  //   },
+  // },
   {
     accessorKey: 'actions',
     header: '',
@@ -83,9 +75,8 @@ export const columns: ColumnDef<Company>[] = [
                 navigator.clipboard.writeText(`
                 Nome da Empresa: ${company.name}
                 CNPJ: ${company.cnpj}
-                Email Corporativo: ${company.corporateEmail}
-                Email Financeiro: ${company.financialEmail}
-                Endereço: ${company.address}
+                Email Corporativo: ${company.contact_email}
+                Telefone: ${company.contact_number}
                 `)
               }
             >

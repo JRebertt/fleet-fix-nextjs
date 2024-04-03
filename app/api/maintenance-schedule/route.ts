@@ -1,4 +1,4 @@
-import { StatusChange } from '@/@types/maintenance.table'
+import { StatusChange } from '@/@types/maintenance-table'
 import { db } from '@/db/firebase/config'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import { createId } from '@paralleldrive/cuid2'

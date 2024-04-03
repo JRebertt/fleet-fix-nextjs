@@ -25,43 +25,59 @@ import {
 import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
-import { z } from 'zod'
-import { vehicleSchema } from '@/schemas/vehicle'
 
-type VehicleValues = z.infer<typeof vehicleSchema>
-
-export const columns: ColumnDef<VehicleValues>[] = [
+export const columns: ColumnDef<Vehicle>[] = [
   {
     accessorKey: 'model',
     header: 'Modelo',
   },
+  // {
+  //   accessorKey: 'make',
+  //   header: 'Marca',
+  // },
   {
     accessorKey: 'licensePlate',
     header: 'Placa',
   },
   {
-    accessorKey: 'updatedAt',
-    header: 'Ultima atualização',
-    cell: ({ row }) => {
-      const dateString = row.getValue('updatedAt') as string
-      const dateObject = new Date(dateString)
-      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
-      const formattedDate = formatDistanceToNow(dateObject, {
-        addSuffix: true,
-        locale: ptBR,
-      })
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>{formattedDate}</TooltipTrigger>
-            <TooltipContent>
-              <p>{formattedDateV2}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
+    accessorKey: 'year',
+    header: 'Ano',
   },
+  {
+    accessorKey: 'vin',
+    header: 'Renavam',
+  },
+  // {
+  //   accessorKey: 'driver_id',
+  //   header: 'Motorista',
+  // },
+  // {
+  //   accessorKey: 'company_id',
+  //   header: 'Empresa',
+  // },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: 'Ultima atualização',
+  //   cell: ({ row }) => {
+  //     const dateString = row.getValue('updatedAt') as string
+  //     const dateObject = new Date(dateString)
+  //     const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+  //     const formattedDate = formatDistanceToNow(dateObject, {
+  //       addSuffix: true,
+  //       locale: ptBR,
+  //     })
+  //     return (
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <TooltipTrigger>{formattedDate}</TooltipTrigger>
+  //           <TooltipContent>
+  //             <p>{formattedDateV2}</p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     )
+  //   },
+  // },
   {
     accessorKey: 'actions',
     header: '',

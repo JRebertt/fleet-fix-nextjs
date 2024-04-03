@@ -1,14 +1,16 @@
 import { api } from '@/lib/api-fetch'
 import { toast } from 'sonner'
 
-export default async function deleteMaintenanceScheduleById(id?: string) {
-  const res = await api(`/maintenance-schedule/${id}`, {
+type deleteMaintenaceByIdResponse = {
+  message: string
+}
+
+export default async function deleteMaintenanceScheduleById(id: string) {
+  const res = await api(`/maintenance/${id}/delete`, {
     method: 'DELETE',
   })
 
-  if (!res.ok) {
-    throw new Error('Falha ao deletar item')
-  }
+  const { message }: deleteMaintenaceByIdResponse = await res.json()
 
-  return toast('O item foi deletado')
+  return toast(message)
 }

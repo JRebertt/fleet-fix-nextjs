@@ -1,24 +1,22 @@
 import { Toaster } from '@/components/ui/sonner'
 import { api } from '@/lib/api-fetch'
-import { z } from 'zod'
 import { columns } from './columns'
 import { DataTable } from '@/components/data-table'
-import { PaymentSchemas } from '@/schemas/payment'
+import { Payment, PaymentReponse } from '@/@types/payment'
 
-type PaymentSchemasValues = z.infer<typeof PaymentSchemas>
-
-async function getPayment(): Promise<PaymentSchemasValues[]> {
-  const response = await api('/payment', {
+async function getPayment(): Promise<Payment[]> {
+  const response = await api('/payments', {
     method: 'Get',
     cache: 'no-store',
   })
 
-  const data = await response.json()
-  return data
+  const { payments }: PaymentReponse = await response.json()
+  return payments
 }
 
-export default async function DriverPage() {
-  const payment: PaymentSchemasValues[] = await getPayment()
+export default async function PaymentPage() {
+  const payment: Payment[] = await getPayment()
+
   return (
     <>
       <section className="py-12">
@@ -26,7 +24,7 @@ export default async function DriverPage() {
 
         <div className="container">
           <DataTable
-            filterColumnName="maintenanceId"
+            filterColumnName="id"
             columns={columns}
             data={payment}
             formComponent={false}

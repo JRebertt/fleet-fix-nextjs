@@ -24,7 +24,7 @@ import {
 import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
-import { MaintenanceHistory } from '@/@types/maintenance.table'
+import { MaintenanceHistory } from '@/@types/maintenance-table'
 
 export const columns: ColumnDef<MaintenanceHistory>[] = [
   {

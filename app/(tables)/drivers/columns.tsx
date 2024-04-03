@@ -25,10 +25,20 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { deleteDriverById } from '@/services/driver/delete-driver-by-id'
+import { Users } from '@/components/driver-form'
 
-export const columns: ColumnDef<Driver>[] = [
+interface DriversColmns extends Driver {
+  user: Users
+  name: string
+}
+
+export const columns: ColumnDef<DriversColmns>[] = [
   {
-    accessorKey: 'fullName',
+    accessorFn: (row) => {
+      const driverName = row.user.name
+      return driverName
+    },
+    accessorKey: 'name',
     header: 'Nome',
   },
   {
@@ -36,28 +46,36 @@ export const columns: ColumnDef<Driver>[] = [
     header: 'CPF',
   },
   {
-    accessorKey: 'updatedAt',
-    header: 'Ultima atualização',
-    cell: ({ row }) => {
-      const dateString = row.getValue('updatedAt') as string
-      const dateObject = new Date(dateString)
-      const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
-      const formattedDate = formatDistanceToNow(dateObject, {
-        addSuffix: true,
-        locale: ptBR,
-      })
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>{formattedDate}</TooltipTrigger>
-            <TooltipContent>
-              <p>{formattedDateV2}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
+    accessorKey: 'licenseNumber',
+    header: 'CNH',
   },
+  {
+    accessorKey: 'contact_number',
+    header: 'Celular',
+  },
+  // {
+  //   accessorKey: 'updatedAt',
+  //   header: 'Ultima atualização',
+  //   cell: ({ row }) => {
+  //     const dateString = row.getValue('updatedAt') as string
+  //     const dateObject = new Date(dateString)
+  //     const formattedDateV2 = format(dateObject, 'dd/MM/yyyy HH:mm:ss')
+  //     const formattedDate = formatDistanceToNow(dateObject, {
+  //       addSuffix: true,
+  //       locale: ptBR,
+  //     })
+  //     return (
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <TooltipTrigger>{formattedDate}</TooltipTrigger>
+  //           <TooltipContent>
+  //             <p>{formattedDateV2}</p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     )
+  //   },
+  // },
   {
     accessorKey: 'actions',
     header: '',
@@ -81,11 +99,10 @@ export const columns: ColumnDef<Driver>[] = [
               className="cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(`
-                Nome do Motorista: ${company.fullName}
+                Nome do Motorista: ${company.cpf}
                 CPF: ${company.cpf}
-                Data de Nascimento: ${company.dateOfBirth}
-                Data de Entrada: ${company.hireDate}
-                Contato: ${company.contactNumber}
+                Data de Nascimento: ${company.birthDate}
+                Contato: ${company.contact_number}
                 `)
               }
             >

@@ -1,8 +1,9 @@
-import { Company } from '@/@types/company-table'
+import { Company, GetCompanyResponse } from '@/@types/company-table'
 import { api } from '@/lib/api-fetch'
+type CompnayWithoutId = Omit<Company, 'id'>
 
-export default async function createNewComapny(
-  company: Company,
+export default async function createComapny(
+  company: CompnayWithoutId,
 ): Promise<Company> {
   const res = await api(`/company`, {
     method: 'POST',
@@ -14,11 +15,7 @@ export default async function createNewComapny(
     body: JSON.stringify(company),
   })
 
-  const data = await res.json()
+  const { company: CompanyResponse }: GetCompanyResponse = await res.json()
 
-  if (!res.ok) {
-    throw new Error(data.error || 'Erro desconhecido ao adicionar item')
-  }
-
-  return data
+  return CompanyResponse
 }

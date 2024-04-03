@@ -1,32 +1,15 @@
-interface SocialMedia {
-  name?: string
-  url?: string
-}
-
 export interface Company {
-  id?: string
+  id: string
   name: string
   cnpj: string
-  address: {
-    street: string
-    number: string
-    complement?: string
-    neighborhood: string
-    city: string
-    state: string
-    zipCode: string
-  }
-  socialMedia?: SocialMedia[]
-  contactPhone: string
-  billingEmail?: string
-  logisticsEmail: string
-  corporateEmail: string
-  financialEmail: string
-  stateRegistration?: string
-  responsiblePersonName: {
-    name: string
-    contact: string
-  }
-  createdAt?: string
-  updatedAt?: string
+  contact_number: string | null
+  contact_email: string | null
+}
+
+export interface GetCompanyResponse {
+  company: Company
+}
+
+export interface FetchCompanyResponse {
+  companies: Company[]
 }

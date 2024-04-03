@@ -28,6 +28,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import ScheduleForm from './schedule-form'
+import { Plus } from 'lucide-react'
 
 const filterSchema = z.object({
   name: z.string(),
@@ -95,7 +96,9 @@ export function Header() {
       </form>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">Agendar</Button>
+          <Button variant="outline">
+            <Plus />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

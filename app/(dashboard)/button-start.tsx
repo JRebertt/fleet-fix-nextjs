@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
@@ -30,40 +30,35 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { AwardIcon, Check, ChevronsUpDown } from 'lucide-react'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
+import { CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import getVehicles from '@/services/vehicle/get-vehicles'
 import { Vehicle } from '@/@types/vehicle-table'
-import updateMaintenanceSchedule from '@/services/maintenance-schedule/update-maintenance-schedule'
-import { PaymentSchemas } from '@/schemas/payment'
-import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
-import createNewPayment from '@/services/payment/create-new-payment'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { Calendar } from '@/components/ui/calendar'
+import startMaintenanceSchedule from '@/services/maintenance-schedule/start-maintenance-schedule'
+import completeMaintenanceSchedule from '@/services/maintenance-schedule/complete-maintenance-schedule'
 
 const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
-  vehicleId: true,
-  workshopId: true,
-  status: true,
-  mechanicAssigned: true,
-  statusChangeHistory: true,
-  feedback: true,
-  maintenanceCost: true,
+  startDate: true,
 })
 
-type MaintenanceScheduleFormsValues = z.infer<
+type StartMaintenanceScheduleFormsValues = z.infer<
   typeof StarteMaintenanceScheduleSchema
 >
 
-type PaymenteFormsValues = z.infer<typeof PaymentSchemas>
+const RequestCompleteMaintenanceSchema = z.object({
+  endDate: z.coerce.date(),
+  cost: z.coerce.number(),
+})
+
+type RequestCompleteMaintenanceFormsValues = z.infer<
+  typeof RequestCompleteMaintenanceSchema
+>
 
 export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
-  const [schedule, setSchedule] = useState<Vehicle[]>([])
+  const [_, setSchedule] = useState<Vehicle[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,82 +68,44 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
     fetchData()
   }, [])
 
-  const form = useForm<MaintenanceScheduleFormsValues>({
+  const form = useForm<StartMaintenanceScheduleFormsValues>({
     resolver: zodResolver(StarteMaintenanceScheduleSchema),
     defaultValues: {
-      feedback: '',
-      mechanicAssigned: '',
-      workshopId: '',
-      vehicleId: value.vehicleId,
-      status: value.status === 'Agendado' ? 'Em Manutenção' : 'Concluído',
-      statusChangeHistory: [
-        ...value.statusChangeHistory,
-        {
-          changedAt: new Date().toDateString(),
-          reason:
-            value.status === 'Agendado'
-              ? 'Manutenção iniciada'
-              : 'Manutenção concluída',
-          status: value.status === 'Agendado' ? 'Em Manutenção' : 'Concluído',
-        },
-      ],
+      startDate: new Date(),
     },
   })
 
-  const formEnd = useForm<PaymenteFormsValues>({
-    resolver: zodResolver(PaymentSchemas),
+  const formEnd = useForm<RequestCompleteMaintenanceFormsValues>({
+    resolver: zodResolver(RequestCompleteMaintenanceSchema),
     defaultValues: {
-      payment: {
-        amount: '',
-        paymentedDate: new Date().toISOString(),
-        paymentStatus: 'Pendente',
-        paymentMethod: 'A Definir',
-      },
-      vehicle: {
-        id: '',
-        model: '',
-      },
-      maintenanceSchedule: {
-        id: value.id,
-        title: value.title,
-        description: value.description,
-      },
+      endDate: new Date(),
+      cost: 0,
     },
   })
 
-  async function onSubmit(values: MaintenanceScheduleFormsValues) {
-    toast('Manutenção iniciada sucesso!✅ ')
+  async function onSubmit({ startDate }: StartMaintenanceScheduleFormsValues) {
     form.reset()
 
-    const data = {
-      ...value, // Dados do Agendamento
-      ...values, // Dados do Start da Manutenção
+    if (startDate === null) {
+      return new Date()
     }
 
-    await updateMaintenanceSchedule(value.id as string, data)
+    await startMaintenanceSchedule(value.id, startDate)
   }
 
-  async function onSubmitEnd(values: PaymenteFormsValues) {
+  async function onSubmitEnd({
+    endDate,
+    cost,
+  }: RequestCompleteMaintenanceFormsValues) {
     toast('Manutenção finalizada sucesso!✅ ')
-    const { id, model } = await getVehicleById(value.vehicleId)
 
-    const updatedValues = {
-      ...values,
-      vehicle: {
-        id,
-        model,
-      },
-    }
-
-    await createNewPayment(updatedValues)
-
-    await updateMaintenanceSchedule(value.id as string, { status: 'Concluído' })
+    await completeMaintenanceSchedule(value.id, endDate, cost)
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {value.status === 'Agendado' ? (
+        {value.status === 'Scheduled' ? (
           <Button variant="blue" className="w-full">
             Iniciar
           </Button>
@@ -163,7 +120,7 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
           <DialogTitle>Adicionar Novo Item</DialogTitle>
           <DialogDescription>Preencha as informações abaixo.</DialogDescription>
         </DialogHeader>
-        {value.status === 'Agendado' ? (
+        {value.status === 'Scheduled' ? (
           <div className="grid gap-4 py-4">
             <Form {...form}>
               <form
@@ -172,83 +129,45 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
               >
                 <FormField
                   control={form.control}
-                  name="mechanicAssigned"
+                  name="startDate"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          placeholder="Nome do Mecanico"
-                          {...field}
-                          className="px-3 py-2"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Campo Oficina */}
-                {/* <FormField
-                  control={form.control}
-                  name="workshopId"
-                  render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
-                              variant="outline"
-                              role="combobox"
+                              variant={'outline'}
                               className={cn(
-                                'w-full justify-between',
+                                'pl-3 text-left font-normal',
                                 !field.value && 'text-muted-foreground',
                               )}
                             >
-                              {field.value
-                                ? schedule.find(
-                                    (data) => data.id === field.value,
-                                  )?.model
-                                : 'Carro'}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              {field.value ? (
+                                format(field.value, 'PPP', {
+                                  locale: ptBR,
+                                })
+                              ) : (
+                                <span>Escolha uma data</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[20rem] sm:w-[24rem] p-0">
-                          <Command className="">
-                            <CommandInput placeholder="Buscar Motorista..." />
-                            <CommandEmpty>
-                              Nenhum Motorista Encontrado.
-                            </CommandEmpty>
-                            <CommandGroup>
-                              {schedule.map((data) => (
-                                <CommandItem
-                                  value={data.id}
-                                  key={data.id}
-                                  onSelect={() => {
-                                    form.setValue(
-                                      'workshopId',
-                                      data.id as string,
-                                    )
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      'mr-2 h-4 w-4',
-                                      data.id === field.value
-                                        ? 'opacity-100'
-                                        : 'opacity-0',
-                                    )}
-                                  />
-                                  {data.model}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            locale={ptBR}
+                            selected={field.value ?? new Date()}
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
                         </PopoverContent>
                       </Popover>
+
                       <FormMessage />
                     </FormItem>
                   )}
-                /> */}
+                />
 
                 <Button className="w-full" type="submit">
                   Confirmar
@@ -265,21 +184,61 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
               >
                 <FormField
                   control={formEnd.control}
-                  name="payment.amount"
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={'outline'}
+                              className={cn(
+                                'pl-3 text-left font-normal',
+                                !field.value && 'text-muted-foreground',
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, 'PPP', {
+                                  locale: ptBR,
+                                })
+                              ) : (
+                                <span>Escolha uma data</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            locale={ptBR}
+                            selected={field.value ?? new Date()}
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={formEnd.control}
+                  name="cost"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <Input
                           placeholder="Valor do Serviço"
                           {...field}
-                          type="number"
                           className="px-3 py-2"
                         />
                       </FormControl>
                     </FormItem>
                   )}
                 />
-
                 <Button className="w-full" type="submit">
                   Confirmar
                 </Button>

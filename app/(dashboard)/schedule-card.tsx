@@ -18,7 +18,7 @@ import {
 
 import { Badge } from '@/components/ui/badge'
 
-import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { ButtonStart } from './button-start'
 import { useEffect, useState } from 'react'
 import { Vehicle } from '@/@types/vehicle-table'
@@ -26,16 +26,21 @@ import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
 import { formatDates } from '@/lib/formtDate'
 import { ActionsComponents } from './actions-components'
 
-function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
+interface GetMaintenanceSchedule extends MaintenanceSchedule {
+  created_at: Date
+  updated_at: Date
+}
+
+function ScheduleCard({ data }: { data: GetMaintenanceSchedule }) {
   const [vehicle, setVehicles] = useState<Vehicle>()
-  const divClass = cn({
-    'bg-red-500': data.priority === 'Alta',
-    'bg-yellow-500': data.priority === 'Média',
-    'bg-teal-500': data.priority === 'Baixa',
-  })
+  // const divClass = cn({
+  //   'bg-red-500': data.priority === 'Alta',
+  //   'bg-yellow-500': data.priority === 'Média',
+  //   'bg-teal-500': data.priority === 'Baixa',
+  // })
 
   const { formattedDate: simpleCreatedAt, timeUntilNow: detailsCreatedAt } =
-    formatDates(data.createdAt as string, {
+    formatDates(data.created_at, {
       formatDate: 'dd/MM/yyyy HH:mm:ss',
     })
 
@@ -48,7 +53,7 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const vehiclesList = await getVehicleById(data.vehicleId)
+      const vehiclesList = await getVehicleById(data.vehicle_id)
       setVehicles(vehiclesList)
     }
     fetchData()
@@ -57,13 +62,13 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
   return (
     <Card className="max-h-60 p-4 flex flex-col gap-2 justify-center">
       <CardHeader className="flex flex-row w-full py-1 px-0 items-center justify-between">
-        <h3 className="max-w-48 text-sm font-semibold">{data.id}</h3>
+        <h3 className="max-w-48 text-sm font-semibold">{data.title}</h3>
         <div className="space-x-2 flex ">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
                 <div
-                  className={cn('p-1.5 rounded-full cursor-default', divClass)}
+                // className={cn('p-1.5 rounded-full cursor-default', divClass)}
                 />
               </TooltipTrigger>
               <TooltipContent className="max-w-64">
@@ -73,14 +78,15 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
                 <small className="text-sm font-medium leading-none mr-1">
                   Prioridade:
                 </small>
-                {data.priority}
+                {/* {data.priority} */}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
-          <ActionsComponents id={data.id as string} />
+          <ActionsComponents id={data.id} />
 
-          {/* <DropdownMenu>
+          {/* 
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Abrir menu</span>
@@ -109,7 +115,9 @@ function ScheduleCard({ data }: { data: MaintenanceSchedule }) {
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
+          
+          */}
         </div>
       </CardHeader>
       <CardContent className="p-0">

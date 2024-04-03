@@ -19,14 +19,6 @@ import {
 } from '../../components/ui/form'
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -51,7 +43,7 @@ import { Vehicle } from '@/@types/vehicle-table'
 
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
-import { priority } from '@/db/data'
+import { Textarea } from '@/components/ui/textarea'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
@@ -59,23 +51,14 @@ export default function ScheduleForm() {
   const form = useForm<ScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
     defaultValues: {
+      title: '',
       description: '',
-      completionDate: '',
-      contactPerson: '',
-      serviceList: [],
-      mechanicAssigned: '',
-      startDate: '',
-      workshopId: '',
-      feedback: '',
-      status: 'Agendado',
-      priority: 'Baixa',
-      statusChangeHistory: [
-        {
-          status: 'Agendado',
-          changedAt: new Date().toISOString(),
-          reason: 'Agendamento inicial',
-        },
-      ],
+      status: 'Scheduled',
+      cost: null,
+      startDate: null,
+      endDate: null,
+      scheduledDate: new Date(),
+      vehicle_id: '',
     },
   })
 
@@ -84,6 +67,7 @@ export default function ScheduleForm() {
 
     await createNewMaintenanceSchedule(values)
   }
+
   const [schedule, setSchedule] = useState<Vehicle[]>([])
 
   useEffect(() => {
@@ -97,10 +81,40 @@ export default function ScheduleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Campo Titulo */}
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Titulo" {...field} className="px-3 py-2" />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ''}
+                  placeholder="Descrição"
+                  className="px-3 py-2"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
         {/* Campo Veiculo */}
         <FormField
           control={form.control}
-          name="vehicleId"
+          name="vehicle_id"
           render={({ field }) => (
             <FormItem>
               <Popover>
@@ -132,7 +146,7 @@ export default function ScheduleForm() {
                           value={data.id}
                           key={data.id}
                           onSelect={() => {
-                            form.setValue('vehicleId', data.id as string)
+                            form.setValue('vehicle_id', data.id as string)
                           }}
                         >
                           <Check
@@ -155,93 +169,47 @@ export default function ScheduleForm() {
           )}
         />
 
-        {/* Campo Descrição */}
         <FormField
           control={form.control}
-          name="description"
+          name="scheduledDate"
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  placeholder="Descrição"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
+            <FormItem className="flex flex-col">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={'outline'}
+                      className={cn(
+                        'pl-3 text-left font-normal',
+                        !field.value && 'text-muted-foreground',
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, 'PPP', {
+                          locale: ptBR,
+                        })
+                      ) : (
+                        <span>Escolha uma data</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    locale={ptBR}
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+
+              <FormMessage />
             </FormItem>
           )}
         />
-
-        <div className="grid grid-cols-2 gap-4">
-          {/* Campo Data de Agendamento */}
-          <FormField
-            control={form.control}
-            name="scheduledDate"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-[12rem] pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground',
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, 'PPP', {
-                            locale: ptBR,
-                          })
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      locale={ptBR}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Campo Prioridade */}
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Nivel de Prioridade" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {priority.map((data, i) => (
-                      <SelectItem key={i++} value={data.value}>
-                        {data.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-        </div>
 
         <Button className="w-full" type="submit">
           Agendar

@@ -1,16 +1,15 @@
 import { api } from '@/lib/api-fetch'
-import { PaymentSchemas } from '@/schemas/payment'
+import { PaymentSchema } from '@/schemas/payment'
 import { z } from 'zod'
 
-type PaymentTypes = z.infer<typeof PaymentSchemas>
+type PaymentTypes = z.infer<typeof PaymentSchema>
 
-export default async function createNewPayment(
+export default async function createPayment(
   payment: PaymentTypes,
 ): Promise<PaymentTypes> {
   const res = await api(`/payment`, {
     method: 'POST',
 
-    next: { revalidate: 0 },
     headers: {
       'Content-Type': 'application/json',
     },

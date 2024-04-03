@@ -1,29 +1,11 @@
-'use client'
-
 import { DataTable } from '@/components/data-table'
 import { Toaster } from '@/components/ui/sonner'
 import { columns } from './columns'
-import { Company } from '@/@types/company-table'
 import CompanyForm from '@/components/company-form'
-import getCompanies from '@/services/company/get-companies'
-import { useEffect, useState } from 'react'
+import fetchCompanies from '@/services/company/fetch-companies'
 
-export default function CompanyPage() {
-  const [companies, setCompanies] = useState<Company[]>([])
-
-  useEffect(() => {
-    async function loadVehicles() {
-      try {
-        const companyData = await getCompanies()
-        setCompanies(companyData)
-      } catch (error) {
-        console.error('Erro ao carregar item:', error)
-      }
-    }
-
-    loadVehicles()
-  }, [])
-
+export default async function CompanyPage() {
+  const companies = await fetchCompanies()
   return (
     <>
       <section className="py-12">

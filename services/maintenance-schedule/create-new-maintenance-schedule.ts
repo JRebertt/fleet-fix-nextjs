@@ -1,13 +1,14 @@
-import { MaintenanceSchedule } from '@/@types/maintenance.table'
+import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
 
+export type MaintenanceScheduleWithoutId = Omit<MaintenanceSchedule, 'id'>
+
 export default async function createNewMaintenanceSchedule(
-  maintenanceSchedule: MaintenanceSchedule,
+  maintenanceSchedule: MaintenanceScheduleWithoutId,
 ): Promise<MaintenanceSchedule> {
-  const res = await api(`/maintenance-schedule`, {
+  const res = await api(`/maintenance`, {
     method: 'POST',
 
-    next: { revalidate: 0 },
     headers: {
       'Content-Type': 'application/json',
     },

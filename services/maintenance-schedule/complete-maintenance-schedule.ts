@@ -5,16 +5,18 @@ interface MaintenanceResponse {
   maintenance: MaintenanceSchedule
 }
 
-export default async function updateMaintenanceSchedule(
+export default async function completeMaintenanceSchedule(
   id: string,
-  updatedData: Partial<MaintenanceSchedule>,
-): Promise<MaintenanceSchedule> {
-  const res = await api(`/maintenance/${id}/update`, {
+  endDate: Date,
+  cost: number | null,
+) {
+  const res = await api(`/maintenance/${id}/complete`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(updatedData),
+
+    body: JSON.stringify({ endDate, cost }),
   })
 
   const { maintenance }: MaintenanceResponse = await res.json()

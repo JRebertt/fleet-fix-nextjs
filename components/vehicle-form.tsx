@@ -29,10 +29,10 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import createNewVehicle from '@/services/vehicle/create-new-vehicle'
 import { useEffect, useState } from 'react'
-import getDrivers from '@/services/driver/get-drivers'
 import { Driver } from '@/@types/driver-table'
-import getCompanies from '@/services/company/get-companies'
 import { Company } from '@/@types/company-table'
+import fetchDrivers from '@/services/driver/get-drivers'
+import fetchCompanies from '@/services/company/fetch-companies'
 
 type VehicleFormValues = z.infer<typeof vehicleSchema>
 
@@ -41,23 +41,19 @@ export default function VehicleForm() {
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
       model: '',
+      make: '',
       licensePlate: '',
-      chassisNumber: '',
-      renavamNumber: '',
-      crlveNumber: '',
-      currentMileage: '',
+      vin: '',
       year: '',
-      driver: '',
-      purchaseDate: '',
-      photos: [],
-      company: '',
-      vehicleStatus: 'Em Viagem',
+      company_id: '',
+      driver_id: '',
     },
   })
 
   async function onSubmit(values: VehicleFormValues) {
     toast('Veículo adicionado com sucesso!✅ ')
     form.reset()
+
     await createNewVehicle(values)
   }
 
@@ -66,8 +62,8 @@ export default function VehicleForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const driversList = await getDrivers()
-      const companiesList = await getCompanies()
+      const driversList = await fetchDrivers()
+      const companiesList = await fetchCompanies()
       setDrivers(driversList)
       setCompanies(companiesList)
     }
@@ -79,7 +75,22 @@ export default function VehicleForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 p-4">
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Descrição */}
+          <FormField
+            control={form.control}
+            name="make"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Marca do Veículo"
+                    {...field}
+                    className="px-3 py-2"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="model"
@@ -117,29 +128,10 @@ export default function VehicleForm() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
-          {/* Campo Número do CRLVe */}
-          <FormField
-            control={form.control}
-            name="crlveNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    id="crlveNumber"
-                    placeholder="Número do CRLVe"
-                    {...field}
-                    className="px-3 py-2"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           {/* Campo Número do RENAVAM */}
           <FormField
             control={form.control}
-            name="renavamNumber"
+            name="vin"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -160,24 +152,7 @@ export default function VehicleForm() {
         <div className="grid md:grid-cols-2 gap-4 items-center">
           <FormField
             control={form.control}
-            name="purchaseDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Data da compra"
-                    {...field}
-                    className="px-3 py-2"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="company"
+            name="company_id"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <Popover>
@@ -209,7 +184,7 @@ export default function VehicleForm() {
                             value={data.name}
                             key={data.id}
                             onSelect={() => {
-                              form.setValue('company', data.id as string)
+                              form.setValue('company_id', data.id as string)
                             }}
                           >
                             <Check
@@ -257,7 +232,7 @@ export default function VehicleForm() {
           {/* Campo Motorista */}
           <FormField
             control={form.control}
-            name="driver"
+            name="driver_id"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <Popover>
@@ -273,8 +248,9 @@ export default function VehicleForm() {
                       >
                         {field.value
                           ? drivers.find((data) => data.id === field.value)
-                              ?.nickname
+                              ?.user?.name || 'Motorista'
                           : 'Motorista'}
+
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -286,10 +262,10 @@ export default function VehicleForm() {
                       <CommandGroup>
                         {drivers.map((data) => (
                           <CommandItem
-                            value={data.nickname}
+                            value={data.user?.name}
                             key={data.id}
                             onSelect={() => {
-                              form.setValue('driver', data.id as string)
+                              form.setValue('driver_id', data.id as string)
                             }}
                           >
                             <Check
@@ -300,7 +276,7 @@ export default function VehicleForm() {
                                   : 'opacity-0',
                               )}
                             />
-                            {data.nickname}
+                            {data.user?.name}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -313,44 +289,7 @@ export default function VehicleForm() {
           />
         </div>
 
-        {/* Campo Quilometragem Atual */}
-        <FormField
-          control={form.control}
-          name="currentMileage"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  id="currentMileage"
-                  placeholder="Quilometragem Atual"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="chassisNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  id="chassisNumber"
-                  placeholder="Chassi"
-                  {...field}
-                  className="px-3 py-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Salvar Veículo</Button>
+        <Button type="submit">Salvar</Button>
       </form>
     </Form>
   )
