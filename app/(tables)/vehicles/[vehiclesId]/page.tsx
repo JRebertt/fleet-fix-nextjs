@@ -1,11 +1,7 @@
-import * as React from 'react'
-
-import { DataTable } from '@/components/data-table'
 import { Card as CardShadcnUi } from '@/components/ui/card'
 
 import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
 import getMaintenanceHistory from '@/services/vehicle/maintenance-history/get-maintenance-history'
-import { columns } from './columns'
 import { getDriverById } from '@/services/driver/get-driver-by-id'
 
 import CustomProgress from '@/components/customProgress'

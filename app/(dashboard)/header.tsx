@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import React, { ChangeEvent } from 'react'
 
 import {
   DropdownMenu,
@@ -11,14 +11,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Dialog,
   DialogContent,
@@ -29,71 +24,74 @@ import {
 } from '@/components/ui/dialog'
 import ScheduleForm from './schedule-form'
 import { Plus } from 'lucide-react'
-
-const filterSchema = z.object({
-  name: z.string(),
-})
-
-type Checked = DropdownMenuCheckboxItemProps['checked']
+import { useFilters } from '@/hooks/useFilter'
 
 export function Header() {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false)
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
-  const [showPanel, setShowPanel] = React.useState<Checked>(false)
+  const { filters, setFilters, schedules } = useFilters()
 
-  const { register, handleSubmit } = useForm({
-    resolver: zodResolver(filterSchema),
-  })
+  const handleSearchTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      searchText: event.target.value,
+    })
+  }
 
-  function onSubmit(value: any) {
-    console.log(value)
+  const handleStatusChange = (
+    statusKey: 'statusAgendado' | 'statusEmProgresso' | 'statusConcluido',
+    isChecked: boolean,
+  ) => {
+    setFilters({
+      ...filters,
+      [statusKey]: isChecked,
+    })
   }
 
   return (
     <section className="flex justify-between w-full gap-2">
-      <form
-        className="w-full max-w-96 flex space-x-2"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {/* <Input
+      <section className="w-full max-w-96 flex space-x-2">
+        <Input
           className="w-full"
           placeholder="Buscar..."
-          {...register('name')}
-        /> */}
+          value={filters.searchText}
+          onChange={handleSearchTextChange}
+        />
 
-        {/* <div>
+        <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Filtro</Button>
+              <Button variant="outline">Status</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Prioridade</DropdownMenuLabel>
+              <DropdownMenuLabel>Status do Agendamento</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuCheckboxItem
-                checked={showStatusBar}
-                onCheckedChange={setShowStatusBar}
-                disabled
+                checked={filters.statusAgendado}
+                onCheckedChange={(checked) =>
+                  handleStatusChange('statusAgendado', checked)
+                }
               >
-                Alta
+                Agendado
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={showActivityBar}
-                onCheckedChange={setShowActivityBar}
-                disabled
+                checked={filters.statusEmProgresso}
+                onCheckedChange={(checked) =>
+                  handleStatusChange('statusEmProgresso', checked)
+                }
               >
-                Media
+                Em Progresso
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                disabled
-                checked={showPanel}
-                onCheckedChange={setShowPanel}
+                checked={filters.statusConcluido}
+                onCheckedChange={(checked) =>
+                  handleStatusChange('statusConcluido', checked)
+                }
               >
-                Baixa
+                Concluído
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div> */}
-      </form>
+        </div>
+      </section>
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline">
