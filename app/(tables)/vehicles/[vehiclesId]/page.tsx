@@ -20,7 +20,7 @@ export default async function VehicleProfile({
 }) {
   const data = await getVehicleById(params.vehiclesId)
   const maintenanceHistory = await getMaintenanceHistory(params.vehiclesId)
-  const driverData = await getDriverById(data.driver)
+  const driverData = await getDriverById(data.driver_id)
 
   function calcularPorcentagemAutomatica(
     kmAtual: number,
@@ -83,7 +83,7 @@ export default async function VehicleProfile({
                 <li className="flex gap-2 max-w-[16rem]">
                   <p className="text-base text-muted-foreground">Chassi</p>
                   <h3 className="font-semibold text-sm tracking-wider">
-                    {data.chassisNumber}
+                    {data.vin}
                   </h3>
                 </li>
                 <li className="flex gap-2 max-w-[16rem]">
@@ -97,10 +97,10 @@ export default async function VehicleProfile({
                     Data de Compra
                   </p>
                   <h3 className="font-semibold text-sm tracking-wider">
-                    {data.purchaseDate}
+                    {data.make}
                   </h3>
                 </li>
-                <li className="flex gap-2 max-w-[16rem]">
+                {/* <li className="flex gap-2 max-w-[16rem]">
                   <p className="text-base text-muted-foreground">Renavam</p>
                   <h3 className="font-semibold text-sm tracking-wider">
                     {data.renavamNumber}
@@ -119,7 +119,7 @@ export default async function VehicleProfile({
                   <h3 className="font-semibold text-sm tracking-wider">
                     {Number(data.currentMileage)}
                   </h3>
-                </li>
+                </li> */}
               </ul>
             </div>
           </CardShadcnUi>
@@ -132,13 +132,13 @@ export default async function VehicleProfile({
                 <div className="flex flex-col space-y-1 px-2">
                   <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">Nome:</h2>
-                    <p>{driverData.fullName}</p>
+                    <p>{driverData.user?.name}</p>
                   </div>
                   <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">
                       Apelido:
                     </h2>
-                    <p>{driverData.nickname}</p>
+                    <p>{driverData.user?.email}</p>
                   </div>
                   <div>
                     <div className="w-16 h-5 bg-red-300"></div>
@@ -150,11 +150,11 @@ export default async function VehicleProfile({
                 <div className="flex flex-col space-y-1 px-2">
                   <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">Contato</h2>
-                    <p>{driverData.contactNumber}</p>
+                    <p>{driverData.contact_number}</p>
                   </div>
                   <div className="flex gap-2">
                     <h2 className="text-base text-muted-foreground">CNH:</h2>
-                    <p>{driverData.driverLicenseNumber}</p>
+                    <p>{driverData.licenseNumber}</p>
                   </div>
                 </div>
                 <Separator orientation="vertical" />
@@ -169,7 +169,11 @@ export default async function VehicleProfile({
                     <h2 className="text-base text-muted-foreground">
                       Data de Nascimentos:
                     </h2>
-                    <p>{driverData.dateOfBirth}</p>
+                    <p>
+                      {driverData.birthDate
+                        ? driverData.birthDate.toLocaleDateString()
+                        : 'Não informado'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -177,7 +181,7 @@ export default async function VehicleProfile({
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </section>
-        <section>
+        {/* <section>
           <div>
             <DataTable
               filterColumnName="description"
@@ -185,7 +189,7 @@ export default async function VehicleProfile({
               data={maintenanceHistory}
             />
           </div>
-        </section>
+        </section> */}
       </main>
     </>
   )
