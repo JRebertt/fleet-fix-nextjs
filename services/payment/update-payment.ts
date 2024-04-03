@@ -1,9 +1,9 @@
 import { api } from '@/lib/api-fetch'
-import { PaymentSchemas } from '@/schemas/payment'
+import { PaymentSchema } from '@/schemas/payment'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-type PaymentValues = z.infer<typeof PaymentSchemas>
+type PaymentValues = z.infer<typeof PaymentSchema>
 
 export default async function updatePayments(
   id: string,
