@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
@@ -19,8 +21,8 @@ interface Props {
 type MaintenanceScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
 export function ActionsComponents({ id }: Props) {
-  const [vehicle, setVehicle] = useState<Vehicle[]>([])
-  const [schedule, setSchedule] = useState<MaintenanceScheduleFormValues>()
+  const [_, setVehicle] = useState<Vehicle[]>([])
+  const [__, setSchedule] = useState<MaintenanceScheduleFormValues>()
 
   useEffect(() => {
     const fetchData = async () => {

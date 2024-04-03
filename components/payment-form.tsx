@@ -3,7 +3,6 @@
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
 
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
@@ -16,21 +15,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
+import { CalendarIcon } from 'lucide-react'
 
-import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react'
-
-import getVehicles from '@/services/vehicle/get-vehicles'
-import { Vehicle } from '@/@types/vehicle-table'
-
-import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
-import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Form,

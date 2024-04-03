@@ -16,9 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
-
-import updatePayments from '@/services/payment/update-payment'
 import { Payment } from '@/@types/payment'
 import { PaymentStatusDisplay } from '@/components/payment-status'
 import { PaymentMethodDisplay } from '@/components/payment-method'
@@ -30,12 +27,11 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { formatDates } from '@/lib/formtDate'
-import { space } from 'postcss/lib/list'
 import deletePaymentById from '@/services/payment/delete-payment-by-id'
 
 interface PaymentColum extends Payment {
-  maintenanceTitle: string
-  licensePlate: string
+  maintenanceTitle?: string
+  licensePlate?: string
 }
 
 export const columns: ColumnDef<PaymentColum>[] = [

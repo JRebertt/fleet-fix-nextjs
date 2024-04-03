@@ -1,7 +1,3 @@
-import { MainNav } from '@/components/main-nav'
-import TeamSwitcher from '@/components/team-switcher'
-import { UserNav } from '@/components/user-nav'
-
 export default async function Header() {
   return (
     <>

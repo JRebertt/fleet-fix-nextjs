@@ -16,14 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Vehicle } from '@/@types/vehicle-table'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { format, formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
 
 export const columns: ColumnDef<Vehicle>[] = [

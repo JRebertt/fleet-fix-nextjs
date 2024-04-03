@@ -5,8 +5,6 @@ import {
   Truck,
   User,
   Wallet,
-  Wrench,
-  HardHat,
 } from 'lucide-react'
 import { type NavItem } from '@/@types/types'
 

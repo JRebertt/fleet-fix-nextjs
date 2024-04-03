@@ -16,26 +16,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Driver } from '@/@types/driver-table'
-import { format, formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { deleteDriverById } from '@/services/driver/delete-driver-by-id'
 import { Users } from '@/components/driver-form'
 
 interface DriversColmns extends Driver {
-  user: Users
-  name: string
+  user?: Users
+  name?: string
 }
 
 export const columns: ColumnDef<DriversColmns>[] = [
   {
     accessorFn: (row) => {
-      const driverName = row.user.name
+      const driverName = row.user?.name
       return driverName
     },
     accessorKey: 'name',
