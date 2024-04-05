@@ -26,9 +26,6 @@ export default async function sessionsUser(user: SessionsUserRequest) {
     httpOnly: true, // Acessível apenas pelo servidor
     sameSite: 'strict', // O cookie é enviado em solicitações apenas do mesmo site
   })
-  if (res.ok) {
-    redirect('/')
-  }
 
   return data
 }

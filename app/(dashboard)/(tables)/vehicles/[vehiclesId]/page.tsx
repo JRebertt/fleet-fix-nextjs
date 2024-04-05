@@ -1,12 +1,9 @@
 import { Card as CardShadcnUi } from '@/components/ui/card'
 
 import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
-import getMaintenanceHistory from '@/services/vehicle/maintenance-history/get-maintenance-history'
 import { getDriverById } from '@/services/driver/get-driver-by-id'
 
 import CustomProgress from '@/components/customProgress'
-import { Separator } from '@/components/ui/separator'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Image } from '@nextui-org/react'
 
 export default async function VehicleProfile({
@@ -15,7 +12,7 @@ export default async function VehicleProfile({
   params: { vehiclesId: string }
 }) {
   const data = await getVehicleById(params.vehiclesId)
-  const maintenanceHistory = await getMaintenanceHistory(params.vehiclesId)
+
   const driverData = await getDriverById(data.driver_id)
 
   function calcularPorcentagemAutomatica(

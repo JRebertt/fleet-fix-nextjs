@@ -51,7 +51,7 @@ function ScheduleCard({ data }: { data: GetMaintenanceSchedule }) {
       setVehicles(vehiclesList)
     }
     fetchData()
-  }, [])
+  }, [data.vehicle_id])
 
   return (
     <Card className="min-h-60 p-4 flex flex-col gap-2 justify-center">

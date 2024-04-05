@@ -27,7 +27,7 @@ import { Plus } from 'lucide-react'
 import { useFilters } from '@/hooks/useFilter'
 
 export function Header() {
-  const { filters, setFilters, schedules } = useFilters()
+  const { filters, setFilters } = useFilters()
 
   const handleSearchTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilters({

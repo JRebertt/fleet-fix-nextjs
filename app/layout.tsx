@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Layout } from '@/components/layout'
 import { Providers } from './providers'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 

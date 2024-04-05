@@ -10,6 +10,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Icons } from '@/components/icons'
 import sessionsUser from '@/services/user/sessions-user'
+import { toast } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
+import { useRouter } from 'next/navigation'
 
 const UserAuthFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -32,17 +35,26 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
     },
   })
 
+  const route = useRouter()
+
   async function onSubmit(values: UserAuthFormValues) {
     // Adicionando delay de 2 segundos antes de prosseguir
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    await sessionsUser(values)
+    const response = await sessionsUser(values)
+
+    if (!response.token) {
+      toast(response.message)
+    }
+
+    route.push('/')
 
     reset()
   }
 
   return (
     <div className={cn('grid gap-6', props.className)} {...props}>
+      <Toaster />
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-2">
         <div className="grid gap-1">
           <Label htmlFor="email" className="sr-only">

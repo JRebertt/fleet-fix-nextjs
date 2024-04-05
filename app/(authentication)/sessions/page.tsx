@@ -3,6 +3,8 @@ import Image from 'next/image'
 
 import { UserAuthForm } from './user-auth-form'
 
+import { Toaster } from '@/components/ui/toaster'
+
 export const metadata: Metadata = {
   title: 'Autenticação',
   description: 'Formulários de autenticação construídos usando os componentes.',
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
 export default function AuthenticationSessionsPage() {
   return (
     <>
+      <Toaster />
       <div className="container relative hidden min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         {/* <Link
           href="/register"
