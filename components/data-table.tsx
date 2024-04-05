@@ -47,7 +47,7 @@ interface DataTableProps<TData, TValue> {
   formComponent?: React.ReactNode
   dialogTitle?: string
   dialogDescription?: string
-  buttonText?: string
+  buttonText?: React.ReactNode | string
   filterColumnName: string
 }
 
