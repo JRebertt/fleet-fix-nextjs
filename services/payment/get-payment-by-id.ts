@@ -1,3 +1,5 @@
+'use server'
+
 import { Payment } from '@/@types/payment'
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'

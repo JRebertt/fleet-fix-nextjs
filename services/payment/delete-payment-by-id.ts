@@ -1,3 +1,5 @@
+'use server'
+
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
 import { toast } from 'sonner'
