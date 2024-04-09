@@ -65,6 +65,8 @@ export default function ScheduleForm() {
   async function onSubmit(values: ScheduleFormValues) {
     toast('Manutenção Agendada com sucesso!✅ ')
 
+    console.log(values)
+
     await createNewMaintenanceSchedule(values)
   }
 

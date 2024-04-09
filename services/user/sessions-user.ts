@@ -2,14 +2,25 @@
 
 import { cookies } from 'next/headers'
 import { api } from '@/lib/api-fetch'
-import { redirect } from 'next/navigation'
 
 interface SessionsUserRequest {
   email: string
   password: string
 }
 
-export default async function sessionsUser(user: SessionsUserRequest) {
+interface ErrorResponse {
+  message: string
+}
+
+interface SuccessResponse {
+  token: string
+}
+
+type SessionsUserResponse = ErrorResponse | SuccessResponse
+
+export default async function sessionsUser(
+  user: SessionsUserRequest,
+): Promise<SessionsUserResponse> {
   const cookieStore = cookies()
   const res = await api(`/sessions`, {
     method: 'POST',
@@ -19,13 +30,15 @@ export default async function sessionsUser(user: SessionsUserRequest) {
     body: JSON.stringify(user),
   })
 
-  const data = await res.json()
+  const data: SessionsUserResponse = await res.json()
 
-  cookieStore.set('@auth_accessToken', data.token, {
-    maxAge: 60 * 60 * 24, // 24 horas em segundos
-    httpOnly: true, // Acessível apenas pelo servidor
-    sameSite: 'strict', // O cookie é enviado em solicitações apenas do mesmo site
-  })
+  if ('token' in data) {
+    cookieStore.set('@auth_accessToken', data.token, {
+      maxAge: 60 * 60 * 24, // 24 horas em segundos
+      httpOnly: true, // Acessível apenas pelo servidor
+      sameSite: 'strict', // O cookie é enviado em solicitações apenas do mesmo site
+    })
+  }
 
   return data
 }
