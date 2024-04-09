@@ -3,7 +3,7 @@
 'use client'
 
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
-import deleteMaintenanceScheduleById from '@/services/maintenance-schedule/dele-maintenance-schedule-by-id'
+import deleteMaintenanceScheduleById from '@/services/maintenance-schedule/delete-maintenance-schedule-by-id'
 import updateMaintenanceSchedule from '@/services/maintenance-schedule/update-maintenance-schedule'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
@@ -14,6 +14,7 @@ import { Vehicle } from '@/@types/vehicle-table'
 import getVehicles from '@/services/vehicle/get-vehicles'
 import { getMaintenanceScheduleById } from '@/services/maintenance-schedule/get-maintenance-schedule-by-id'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface Props {
   id: string
@@ -36,7 +37,9 @@ export function ActionsComponents({ id }: Props) {
   }, [])
 
   async function handlerRemove(id: string) {
-    await deleteMaintenanceScheduleById(id)
+    const reponse = await deleteMaintenanceScheduleById(id)
+
+    toast(reponse)
   }
 
   const form = useForm<MaintenanceScheduleFormValues>({

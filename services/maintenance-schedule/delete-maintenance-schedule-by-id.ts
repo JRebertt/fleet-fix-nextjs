@@ -2,7 +2,6 @@
 
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
-import { toast } from 'sonner'
 
 type deleteMaintenaceByIdResponse = {
   message: string
@@ -23,5 +22,5 @@ export default async function deleteMaintenanceScheduleById(id: string) {
 
   const { message }: deleteMaintenaceByIdResponse = await res.json()
 
-  return toast(message)
+  return message
 }
