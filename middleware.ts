@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from 'next/server'
 export default function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  const token = request.cookies.get('@auth_accessToken')?.value || ''
+  const token = request.cookies.get('@fleetFix.accessToken')?.value || ''
 
   // Define quais são os caminhos públicos (acessíveis sem autenticação)
   const isPublicPath = ['/sessions'].includes(path)
@@ -17,6 +17,12 @@ export default function middleware(request: NextRequest) {
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL('/sessions', request.nextUrl))
   }
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL('/', request.nextUrl))
+  }
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL('/', request.nextUrl))
+  }
 
   // Continua a requisição se nenhuma das condições acima for atendida
   return NextResponse.next()
@@ -26,6 +32,7 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/',
+    '/sessions',
     '/drivers/:path*',
     '/vehicles/:path*',
     '/company/:path*',

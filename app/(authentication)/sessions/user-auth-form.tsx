@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -13,6 +13,8 @@ import sessionsUser from '@/services/user/sessions-user'
 import { toast } from 'sonner'
 import { Toaster } from '@/components/ui/sonner'
 import { useRouter } from 'next/navigation'
+import refreshToken from '@/services/user/refresh'
+import { AuthContext } from '@/context/auth-context'
 
 const UserAuthFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -36,16 +38,19 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
   })
 
   const route = useRouter()
+  const { signIn } = useContext(AuthContext)
 
   async function onSubmit(values: UserAuthFormValues) {
     // Adicionando delay de 2 segundos antes de prosseguir
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    const response = await sessionsUser(values)
+    await signIn(values)
 
-    if (!response.token) {
-      toast(response.message)
-    }
+    // const refresh = await refreshToken(values)
+
+    // if (!response.token) {
+    //   toast(response.message)
+    // }
 
     route.push('/')
 

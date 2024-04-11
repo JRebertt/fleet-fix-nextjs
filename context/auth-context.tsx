@@ -1,0 +1,79 @@
+'use client'
+
+import profileUser from '@/services/user/profile-user'
+import sessionsUser from '@/services/user/sessions-user'
+import { deleteCookie, getCookie, setCookie } from 'cookies-next'
+
+import { useRouter } from 'next/navigation'
+
+import { ReactNode, createContext, useEffect, useState } from 'react'
+
+interface Props {
+  children?: ReactNode
+}
+
+type SignInData = {
+  email: string
+  password: string
+}
+
+type User = {
+  id: string
+  name: string
+  email: string
+  role: string
+  created_at: string
+}
+
+type AuthContextType = {
+  isAuthenticated: boolean
+  user: User | null
+  signIn: (data: SignInData) => Promise<void>
+  signOut: () => Promise<void>
+}
+
+export const AuthContext = createContext({} as AuthContextType)
+
+export function AuthProvider({ children }: Props) {
+  const [user, setUser] = useState<User | null>(null)
+  const router = useRouter()
+
+  const isAuthenticated = !!user
+
+  useEffect(() => {
+    const token = getCookie('@fleetFix.accessToken')
+
+    if (token) {
+      profileUser(token).then((response) => {
+        setUser(response.user)
+      })
+    }
+  }, [])
+
+  async function signIn({ email, password }: SignInData) {
+    const data = await sessionsUser({ email, password })
+
+    setCookie('@fleetFix.accessToken', data.token)
+
+    const isCookie = getCookie('@fleetFix.accessToken')
+
+    if (isCookie) {
+      const { user } = await profileUser(isCookie)
+      setUser(user)
+    }
+
+    router.push('/')
+  }
+
+  async function signOut() {
+    deleteCookie('@fleetFix.accessToken')
+
+    router.push('/sessions')
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}

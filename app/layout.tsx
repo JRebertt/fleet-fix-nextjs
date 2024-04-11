@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Providers } from './providers'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { AuthProvider } from '@/context/auth-context'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,7 +33,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            {children}
+            <AuthProvider>{children}</AuthProvider>
             <SpeedInsights />
           </Providers>
         </ThemeProvider>
