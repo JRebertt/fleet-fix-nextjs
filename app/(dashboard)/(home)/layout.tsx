@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Header } from './header'
-import { FiltersProvider } from '@/hooks/useFilter'
+import { FiltersProvider } from '@/context/useFilter'
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (

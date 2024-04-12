@@ -19,8 +19,6 @@ async function getPayment(): Promise<Payment[]> {
 export default async function PaymentPage() {
   const payment: Payment[] = await getPayment()
 
-  console.log(payment)
-
   return (
     <>
       <section>

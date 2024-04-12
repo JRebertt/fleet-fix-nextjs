@@ -2,6 +2,7 @@
 
 import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
+import { COOKIE_NAME } from '@/lib/cookies'
 import { cookies } from 'next/headers'
 
 type GetMaintenanceScheduleByIdResponse = {
@@ -13,7 +14,7 @@ export async function getMaintenanceScheduleById(
 ): Promise<MaintenanceSchedule> {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/maintenance/${id}`, {
     method: 'GET',
     headers: {

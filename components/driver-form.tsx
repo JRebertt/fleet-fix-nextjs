@@ -42,6 +42,9 @@ import {
 import { Company } from '@/@types/company-table'
 import fetchUsers from '@/services/company/fetch-users'
 import fetchCompanies from '@/services/company/fetch-companies'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
+import { Icons } from './icons'
 
 type DriverFormValues = z.infer<typeof driverSchema>
 
@@ -69,11 +72,18 @@ export default function DriverForm() {
 
   const masked = useHookFormMask(form.register)
 
-  async function onSubmit(value: DriverFormValues) {
-    toast('Empresa adicionado com sucesso!✅ ')
-    form.reset()
+  const { mutateAsync: createDriverFn } = useMutation({
+    mutationFn: createDriver,
+  })
 
-    createDriver(value)
+  async function onSubmit(value: DriverFormValues) {
+    try {
+      createDriverFn(value)
+      toast.success(notifications.driver.create.success)
+      form.reset()
+    } catch (err) {
+      toast.error(notifications.driver.create.error)
+    }
   }
 
   const [users, setUsers] = useState<Users[]>([])
@@ -89,8 +99,6 @@ export default function DriverForm() {
 
     fetchData()
   }, [])
-
-  console.log(users)
 
   return (
     <Form {...form}>
@@ -260,7 +268,14 @@ export default function DriverForm() {
           )}
         />
 
-        <Button className="col-span-2" type="submit">
+        <Button
+          disabled={form.formState.isSubmitting}
+          className="col-span-2"
+          type="submit"
+        >
+          {form.formState.isSubmitting && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Salvar
         </Button>
       </form>

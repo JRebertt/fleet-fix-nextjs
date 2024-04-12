@@ -3,6 +3,7 @@
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
 import { toast } from 'sonner'
+import { COOKIE_NAME } from '@/lib/cookies'
 
 type deleteCompanyByIdResponse = {
   message: string
@@ -11,7 +12,7 @@ type deleteCompanyByIdResponse = {
 export default async function deleteCompanyById(id: string) {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/company/${id}/delete`, {
     method: 'DELETE',
     headers: {

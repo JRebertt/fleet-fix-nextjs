@@ -7,6 +7,7 @@ import { deleteCookie, getCookie, setCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
 
 import { ReactNode, createContext, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 interface Props {
   children?: ReactNode
@@ -53,7 +54,15 @@ export function AuthProvider({ children }: Props) {
   async function signIn({ email, password }: SignInData) {
     const data = await sessionsUser({ email, password })
 
+    if (!data.token) {
+      throw new Error()
+    }
+
     setCookie('@fleetFix.accessToken', data.token)
+
+    // const refreshTokenReponse = await refreshToken({ email, password })
+
+    // console.log(refreshTokenReponse)
 
     const isCookie = getCookie('@fleetFix.accessToken')
 

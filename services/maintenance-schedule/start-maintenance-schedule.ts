@@ -3,6 +3,7 @@
 import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
+import { COOKIE_NAME } from '@/lib/cookies'
 
 interface MaintenanceResponse {
   maintenance: MaintenanceSchedule
@@ -14,7 +15,7 @@ export default async function startMaintenanceSchedule(
 ) {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/maintenance/${id}/start`, {
     method: 'PUT',
     headers: {

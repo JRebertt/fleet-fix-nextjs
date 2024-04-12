@@ -3,6 +3,8 @@ import { api } from '@/lib/api-fetch'
 import { PaymentSchema } from '@/schemas/payment'
 import { cookies } from 'next/headers'
 import { toast } from 'sonner'
+import { COOKIE_NAME } from '@/lib/cookies'
+
 import { z } from 'zod'
 
 type PaymentValues = z.infer<typeof PaymentSchema>
@@ -13,7 +15,7 @@ export default async function updatePayments(
 ): Promise<PaymentValues> {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/payment/${id}`, {
     method: 'PATCH',
     headers: {

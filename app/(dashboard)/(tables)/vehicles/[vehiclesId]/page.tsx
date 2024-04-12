@@ -33,8 +33,6 @@ export default async function VehicleProfile({
 
   const porcentagem = calcularPorcentagemAutomatica(kmAtual, intervaloTroca)
 
-  console.log(driverData)
-
   return (
     <>
       <main className="w-full p-6 flex flex-col gap-6">

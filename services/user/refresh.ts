@@ -1,7 +1,6 @@
 'use server'
+
 import { api } from '@/lib/api-fetch'
-import { getCookies } from 'cookies-next'
-import { cookies } from 'next/headers'
 
 interface SessionsUserRequest {
   email: string
@@ -9,17 +8,25 @@ interface SessionsUserRequest {
 }
 
 export default async function refreshToken(user: SessionsUserRequest) {
-  const res = await api(`/token/refresh`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  })
+  try {
+    const res = await api(`/token/refresh`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
 
-  const data = await res.json()
+    if (!res.ok) {
+      throw new Error('Failed to refresh token')
+    }
 
-  console.log(data)
-
-  return data
+    const data = await res.json()
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error('An error occurred:', error)
+    throw error // Re-throw the error to be handled by the caller
+  }
 }

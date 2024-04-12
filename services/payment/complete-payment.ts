@@ -3,6 +3,7 @@
 import { Payment } from '@/@types/payment'
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
+import { COOKIE_NAME } from '@/lib/cookies'
 
 type PaymentResponse = {
   payment: Payment
@@ -15,7 +16,7 @@ export default async function completePayment(
 ): Promise<Payment> {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/payment/${id}/complete`, {
     method: 'PUT',
     headers: {

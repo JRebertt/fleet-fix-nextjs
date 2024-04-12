@@ -33,6 +33,9 @@ import { Driver } from '@/@types/driver-table'
 import { Company } from '@/@types/company-table'
 import fetchDrivers from '@/services/driver/get-drivers'
 import fetchCompanies from '@/services/company/fetch-companies'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
+import { Icons } from './icons'
 
 type VehicleFormValues = z.infer<typeof vehicleSchema>
 
@@ -50,11 +53,18 @@ export default function VehicleForm() {
     },
   })
 
-  async function onSubmit(values: VehicleFormValues) {
-    toast('Veículo adicionado com sucesso!✅ ')
-    form.reset()
+  const { mutateAsync: createNewVehicleFn } = useMutation({
+    mutationFn: createNewVehicle,
+  })
 
-    await createNewVehicle(values)
+  async function onSubmit(values: VehicleFormValues) {
+    try {
+      toast.success(notifications.vehicle.create.success)
+      await createNewVehicleFn(values)
+      form.reset()
+    } catch (err) {
+      toast.error(notifications.vehicle.create.error)
+    }
   }
 
   const [drivers, setDrivers] = useState<Driver[]>([])
@@ -289,7 +299,12 @@ export default function VehicleForm() {
           />
         </div>
 
-        <Button type="submit">Salvar</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          Salvar
+        </Button>
       </form>
     </Form>
   )

@@ -1,6 +1,7 @@
 'use server'
 
 import { api } from '@/lib/api-fetch'
+import { COOKIE_NAME } from '@/lib/cookies'
 import { cookies } from 'next/headers'
 
 type deleteMaintenaceByIdResponse = {
@@ -10,7 +11,7 @@ type deleteMaintenaceByIdResponse = {
 export default async function deleteMaintenanceScheduleById(id: string) {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/maintenance/${id}/delete`, {
     method: 'DELETE',
     headers: {
