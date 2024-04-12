@@ -1,28 +1,28 @@
 'use server'
 
-import { Users } from '@/components/driver-form'
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
 import { COOKIE_NAME } from '@/lib/cookies'
+import { Payment } from '@/@types/payment'
 
-interface FetchUsersResponse {
-  users: Users[]
+export interface PaymentsResponse {
+  payments: Payment[]
 }
 
-export default async function fetchUsers(): Promise<Users[]> {
+export default async function getPayments(): Promise<Payment[]> {
   const cookieStore = cookies()
 
   const token = cookieStore.get(COOKIE_NAME)
-  const res = await api(`/users`, {
+  const res = await api(`/payments`, {
+    method: 'Get',
     cache: 'no-store',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
   })
 
-  const { users }: FetchUsersResponse = await res.json()
+  const { payments }: PaymentsResponse = await res.json()
 
-  return users || []
+  return payments || []
 }

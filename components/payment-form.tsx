@@ -37,6 +37,9 @@ import {
   SelectValue,
 } from './ui/select'
 import createPayment from '@/services/payment/create-new-payment'
+import { Icons } from './icons'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
 
 type Status = {
   name:
@@ -123,10 +126,18 @@ export default function PaymentForm() {
     },
   })
 
-  async function onSubmit(values: PaymentFormValues) {
-    toast('Manutenção Agendada com sucesso!✅ ')
+  const { mutateAsync: createPaymentFn } = useMutation({
+    mutationFn: createPayment,
+  })
 
-    await createPayment(values)
+  async function onSubmit(values: PaymentFormValues) {
+    try {
+      toast.success(notifications.payment.create.success)
+      await createPaymentFn(values)
+      form.reset()
+    } catch (err) {
+      toast.success(notifications.payment.create.success)
+    }
   }
 
   return (
@@ -253,7 +264,14 @@ export default function PaymentForm() {
           )}
         />
 
-        <Button className="w-full" type="submit">
+        <Button
+          className="w-full"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Continuar
         </Button>
       </form>

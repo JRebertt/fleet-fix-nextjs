@@ -33,11 +33,11 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
     },
   })
 
-  const onSubmit = async (values: UserAuthFormValues) => {
+  const onSubmit = async () => {
     // Adicionando delay de 2 segundos antes de prosseguir
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    console.log(values) // Aqui, você pode enviar os dados para sua API ou serviço
+    // console.log(values) // Aqui, você pode enviar os dados para sua API ou serviço
     reset() // Limpa os campos do formulário após a submissão
   }
 

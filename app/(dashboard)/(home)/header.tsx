@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import ScheduleForm from './schedule-form'
 import { Plus } from 'lucide-react'
-import { useFilters } from '@/hooks/useFilter'
+import { useFilters } from '@/context/useFilter'
 
 export function Header() {
   const { filters, setFilters } = useFilters()

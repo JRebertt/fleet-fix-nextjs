@@ -44,6 +44,9 @@ import { Vehicle } from '@/@types/vehicle-table'
 import { MaintenanceScheduleSchema } from '@/schemas/maintenance-schedule'
 import createNewMaintenanceSchedule from '@/services/maintenance-schedule/create-new-maintenance-schedule'
 import { Textarea } from '@/components/ui/textarea'
+import { useMutation } from '@tanstack/react-query'
+import { Icons } from '@/components/icons'
+import notifications from '@/utils/ notifications'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
@@ -62,12 +65,17 @@ export default function ScheduleForm() {
     },
   })
 
+  const { mutateAsync: createMaintenanceSchedule } = useMutation({
+    mutationFn: createNewMaintenanceSchedule,
+  })
+
   async function onSubmit(values: ScheduleFormValues) {
-    toast('Manutenção Agendada com sucesso!✅ ')
-
-    console.log(values)
-
-    await createNewMaintenanceSchedule(values)
+    try {
+      toast.success(notifications.maintenance.schedule.success)
+      await createMaintenanceSchedule(values)
+    } catch (err) {
+      toast.error(notifications.maintenance.schedule.error)
+    }
   }
 
   const [schedule, setSchedule] = useState<Vehicle[]>([])
@@ -213,7 +221,14 @@ export default function ScheduleForm() {
           )}
         />
 
-        <Button className="w-full" type="submit">
+        <Button
+          className="w-full"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Agendar
         </Button>
       </form>

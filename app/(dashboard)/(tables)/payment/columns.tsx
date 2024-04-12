@@ -28,6 +28,8 @@ import {
 } from '@/components/ui/tooltip'
 import { formatDates } from '@/lib/formtDate'
 import deletePaymentById from '@/services/payment/delete-payment-by-id'
+import { handleRemoveItem } from '@/lib/action-delete'
+import notifications from '@/utils/ notifications'
 
 interface PaymentColum extends Payment {
   maintenanceTitle?: string
@@ -158,7 +160,9 @@ export const columns: ColumnDef<PaymentColum>[] = [
     cell: ({ row }) => {
       const data = row.original
 
-      return (
+      return data.status === 'Completed' ? (
+        <span></span>
+      ) : (
         <Button
           className="h-8"
           variant="outline"
@@ -208,7 +212,13 @@ export const columns: ColumnDef<PaymentColum>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deletePaymentById(payment.id)}
+              onClick={() =>
+                handleRemoveItem({
+                  id: payment.id,
+                  router: deletePaymentById,
+                  notify: notifications.payment.delete,
+                })
+              }
             >
               Delete
               <DropdownMenuShortcut>

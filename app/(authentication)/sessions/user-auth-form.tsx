@@ -9,12 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Icons } from '@/components/icons'
-import sessionsUser from '@/services/user/sessions-user'
-import { toast } from 'sonner'
 import { Toaster } from '@/components/ui/sonner'
-import { useRouter } from 'next/navigation'
-import refreshToken from '@/services/user/refresh'
 import { AuthContext } from '@/context/auth-context'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import notifications from '@/utils/ notifications'
 
 const UserAuthFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -24,6 +23,8 @@ const UserAuthFormSchema = z.object({
 type UserAuthFormValues = z.infer<typeof UserAuthFormSchema>
 
 export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
+  const { signIn } = useContext(AuthContext)
+
   const {
     register,
     handleSubmit,
@@ -37,24 +38,17 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
     },
   })
 
-  const route = useRouter()
-  const { signIn } = useContext(AuthContext)
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: signIn,
+  })
 
   async function onSubmit(values: UserAuthFormValues) {
-    // Adicionando delay de 2 segundos antes de prosseguir
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    await signIn(values)
-
-    // const refresh = await refreshToken(values)
-
-    // if (!response.token) {
-    //   toast(response.message)
-    // }
-
-    route.push('/')
-
-    reset()
+    try {
+      await authenticate(values)
+      reset()
+    } catch (err) {
+      toast.error(notifications.authentication.error)
+    }
   }
 
   return (
@@ -100,6 +94,7 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
           Entrar
         </Button>
       </form>
+
       {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />

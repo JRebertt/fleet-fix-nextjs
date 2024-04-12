@@ -1,5 +1,6 @@
 'use client'
 
+import { COOKIE_NAME } from '@/lib/cookies'
 import profileUser from '@/services/user/profile-user'
 import sessionsUser from '@/services/user/sessions-user'
 import { deleteCookie, getCookie, setCookie } from 'cookies-next'
@@ -53,9 +54,17 @@ export function AuthProvider({ children }: Props) {
   async function signIn({ email, password }: SignInData) {
     const data = await sessionsUser({ email, password })
 
-    setCookie('@fleetFix.accessToken', data.token)
+    if (!data.token) {
+      throw new Error()
+    }
 
-    const isCookie = getCookie('@fleetFix.accessToken')
+    setCookie(COOKIE_NAME, data.token)
+
+    // const refreshTokenReponse = await refreshToken({ email, password })
+
+    // console.log(refreshTokenReponse)
+
+    const isCookie = getCookie(COOKIE_NAME)
 
     if (isCookie) {
       const { user } = await profileUser(isCookie)

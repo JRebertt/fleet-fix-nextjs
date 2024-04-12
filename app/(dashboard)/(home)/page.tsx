@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import ScheduleCard from './schedule-card'
 import { Toaster } from 'sonner'
-import { useFilters } from '@/hooks/useFilter'
+import { useFilters } from '@/context/useFilter'
 import { GetMaintenanceSchedule } from '@/@types/maintenance-table'
 
 export default function Home() {

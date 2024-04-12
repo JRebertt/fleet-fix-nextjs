@@ -1,7 +1,6 @@
 import { Card as CardShadcnUi } from '@/components/ui/card'
 
 import { getVehicleById } from '@/services/vehicle/get-vehicles-by-id'
-import { getDriverById } from '@/services/driver/get-driver-by-id'
 
 import CustomProgress from '@/components/customProgress'
 import { Image } from '@nextui-org/react'
@@ -13,7 +12,7 @@ export default async function VehicleProfile({
 }) {
   const data = await getVehicleById(params.vehiclesId)
 
-  const driverData = await getDriverById(data.driver_id)
+  // const driverData = await getDriverById(data.driver_id)
 
   function calcularPorcentagemAutomatica(
     kmAtual: number,
@@ -32,8 +31,6 @@ export default async function VehicleProfile({
   const intervaloTroca = 20000
 
   const porcentagem = calcularPorcentagemAutomatica(kmAtual, intervaloTroca)
-
-  console.log(driverData)
 
   return (
     <>

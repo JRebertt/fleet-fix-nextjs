@@ -1,21 +1,20 @@
 'use server'
 
 import { api } from '@/lib/api-fetch'
-import { cookies } from 'next/headers'
 import { COOKIE_NAME } from '@/lib/cookies'
+import { cookies } from 'next/headers'
 
-export async function deleteDriverById(id: string) {
+export async function deleteCompanyById(id: string) {
   const cookieStore = cookies()
 
   const token = cookieStore.get(COOKIE_NAME)
-  const res = await api(`/driver/${id}/delete`, {
+  const res = await api(`/company/${id}/delete`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${token?.value}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   })
-
   if (!res.ok) {
     throw new Error()
   }

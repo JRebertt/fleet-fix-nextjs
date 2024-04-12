@@ -3,6 +3,8 @@
 import { api } from '@/lib/api-fetch'
 import { PaymentSchema } from '@/schemas/payment'
 import { cookies } from 'next/headers'
+import { COOKIE_NAME } from '@/lib/cookies'
+
 import { z } from 'zod'
 
 type PaymentTypes = z.infer<typeof PaymentSchema>
@@ -12,13 +14,12 @@ export default async function createPayment(
 ): Promise<PaymentTypes> {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/payment`, {
     method: 'POST',
 
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(payment),

@@ -9,6 +9,9 @@ import { Form, FormControl, FormField, FormItem } from './ui/form'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import createComapny from '@/services/company/create-new-company'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
+import { Icons } from './icons'
 
 type CompaniesFormValues = z.infer<typeof CompanySchema>
 
@@ -23,11 +26,16 @@ export default function CompanyForm() {
     },
   })
 
-  async function onSubmit(values: CompaniesFormValues) {
-    toast('Empresa adicionada com sucesso! ✅')
-    form.reset()
+  const { mutateAsync: createComapnyFn } = useMutation({
+    mutationFn: createComapny,
+  })
 
-    createComapny(values)
+  async function onSubmit(values: CompaniesFormValues) {
+    try {
+      toast.success(notifications.company.create.success)
+      createComapnyFn(values)
+      form.reset()
+    } catch (err) {}
   }
 
   return (
@@ -103,7 +111,12 @@ export default function CompanyForm() {
             />
           </div>
         </main>
-        <Button type="submit">Salvar</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          Salvar
+        </Button>
       </form>
     </Form>
   )

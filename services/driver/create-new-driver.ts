@@ -2,6 +2,8 @@
 
 import { Driver } from '@/@types/driver-table'
 import { api } from '@/lib/api-fetch'
+import { COOKIE_NAME } from '@/lib/cookies'
+
 import { cookies } from 'next/headers'
 
 type DriverWithoutId = Omit<Driver, 'id' | 'created_at' | 'updated_at'>
@@ -11,7 +13,7 @@ export default async function createDriver(
 ): Promise<Driver> {
   const cookieStore = cookies()
 
-  const token = cookieStore.get('@auth_accessToken')
+  const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/driver`, {
     method: 'POST',
 
