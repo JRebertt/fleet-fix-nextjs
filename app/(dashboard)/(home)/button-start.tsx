@@ -40,6 +40,8 @@ import { ptBR } from 'date-fns/locale'
 import { Calendar } from '@/components/ui/calendar'
 import startMaintenanceSchedule from '@/services/maintenance-schedule/start-maintenance-schedule'
 import completeMaintenanceSchedule from '@/services/maintenance-schedule/complete-maintenance-schedule'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
 
 const StarteMaintenanceScheduleSchema = MaintenanceScheduleSchema.pick({
   startDate: true,
@@ -84,23 +86,40 @@ export function ButtonStart({ value }: { value: MaintenanceSchedule }) {
     },
   })
 
+  const { mutateAsync: startMaintenanceScheduleFn } = useMutation({
+    mutationFn: startMaintenanceSchedule,
+  })
+
   async function onSubmit({ startDate }: StartMaintenanceScheduleFormsValues) {
-    form.reset()
+    try {
+      if (startDate === null) {
+        return new Date()
+      }
 
-    if (startDate === null) {
-      return new Date()
+      await startMaintenanceScheduleFn({ id: value.id, startDate })
+      form.reset()
+
+      toast.success(notifications.maintenance.start.success)
+    } catch (err) {
+      toast.error(notifications.maintenance.start.error)
     }
-
-    await startMaintenanceSchedule(value.id, startDate)
   }
+
+  const { mutateAsync: completeMaintenanceScheduleFn } = useMutation({
+    mutationFn: completeMaintenanceSchedule,
+  })
 
   async function onSubmitEnd({
     endDate,
     cost,
   }: RequestCompleteMaintenanceFormsValues) {
-    toast('Manutenção finalizada sucesso!✅ ')
-
-    await completeMaintenanceSchedule(value.id, endDate, cost)
+    try {
+      await completeMaintenanceScheduleFn({ id: value.id, endDate, cost })
+      toast.success(notifications.maintenance.completion.success)
+      form.reset()
+    } catch (err) {
+      toast.error(notifications.maintenance.completion.error)
+    }
   }
 
   return (

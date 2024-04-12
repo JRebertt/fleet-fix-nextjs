@@ -5,14 +5,19 @@ import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
 import { COOKIE_NAME } from '@/lib/cookies'
 
+interface MaintenanceRequest {
+  id: string
+  startDate: Date
+}
+
 interface MaintenanceResponse {
   maintenance: MaintenanceSchedule
 }
 
-export default async function startMaintenanceSchedule(
-  id: string,
-  startDate: Date,
-) {
+export default async function startMaintenanceSchedule({
+  id,
+  startDate,
+}: MaintenanceRequest) {
   const cookieStore = cookies()
 
   const token = cookieStore.get(COOKIE_NAME)

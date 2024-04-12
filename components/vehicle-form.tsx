@@ -59,8 +59,8 @@ export default function VehicleForm() {
 
   async function onSubmit(values: VehicleFormValues) {
     try {
-      toast.success(notifications.vehicle.create.success)
       await createNewVehicleFn(values)
+      toast.success(notifications.vehicle.create.success)
       form.reset()
     } catch (err) {
       toast.error(notifications.vehicle.create.error)
