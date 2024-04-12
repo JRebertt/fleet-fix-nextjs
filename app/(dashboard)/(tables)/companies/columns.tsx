@@ -16,7 +16,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Company } from '@/@types/company-table'
-import deleteCompanyById from '@/services/company/dele-company-by-id'
+import { deleteCompanyById } from '@/services/company/delete-company-by-id'
+import notifications from '@/utils/ notifications'
+import { handleRemoveItem } from '@/lib/action-delete'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -85,7 +87,13 @@ export const columns: ColumnDef<Company>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteCompanyById(company.id)}
+              onClick={() =>
+                handleRemoveItem({
+                  id: company.id,
+                  router: deleteCompanyById,
+                  notify: notifications.company.delete,
+                })
+              }
             >
               Delete
               <DropdownMenuShortcut>

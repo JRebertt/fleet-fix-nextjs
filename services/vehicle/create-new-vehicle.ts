@@ -18,7 +18,6 @@ export default async function createNewVehicle(
 
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(vehicle),

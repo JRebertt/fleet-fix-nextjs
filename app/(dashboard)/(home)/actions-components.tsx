@@ -15,6 +15,10 @@ import getVehicles from '@/services/vehicle/get-vehicles'
 import { getMaintenanceScheduleById } from '@/services/maintenance-schedule/get-maintenance-schedule-by-id'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useMutation } from '@tanstack/react-query'
+import notifications from '@/utils/ notifications'
+import { useRouter } from 'next/navigation'
+import { handleRemoveItem } from '@/lib/action-delete'
 
 interface Props {
   id: string
@@ -36,11 +40,9 @@ export function ActionsComponents({ id }: Props) {
     fetchData()
   }, [])
 
-  async function handlerRemove(id: string) {
-    const reponse = await deleteMaintenanceScheduleById(id)
-
-    toast(reponse)
-  }
+  const { mutateAsync: deleteMaintenanceScheduleFn } = useMutation({
+    mutationFn: handleRemoveItem,
+  })
 
   const form = useForm<MaintenanceScheduleFormValues>({
     resolver: zodResolver(MaintenanceScheduleSchema),
@@ -57,7 +59,13 @@ export function ActionsComponents({ id }: Props) {
       <Button
         className="px-4"
         variant={'ghost'}
-        onClick={() => handlerRemove(id)}
+        onClick={() =>
+          deleteMaintenanceScheduleFn({
+            id,
+            router: deleteMaintenanceScheduleById,
+            notify: notifications.maintenance.delete,
+          })
+        }
         type="button"
       >
         <Trash size={16} />

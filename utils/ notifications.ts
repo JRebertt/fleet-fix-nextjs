@@ -4,7 +4,7 @@ const notifications = {
   maintenance: {
     schedule: {
       success:
-        'Seu equipamento está no nosso radar! Manutenção agendada com sucesso.',
+        'Seu veículo está no nosso radar! Manutenção agendada com sucesso.',
       error:
         'Algum gremlin interferiu no agendamento. Por favor, tente novamente mais tarde.',
     },
@@ -113,7 +113,6 @@ const notifications = {
         'Atualizar os dados do motorista não funcionou desta vez. Cheque e tente de novo.',
     },
   },
-  // Adicione mais categorias conforme necessário
 }
 
 export default notifications

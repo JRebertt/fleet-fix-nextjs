@@ -17,7 +17,6 @@ export async function getPaymentById(id: string): Promise<Payment> {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
   })

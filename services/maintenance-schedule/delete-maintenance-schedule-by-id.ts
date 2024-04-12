@@ -4,10 +4,6 @@ import { api } from '@/lib/api-fetch'
 import { COOKIE_NAME } from '@/lib/cookies'
 import { cookies } from 'next/headers'
 
-type deleteMaintenaceByIdResponse = {
-  message: string
-}
-
 export default async function deleteMaintenanceScheduleById(id: string) {
   const cookieStore = cookies()
 
@@ -16,12 +12,11 @@ export default async function deleteMaintenanceScheduleById(id: string) {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
   })
 
-  const { message }: deleteMaintenaceByIdResponse = await res.json()
-
-  return message
+  if (!res.ok) {
+    throw new Error()
+  }
 }

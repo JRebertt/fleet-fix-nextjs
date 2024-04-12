@@ -1,5 +1,6 @@
 'use client'
 
+import { COOKIE_NAME } from '@/lib/cookies'
 import profileUser from '@/services/user/profile-user'
 import sessionsUser from '@/services/user/sessions-user'
 import { deleteCookie, getCookie, setCookie } from 'cookies-next'
@@ -7,7 +8,6 @@ import { deleteCookie, getCookie, setCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
 
 import { ReactNode, createContext, useEffect, useState } from 'react'
-import { toast } from 'sonner'
 
 interface Props {
   children?: ReactNode
@@ -58,13 +58,13 @@ export function AuthProvider({ children }: Props) {
       throw new Error()
     }
 
-    setCookie('@fleetFix.accessToken', data.token)
+    setCookie(COOKIE_NAME, data.token)
 
     // const refreshTokenReponse = await refreshToken({ email, password })
 
     // console.log(refreshTokenReponse)
 
-    const isCookie = getCookie('@fleetFix.accessToken')
+    const isCookie = getCookie(COOKIE_NAME)
 
     if (isCookie) {
       const { user } = await profileUser(isCookie)

@@ -2,27 +2,27 @@
 
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
-import { toast } from 'sonner'
 import { COOKIE_NAME } from '@/lib/cookies'
+import { Payment } from '@/@types/payment'
 
-type deleteCompanyByIdResponse = {
-  message: string
+export interface PaymentsResponse {
+  payments: Payment[]
 }
 
-export default async function deleteCompanyById(id: string) {
+export default async function getPayments(): Promise<Payment[]> {
   const cookieStore = cookies()
 
   const token = cookieStore.get(COOKIE_NAME)
-  const res = await api(`/company/${id}/delete`, {
-    method: 'DELETE',
+  const res = await api(`/payments`, {
+    method: 'Get',
+    cache: 'no-store',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
   })
 
-  const { message }: deleteCompanyByIdResponse = await res.json()
+  const { payments }: PaymentsResponse = await res.json()
 
-  return toast(message)
+  return payments || []
 }

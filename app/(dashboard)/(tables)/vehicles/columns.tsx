@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Vehicle } from '@/@types/vehicle-table'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
+import { handleRemoveItem } from '@/lib/action-delete'
+import notifications from '@/utils/ notifications'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -103,7 +105,13 @@ export const columns: ColumnDef<Vehicle>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteVehicleById(vehicle.id)}
+              onClick={() =>
+                handleRemoveItem({
+                  id: vehicle.id,
+                  router: deleteVehicleById,
+                  notify: notifications.vehicle.delete,
+                })
+              }
             >
               Delete
               <DropdownMenuShortcut>

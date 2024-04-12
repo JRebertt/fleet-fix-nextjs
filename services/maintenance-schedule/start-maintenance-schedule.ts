@@ -20,7 +20,6 @@ export default async function startMaintenanceSchedule(
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ startDate }),

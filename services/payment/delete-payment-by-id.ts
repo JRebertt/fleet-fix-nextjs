@@ -2,12 +2,7 @@
 
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
-import { toast } from 'sonner'
 import { COOKIE_NAME } from '@/lib/cookies'
-
-type deletePaymentByIdResponse = {
-  message: string
-}
 
 export default async function deletePaymentById(id: string) {
   const cookieStore = cookies()
@@ -17,12 +12,11 @@ export default async function deletePaymentById(id: string) {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token?.value}`,
-
       'Content-Type': 'application/json',
     },
   })
 
-  const { message }: deletePaymentByIdResponse = await res.json()
-
-  return toast(message)
+  if (!res.ok) {
+    throw new Error()
+  }
 }

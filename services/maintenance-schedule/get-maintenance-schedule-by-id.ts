@@ -17,6 +17,7 @@ export async function getMaintenanceScheduleById(
   const token = cookieStore.get(COOKIE_NAME)
   const res = await api(`/maintenance/${id}`, {
     method: 'GET',
+    cache: 'no-cache',
     headers: {
       Authorization: `Bearer ${token?.value}`,
 

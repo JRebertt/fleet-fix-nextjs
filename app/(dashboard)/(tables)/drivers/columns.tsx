@@ -18,6 +18,8 @@ import {
 import { Driver } from '@/@types/driver-table'
 import { deleteDriverById } from '@/services/driver/delete-driver-by-id'
 import { Users } from '@/components/driver-form'
+import { handleRemoveItem } from '@/lib/action-delete'
+import notifications from '@/utils/ notifications'
 
 interface DriversColmns extends Driver {
   user?: Users
@@ -72,7 +74,7 @@ export const columns: ColumnDef<DriversColmns>[] = [
     accessorKey: 'actions',
     header: '',
     cell: ({ row }) => {
-      const company = row.original
+      const driver = row.original
 
       return (
         <DropdownMenu>
@@ -85,16 +87,16 @@ export const columns: ColumnDef<DriversColmns>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link href={`companys/${company.id}`}>Ver detalhes</Link>
+              <Link href={`driver/${driver.id}`}>Ver detalhes</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(`
-                Nome do Motorista: ${company.cpf}
-                CPF: ${company.cpf}
-                Data de Nascimento: ${company.birthDate}
-                Contato: ${company.contact_number}
+                Nome do Motorista: ${driver.cpf}
+                CPF: ${driver.cpf}
+                Data de Nascimento: ${driver.birthDate}
+                Contato: ${driver.contact_number}
                 `)
               }
             >
@@ -103,7 +105,13 @@ export const columns: ColumnDef<DriversColmns>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
-              onClick={() => deleteDriverById(company.id)}
+              onClick={() =>
+                handleRemoveItem({
+                  id: driver.id,
+                  router: deleteDriverById,
+                  notify: notifications.driver.delete,
+                })
+              }
             >
               Delete
               <DropdownMenuShortcut>

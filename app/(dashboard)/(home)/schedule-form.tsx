@@ -47,7 +47,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { useMutation } from '@tanstack/react-query'
 import { Icons } from '@/components/icons'
 import notifications from '@/utils/ notifications'
-import { useRouter } from 'next/navigation'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
