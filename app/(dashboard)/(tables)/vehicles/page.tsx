@@ -12,7 +12,7 @@ export default async function DemoPage() {
   return (
     <>
       <section>
-         <Toaster /> 
+        <Toaster />
         <div className="container">
           <DataTable
             filterColumnName="model"

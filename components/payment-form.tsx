@@ -40,7 +40,6 @@ import createPayment from '@/services/payment/create-new-payment'
 import { Icons } from './icons'
 import { useMutation } from '@tanstack/react-query'
 import notifications from '@/utils/ notifications'
-import { useRouter } from 'next/navigation'
 
 type Status = {
   name:

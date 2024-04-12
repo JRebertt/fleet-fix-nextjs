@@ -33,7 +33,7 @@ export function UserAuthForm(props: React.HTMLAttributes<HTMLDivElement>) {
     },
   })
 
-  const onSubmit = async (values: UserAuthFormValues) => {
+  const onSubmit = async () => {
     // Adicionando delay de 2 segundos antes de prosseguir
     await new Promise((resolve) => setTimeout(resolve, 2000))
 

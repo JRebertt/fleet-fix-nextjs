@@ -10,7 +10,7 @@ export default async function CompanyPage() {
   return (
     <>
       <section>
-         <Toaster /> 
+        <Toaster />
 
         <div className="container">
           <DataTable
