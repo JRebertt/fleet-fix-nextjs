@@ -10,7 +10,7 @@ const notifications = {
     },
     delete: {
       success:
-        'Cancelamento confirmado. Seu equipamento agradece o descanso extra!',
+        'Cancelamento confirmado. Seu veículo agradece o descanso extra!',
       error:
         'A tentativa de cancelamento esbarrou em um problema. Dê outra chance?',
     },
@@ -19,7 +19,7 @@ const notifications = {
       error: 'Ops, algo travou antes mesmo de começar. Vamos investigar isso.',
     },
     completion: {
-      success: 'Manutenção completa. Seu equipamento está tinindo!',
+      success: 'Manutenção completa. Seu veículo está tinindo!',
       error:
         'A manutenção encontrou um obstáculo. Vamos precisar de um tempinho extra.',
     },

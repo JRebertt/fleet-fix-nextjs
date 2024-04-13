@@ -3,16 +3,20 @@ import { MaintenanceSchedule } from '@/@types/maintenance-table'
 import { api } from '@/lib/api-fetch'
 import { cookies } from 'next/headers'
 import { COOKIE_NAME } from '@/lib/cookies'
-
+interface MaintenanceRequest {
+  id: string
+  endDate: Date
+  cost: number | null
+}
 interface MaintenanceResponse {
   maintenance: MaintenanceSchedule
 }
 
-export default async function completeMaintenanceSchedule(
-  id: string,
-  endDate: Date,
-  cost: number | null,
-) {
+export default async function completeMaintenanceSchedule({
+  id,
+  endDate,
+  cost,
+}: MaintenanceRequest) {
   const cookieStore = cookies()
 
   const token = cookieStore.get(COOKIE_NAME)

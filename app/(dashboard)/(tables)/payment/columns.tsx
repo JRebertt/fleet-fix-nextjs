@@ -30,6 +30,7 @@ import { formatDates } from '@/lib/formtDate'
 import deletePaymentById from '@/services/payment/delete-payment-by-id'
 import { handleRemoveItem } from '@/lib/action-delete'
 import notifications from '@/utils/ notifications'
+import { toast } from 'sonner'
 
 interface PaymentColum extends Payment {
   maintenanceTitle?: string
@@ -160,13 +161,22 @@ export const columns: ColumnDef<PaymentColum>[] = [
     cell: ({ row }) => {
       const data = row.original
 
+      async function handlePaymented() {
+        try {
+          await completePayment(data.id, new Date(), 'Pix')
+          toast.success(notifications.payment.completed.success)
+        } catch (err) {
+          toast.error(notifications.payment.completed.error)
+        }
+      }
+
       return data.status === 'Completed' ? (
         <span></span>
       ) : (
         <Button
           className="h-8"
           variant="outline"
-          onClick={() => completePayment(data.id, new Date(), 'Pix')}
+          onClick={() => handlePaymented()}
         >
           <div className="flex justify-center items-center gap-2">
             <Check size={16} />
