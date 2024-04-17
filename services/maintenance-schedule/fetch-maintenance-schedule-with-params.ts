@@ -16,8 +16,6 @@ export default async function fetchMaintenanceScheduleWithParams({
   from,
   to,
 }: fetchMaintenanceScheduleRequest) {
-  console.log(from, to)
-  console.log(status)
   const res = await apiV2.get<MaintenanceResponse>(`/maintenances`, {
     params: {
       status,
