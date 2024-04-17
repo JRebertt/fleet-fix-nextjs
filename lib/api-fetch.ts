@@ -6,7 +6,7 @@ import { COOKIE_NAME } from './cookies'
 // config fetch api nextjs
 export function api(path: string, init?: RequestInit) {
   const baseUrl = env.NEXT_PUBLIC_API_BASE_URL
-  const apiPrefix = '/api'
+  // const apiPrefix = '/api'
   const url = new URL(path, baseUrl)
   return fetch(url, init)
 }
@@ -16,7 +16,7 @@ export const apiV2 = axios.create({
   baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json', // Define o Content-Type como json
-    Authorization: `Bearer ${token}`, // Supõe que o token está armazenado no localStorage
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   },
 })

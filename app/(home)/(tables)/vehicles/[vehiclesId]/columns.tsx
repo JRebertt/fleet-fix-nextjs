@@ -25,6 +25,7 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import deleteVehicleById from '@/services/vehicle/delete-vehicle-by-id'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'description',
