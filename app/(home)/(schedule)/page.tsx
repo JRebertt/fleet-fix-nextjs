@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import ScheduleCard from './schedule-card'
 import { Toaster } from 'sonner'
 import { GetMaintenanceSchedule } from '@/@types/maintenance-table'
@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import fetchMaintenanceSchedule from '@/services/maintenance-schedule/fetch-maintenance-schedule'
 import { useSearchParams } from 'next/navigation'
 import fetchMaintenanceScheduleWithParams from '@/services/maintenance-schedule/fetch-maintenance-schedule-with-params'
+import HomeLoading from './loading'
 
 export default function Home() {
   // Define as variantes para a animação dos itens da lista
@@ -25,6 +26,7 @@ export default function Home() {
         delay: i * 0.1, // Adiciona um pequeno atraso entre as animações dos itens
       },
     }),
+    exit: { opacity: 0, y: -20, transition: { duration: 0.2 } }, // Define a animação de saída
   }
 
   const { data, isLoading } = useQuery({
@@ -81,22 +83,26 @@ export default function Home() {
         <TabsContent value="schedule">
           <div className="space-y-4">
             <Filters />
-            <section className="grid sm:grid-cols-3 gap-6">
+            <section className="grid gap-6">
               {!isLoadingMaintenances ? (
-                result?.maintenances.map((data, i) => {
-                  return (
+                <AnimatePresence>
+                  {result?.maintenances.map((data, i) => (
                     <motion.div
                       key={i}
                       custom={i} // Passa o índice como propriedade customizada para a variante visible
                       variants={itemVariants}
                       initial="hidden"
                       animate="visible"
+                      exit="exit" // Adiciona a propriedade exit para controlar a animação de saída
                     >
                       <ScheduleCard data={data as GetMaintenanceSchedule} />
                     </motion.div>
-                  )
-                })
+                  ))}
+                </AnimatePresence>
               ) : (
+                <HomeLoading />
+              )}
+              {!isLoadingMaintenances && result?.maintenances.length === 0 && (
                 <p className="col-span-3 text-center">
                   Nenhum Agendamento Encontrado
                 </p>

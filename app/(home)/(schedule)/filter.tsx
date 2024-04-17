@@ -96,16 +96,28 @@ export function Filters() {
   }
 
   return (
-    <section className="flex justify-between">
+    <section className="flex justify-between flex-col sm:flex-row gap-4">
       <form
         onSubmit={handleSubmit(handleFilter)}
-        className="flex items-center gap-2 sm:flex-row flex-col"
+        className="flex gap-2 flex-col sm:flex-row"
       >
-        <Input
-          placeholder="Buscar..."
-          className="max-w-96"
-          {...register('title')}
-        />
+        <div className="flex gap-2">
+          <Input
+            placeholder="Buscar..."
+            className="max-w-96"
+            {...register('title')}
+          />
+          <Controller
+            name="dateRange"
+            control={control}
+            render={({ field }) => (
+              <DatePickerWithRange
+                onChange={field.onChange}
+                value={field.value}
+              />
+            )}
+          />
+        </div>
 
         <div className="flex items-center gap-2">
           <Controller
@@ -160,17 +172,6 @@ export function Filters() {
                   ))}
                 </SelectContent>
               </Select>
-            )}
-          />
-
-          <Controller
-            name="dateRange"
-            control={control}
-            render={({ field }) => (
-              <DatePickerWithRange
-                onChange={field.onChange}
-                value={field.value}
-              />
             )}
           />
 

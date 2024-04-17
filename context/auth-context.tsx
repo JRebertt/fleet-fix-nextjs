@@ -45,7 +45,7 @@ export function AuthProvider({ children }: Props) {
     const token = getCookie(COOKIE_NAME)
 
     if (token) {
-      profileUser(token).then((response) => {
+      profileUser().then((response) => {
         setUser(response.user)
       })
     }
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: Props) {
     const isCookie = getCookie(COOKIE_NAME)
 
     if (isCookie) {
-      const { user } = await profileUser(isCookie)
+      const { user } = await profileUser()
       setUser(user)
     }
 
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: Props) {
   }
 
   async function signOut() {
-    deleteCookie(COOKIE_NAME)
+    deleteCookie('@fleetFix.accessToken')
 
     router.push('/sessions')
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import {
@@ -145,7 +146,7 @@ function CalendarGrid({ state, ...props }: CalendarGridProps) {
         </tr>
       </thead>
       <tbody>
-        {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
+        {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
           <tr className="mt-2 flex w-full" key={weekIndex}>
             {state
               .getDatesInWeek(weekIndex)

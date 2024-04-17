@@ -1,20 +1,8 @@
-'use server'
-
 import { ProfileUserResponse } from '@/@types/users'
-import { api } from '@/lib/api-fetch'
+import { apiV2 } from '@/lib/api-fetch'
 
-export default async function profileUser(
-  token: string,
-): Promise<ProfileUserResponse> {
-  const res = await api(`/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  })
+export default async function profileUser() {
+  const res = await apiV2.get<ProfileUserResponse>(`/me`)
 
-  const { user }: ProfileUserResponse = await res.json()
-
-  return { user }
+  return res.data
 }
