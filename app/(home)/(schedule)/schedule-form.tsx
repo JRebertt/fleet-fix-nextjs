@@ -211,7 +211,6 @@ export default function ScheduleForm() {
                     locale={ptBR}
                     selected={field.value}
                     onSelect={field.onChange}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>

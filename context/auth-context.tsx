@@ -42,7 +42,7 @@ export function AuthProvider({ children }: Props) {
   const isAuthenticated = !!user
 
   useEffect(() => {
-    const token = getCookie('@fleetFix.accessToken')
+    const token = getCookie(COOKIE_NAME)
 
     if (token) {
       profileUser(token).then((response) => {
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: Props) {
   }
 
   async function signOut() {
-    deleteCookie('@fleetFix.accessToken')
+    deleteCookie(COOKIE_NAME)
 
     router.push('/sessions')
   }
