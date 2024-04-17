@@ -1,10 +1,10 @@
 'use client'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import fetchMaintenanceSchedule from '@/services/maintenance-schedule/fetch-maintenance-schedule'
+import fetchMaintenanceSchedule from '@/services/maintenance-schedule/fetch-maintenance-schedule-with-params'
 
 // Tipagem para os filtros
 type FilterState = {
-  searchText: string
+  title: string
   statusAgendado: boolean
   statusEmProgresso: boolean
   statusConcluido: boolean
@@ -38,7 +38,7 @@ type FiltersProviderProps = {
 
 // Estado inicial dos filtros
 const initialFilters: FilterState = {
-  searchText: '',
+  title: '',
   statusAgendado: false,
   statusEmProgresso: false,
   statusConcluido: false,
@@ -61,27 +61,24 @@ export const FiltersProvider: React.FC<FiltersProviderProps> = ({
   // Função para buscar dados filtrados
   // Função para buscar dados filtrados
   const fetchFilteredData = async () => {
-    const allSchedules = await fetchMaintenanceSchedule()
-    // Aplica os filtros aqui
-    const filteredSchedules = allSchedules.filter((schedule) => {
-      // Filtragem por status
-      const filterByStatus =
-        (filters.statusAgendado && schedule.status === 'Scheduled') ||
-        (filters.statusEmProgresso && schedule.status === 'InProgress') ||
-        (filters.statusConcluido && schedule.status === 'Completed') ||
-        (!filters.statusAgendado &&
-          !filters.statusEmProgresso &&
-          !filters.statusConcluido) // Se nenhum status estiver selecionado, não filtrar por status
-
-      // Filtragem por texto de busca
-      const filterByText =
-        filters.searchText === '' ||
-        schedule.title.toLowerCase().includes(filters.searchText.toLowerCase())
-
-      return filterByStatus && filterByText
-    })
-
-    setSchedules(filteredSchedules)
+    // const allSchedules = await fetchMaintenanceSchedule()
+    // // Aplica os filtros aqui
+    // const filteredSchedules = allSchedules.filter((schedule) => {
+    //   // Filtragem por status
+    //   const filterByStatus =
+    //     (filters.statusAgendado && schedule.status === 'Scheduled') ||
+    //     (filters.statusEmProgresso && schedule.status === 'InProgress') ||
+    //     (filters.statusConcluido && schedule.status === 'Completed') ||
+    //     (!filters.statusAgendado &&
+    //       !filters.statusEmProgresso &&
+    //       !filters.statusConcluido) // Se nenhum status estiver selecionado, não filtrar por status
+    //   // Filtragem por texto de busca
+    //   const filterByText =
+    //     filters.title === '' ||
+    //     schedule.title.toLowerCase().includes(filters.title.toLowerCase())
+    //   return filterByStatus && filterByText
+    // })
+    // setSchedules(filteredSchedules)
   }
 
   useEffect(() => {

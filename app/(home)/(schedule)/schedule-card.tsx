@@ -53,6 +53,15 @@ function ScheduleCard({ data }: { data: GetMaintenanceSchedule }) {
     fetchData()
   }, [data.vehicle_id])
 
+  const statusTranslations = {
+    Scheduled: 'Agendado',
+    InProgress: 'Em Andamento',
+    OnHold: 'Em Espera',
+    Completed: 'Concluído',
+    Canceled: 'Cancelado',
+    Failed: 'Falhou',
+  }
+
   return (
     <Card className="min-h-60 p-4 flex flex-col gap-2 justify-center">
       <CardHeader className="flex flex-row w-full py-1 px-0 items-center justify-between">
@@ -121,7 +130,9 @@ function ScheduleCard({ data }: { data: GetMaintenanceSchedule }) {
         </div>
         <div className="flex space-x-2">
           <span className="font-bold">Status:</span>
-          <Badge variant={'outline'}>{data.status}</Badge>
+          <Badge variant={'outline'}>
+            {statusTranslations[data.status] || data.status}
+          </Badge>
         </div>
         <div className="flex space-x-2">
           <span className="font-bold">Data:</span>
