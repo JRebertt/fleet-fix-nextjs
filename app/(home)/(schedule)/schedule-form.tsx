@@ -79,6 +79,7 @@ export default function ScheduleForm() {
   }
 
   const [schedule, setSchedule] = useState<Vehicle[]>([])
+  // const [date, setDate] = React.useState(new Date())
 
   useEffect(() => {
     const fetchData = async () => {
@@ -178,6 +179,12 @@ export default function ScheduleForm() {
             </FormItem>
           )}
         />
+
+        {/* <DateTimePicker
+          granularity="second"
+          jsDate={date}
+          onJsDateChange={setDate}
+        /> */}
 
         <FormField
           control={form.control}
