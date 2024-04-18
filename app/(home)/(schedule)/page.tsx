@@ -83,7 +83,7 @@ export default function Home() {
         <TabsContent value="schedule">
           <div className="space-y-4">
             <Filters />
-            <section className="grid gap-6">
+            <section className="grid sm:grid-cols-3 gap-6">
               {!isLoadingMaintenances ? (
                 <AnimatePresence>
                   {result?.maintenances.map((data, i) => (
