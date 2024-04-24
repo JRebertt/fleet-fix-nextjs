@@ -180,12 +180,6 @@ export default function ScheduleForm() {
           )}
         />
 
-        {/* <DateTimePicker
-          granularity="second"
-          jsDate={date}
-          onJsDateChange={setDate}
-        /> */}
-
         <FormField
           control={form.control}
           name="scheduledDate"

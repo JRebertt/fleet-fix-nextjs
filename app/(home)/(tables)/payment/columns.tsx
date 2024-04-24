@@ -39,13 +39,18 @@ interface PaymentColum extends Payment {
 
 export const columns: ColumnDef<PaymentColum>[] = [
   {
-    accessorFn: (row) => {
-      const { id } = row
-
-      return id
-    },
+    accessorFn: (row) => row.id,
     accessorKey: 'id',
     header: 'id',
+  },
+  {
+    accessorFn: (row) => row.maintenance?.title || 'Sem Título',
+    header: 'Título da Manutenção',
+    accessorKey: 'maintenanceTitle',
+    cell: ({ row }) => {
+      const title = row.getValue('maintenanceTitle')
+      return <span>{title as string}</span>
+    },
   },
   // {
   //   cell: async ({ row }) => {

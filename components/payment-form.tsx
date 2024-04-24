@@ -131,6 +131,7 @@ export default function PaymentForm() {
   })
 
   async function onSubmit(values: PaymentFormValues) {
+    console.log(values)
     try {
       toast.success(notifications.payment.create.success)
       await createPaymentFn(values)
@@ -142,7 +143,10 @@ export default function PaymentForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 max-w-xl w-full"
+      >
         <FormField
           control={form.control}
           name="amount"
