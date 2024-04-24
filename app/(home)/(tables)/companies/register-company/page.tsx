@@ -9,7 +9,7 @@ import CompanyForm from '@/components/company-form'
 export default function RegisterCompany() {
   return (
     <div>
-      <Link href={'/payment'}>
+      <Link href={'/companies'}>
         <ArrowLeft className="ml-32" />
       </Link>
 

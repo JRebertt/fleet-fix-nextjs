@@ -9,7 +9,7 @@ import VehicleForm from '@/components/vehicle-form'
 export default function RegisterVehicle() {
   return (
     <div>
-      <Link href={'/?status=Scheduled'}>
+      <Link href={'/vehicles'}>
         <ArrowLeft className="ml-32" />
       </Link>
 

@@ -9,7 +9,7 @@ import DriverForm from '@/components/driver-form'
 export default function RegisterDriver() {
   return (
     <div>
-      <Link href={'/payment'}>
+      <Link href={'/drivers'}>
         <ArrowLeft className="ml-32" />
       </Link>
 
