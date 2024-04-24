@@ -52,30 +52,25 @@ export function AuthProvider({ children }: Props) {
   }, [])
 
   async function signIn({ email, password }: SignInData) {
-    const data = await sessionsUser({ email, password })
+    try {
+      const data = await sessionsUser({ email, password })
 
-    if (!data.token) {
-      throw new Error()
-    }
+      if (!data.token) {
+        throw new Error('Login failed: no token received.')
+      }
 
-    setCookie(COOKIE_NAME, data.token)
+      setCookie(COOKIE_NAME, data.token)
+      router.push('/')
 
-    // const refreshTokenReponse = await refreshToken({ email, password })
-
-    // console.log(refreshTokenReponse)
-
-    const isCookie = getCookie(COOKIE_NAME)
-
-    if (isCookie) {
       const { user } = await profileUser()
       setUser(user)
+    } catch (error) {
+      console.error('Login attempt failed, retrying in 5 seconds...')
     }
-
-    router.push('/')
   }
 
   async function signOut() {
-    deleteCookie('@fleetFix.accessToken')
+    deleteCookie(COOKIE_NAME)
 
     router.push('/sessions')
   }
