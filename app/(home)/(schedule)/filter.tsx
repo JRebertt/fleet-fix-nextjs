@@ -13,20 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { parseAsIsoDateTime, useQueryState } from 'nuqs'
+import { useQueryState } from 'nuqs'
 import { Button } from '@/components/ui/button'
 import { Filter, X, Plus } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { DatePickerWithRange } from './date-range-picker'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import ScheduleForm from './schedule-form'
 import { format } from 'date-fns'
 
 const filterSchema = z.object({
@@ -44,6 +35,7 @@ const filterSchema = z.object({
 type FilterSchemaType = z.infer<typeof filterSchema>
 
 export function Filters() {
+  const { push } = useRouter()
   const searchParams = useSearchParams()
   const params = new URLSearchParams(searchParams)
 
@@ -191,26 +183,9 @@ export function Filters() {
           </Button>
         </div>
       </form>
-      <div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">
-              <Plus />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Item</DialogTitle>
-              <DialogDescription>
-                Preencha as informações abaixo.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <ScheduleForm />
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+      <Button variant={'outline'} onClick={() => push('/register-maintenance')}>
+        <Plus />
+      </Button>
     </section>
   )
 }
