@@ -1,10 +1,10 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function RegisterMaintenanceLoading() {
+export default function RegisterPaymentLoading() {
   return (
     <section className="flex h-full justify-center items-center p-4">
       <div className="w-full max-w-xl">
-        <h1 className="text-lg font-bold mb-4">Agendar Manutenção</h1>
+        <h1 className="text-lg font-bold mb-4">Registrar Pagemento</h1>
 
         <Skeleton className="w-full mb-4 h-[40px]" />
         <Skeleton className="w-full mb-4 h-[90px]" />

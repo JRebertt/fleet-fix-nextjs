@@ -3,7 +3,6 @@ import { Toaster } from '@/components/ui/sonner'
 import { columns } from './columns'
 import { Driver } from '@/@types/driver-table'
 import getDrivers from '@/services/driver/get-drivers'
-import DriverForm from '@/components/driver-form'
 import { Plus } from 'lucide-react'
 
 export default async function DriverPage() {
@@ -18,7 +17,7 @@ export default async function DriverPage() {
             filterColumnName="name"
             columns={columns}
             data={drivers}
-            formComponent={<DriverForm />}
+            routerForm="/drivers/register-driver"
             buttonText={<Plus size={20} />}
           />
         </div>

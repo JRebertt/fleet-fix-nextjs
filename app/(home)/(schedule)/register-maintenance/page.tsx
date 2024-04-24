@@ -31,15 +31,13 @@ import { Calendar } from '@/components/ui/calendar'
 import { TimePicker } from '@/components/ui/time-picker'
 import { ptBR } from 'date-fns/locale'
 import { Icons } from '@/components/icons'
-import { useRouter } from 'next/navigation'
+
 import Link from 'next/link'
 
 type ScheduleFormValues = z.infer<typeof MaintenanceScheduleSchema>
 
-export default function RegisteMaintenance() {
+export default function RegisterMaintenance() {
   const defaultDate = new Date()
-
-  const { push } = useRouter()
 
   const { register, handleSubmit, control, setValue, formState } =
     useForm<ScheduleFormValues>({

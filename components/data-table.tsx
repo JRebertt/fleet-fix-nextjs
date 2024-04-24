@@ -29,36 +29,27 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-
 import { Button } from './ui/button'
 import { Input } from '@/components/ui/input'
+import Link from 'next/link'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  formComponent?: React.ReactNode
-  dialogTitle?: string
-  dialogDescription?: string
-  buttonText?: React.ReactNode | string
   filterColumnName: string
+
+  routerForm?: string
+
+  buttonText?: React.ReactNode | string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  dialogTitle = 'Adicionar Novo Item',
-  dialogDescription = 'Preencha as informações abaixo.',
-  buttonText = 'Novo Item',
-  formComponent,
   filterColumnName,
+
+  buttonText = 'Novo Item',
+  routerForm,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -67,19 +58,10 @@ export function DataTable<TData, TValue>({
   const renderDialog = () => {
     return (
       <div>
-        {formComponent && (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">{buttonText}</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogDescription>{dialogDescription}</DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">{formComponent}</div>
-            </DialogContent>
-          </Dialog>
+        {routerForm && (
+          <Link href={routerForm}>
+            <Button variant={'outline'}>{buttonText}</Button>
+          </Link>
         )}
       </div>
     )
