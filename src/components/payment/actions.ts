@@ -1,5 +1,6 @@
 'use server'
 
+import type { HTTPErrorResponse } from '@/@types/types'
 import { canceledPayment } from '@/http/payment/canceled-payment'
 import { completedPayment } from '@/http/payment/completed-payment'
 import { deletePayment } from '@/http/payment/delete-payment'
@@ -39,7 +40,7 @@ export async function completedPaymentActions(data: FormData) {
     revalidateTag('payments')
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
       console.log(message, 'Mensagem de erro aqui')
 
       return { success: false, message, errors: null }
@@ -125,7 +126,7 @@ export async function canceledPaymentActions(data: FormData) {
     revalidateTag('payments')
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
       console.log(message, 'Mensagem de erro aqui')
 
       return { success: false, message, errors: null }
@@ -167,7 +168,7 @@ export async function deletePaymentActions(data: FormData) {
     revalidateTag('payments')
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
 
       console.log(message)
 

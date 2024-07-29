@@ -4,6 +4,7 @@ import { HTTPError } from 'ky'
 import { z } from 'zod'
 
 import { signUp } from '@/http/auth/sign-up'
+import type { HTTPErrorResponse } from '@/@types/types'
 
 const signUpSchema = z
   .object({
@@ -42,7 +43,7 @@ export async function signUpAction(data: FormData) {
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
 
       return { success: false, message, errors: null }
     }

@@ -1,5 +1,6 @@
 'use server'
 
+import type { HTTPErrorResponse } from '@/@types/types'
 import { canceledSchedule } from '@/http/maintenance/canceled-maintenance-schedule'
 import { deleteMaintenanceSchedule } from '@/http/maintenance/delete-maintenance-schedule'
 import { startSchedule } from '@/http/maintenance/start-maintenance-schedule'
@@ -34,7 +35,7 @@ export async function startScheduleMaintenanceActions(data: FormData) {
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
       console.log(message, 'Mensagem de erro aqui')
 
       return { success: false, message, errors: null }
@@ -76,7 +77,7 @@ export async function canceledScheduleMaintenanceActions(data: FormData) {
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
       console.log(message, 'Mensagem de erro aqui')
 
       return { success: false, message, errors: null }
@@ -118,7 +119,7 @@ export async function deleteScheduleMaintenanceActions(data: FormData) {
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
 
       console.log(message)
 

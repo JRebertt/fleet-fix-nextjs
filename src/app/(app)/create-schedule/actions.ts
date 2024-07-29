@@ -1,5 +1,6 @@
 'use server'
 
+import type { HTTPErrorResponse } from '@/@types/types'
 import { createSchedule } from '@/http/maintenance/create-schedule'
 import { HTTPError } from 'ky'
 import { revalidateTag } from 'next/cache'
@@ -48,7 +49,7 @@ export async function createScheduleMaintenanceAction(data: FormData) {
     revalidateTag('maintenances')
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { message } = await err.response.json<HTTPErrorResponse>()
 
       return { success: false, message, errors: null }
     }

@@ -1,5 +1,9 @@
 import { type LucideIcon } from 'lucide-react'
 
+export interface HTTPErrorResponse {
+  message: string
+}
+
 export interface NavItem {
   title: string
   href: string
