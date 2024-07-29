@@ -8,7 +8,7 @@ type PaymentedStatus =
   | 'Canceled'
   | 'Failed'
 
-type PaymentMethod = 'Boleto' | 'Transfer' | 'Card' | 'Cash' | 'Pix'
+// type PaymentMethod = 'Boleto' | 'Transfer' | 'Card' | 'Cash' | 'Pix'
 
 interface Vehicle {
   id: string
@@ -25,7 +25,7 @@ interface GetMaintenanceScheduleResponse {
   maintenances: {
     id: string
     scheduledDate: string
-    status: MaintenanceStatus
+    status: PaymentedStatus
     title: string
     cost: number
     startDate: string
