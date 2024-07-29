@@ -19,6 +19,7 @@ export function useFormState(
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     extraData?: Record<string, any>,
   ) {
     event.preventDefault()

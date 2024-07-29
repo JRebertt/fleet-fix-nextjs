@@ -19,10 +19,26 @@ import {
   AlertDialogContent,
 } from '../ui/alert-dialog'
 import { canceledPaymentActions } from './actions'
+import type {
+  MaintenaceProps,
+  PaymentedStatus,
+  PaymentMethod,
+} from '@/@types/types'
 
 interface PaymentedCanceledFormProps {
   setShowCancelDialog: (show: boolean) => void
-  payment: any
+  payment: {
+    id: string
+    amount: number
+    description: string | null
+    paymentDate: Date | null
+    paymentMethod: PaymentMethod | null
+    status: PaymentedStatus
+    maintenance_id: string | null
+    created_at: Date
+    updated_at: Date
+    maintenance?: MaintenaceProps
+  }
 }
 
 export function PaymentedCanceledForm({

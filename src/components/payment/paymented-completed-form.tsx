@@ -1,7 +1,7 @@
 'use client'
 
 import { useFormState } from '@/hooks/use-form-state'
-import { useState } from 'react'
+
 import { Button } from '../ui/button'
 import {
   DialogContent,
@@ -24,13 +24,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import type {
+  MaintenaceProps,
+  PaymentedStatus,
+  PaymentMethod,
+} from '@/@types/types'
 
 interface PaymentFormModalProps {
   setIsOpen: (isOpen: boolean) => void
-  payment: any
+  payment: {
+    id: string
+    amount: number
+    description: string | null
+    paymentDate: Date | null
+    paymentMethod: PaymentMethod | null
+    status: PaymentedStatus
+    maintenance_id: string | null
+    created_at: Date
+    updated_at: Date
+    maintenance?: MaintenaceProps
+  }
 }
-
-type PaymentMethodType = 'Boleto' | 'Transfer' | 'Card' | 'Cash' | 'Pix'
 
 export function PaymentFormModal({
   setIsOpen,
@@ -91,7 +105,10 @@ export function PaymentFormModal({
             <span className="space-y-1">
               <Label htmlFor="paymentMethod">Método de Pagamento</Label>
 
-              <Select name="paymentMethod" defaultValue={payment.paymentMethod}>
+              <Select
+                name="paymentMethod"
+                defaultValue={payment.paymentMethod ?? 'Selecione'}
+              >
                 <SelectTrigger className="h-10 w-[180px]" id="paymentMethod">
                   <SelectValue placeholder="Selecione o Método de Pagamento" />
                 </SelectTrigger>
